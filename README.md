@@ -1,1 +1,1 @@
-# Numerical Analysis Mini Project
+# Numerical Analysis Project
