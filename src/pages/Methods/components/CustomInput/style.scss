@@ -5,13 +5,13 @@
     justify-content: space-between;
     gap: var(--space-1);
     width: 100%;
+    margin-bottom: var(--space-1);
 
     .custom-input-title {
         font-size: var(--font-size-1);
         font-weight: var(--font-weight-1);
         color: var(--color-3);
     }
-
     .custom-input-field,
     .custom-select-input {
         width: 100%;
@@ -24,35 +24,45 @@
         font-weight: var(--font-weight-2);
         background-color: var(--color-2);
         outline: none;
-
         &:focus {
             border: 1px solid var(--color-3);
         }
     }
-
     .custom-select-input {
         width: 10%;
+    }
+    .custom-input-checkbox {
+        width: 29px;
+        height: 25px;
+        border-radius: 5px;
+        border: 1px solid var(--color-3-50);
+        cursor: pointer;
+        transition: var(--transition-1);
+        &:hover {
+            border: 1px solid var(--color-3);
+        }
+    }
+    .checked {
+        background-color: var(--color-3);
+        border: 1px solid var(--color-3);
     }
 }
 
 .variables {
     display: flex;
     flex-direction: column;
-    margin-top: var(--space-3);
+    margin-top: var(--space-2);
     gap: var(--space-1);
-
     .variables-block {
         display: flex;
         flex-direction: column;
     }
-
     .variables-inline {
         display: flex;
         flex-direction: row;
         gap: var(--space-1);
         align-items: center;
     }
-
     .variables-title {
         font-size: var(--font-size-3);
         font-weight: var(--font-weight-1);
