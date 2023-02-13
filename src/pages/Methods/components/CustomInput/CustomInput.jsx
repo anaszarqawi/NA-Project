@@ -2,8 +2,18 @@ import React from 'react';
 import './style.scss';
 
 const CustomInput = (props) => {
+  const [checked, setChecked] = React.useState(false);
+
   return (
     <div className="custom-input">
+      {props.withCheckbox && (
+        <div
+          className={`custom-input-checkbox ${props.condition === props.name && 'checked'}`}
+          onClick={() => {
+            props.onClick(props.name);
+            setChecked(!checked);
+          }}></div>
+      )}
       <div className="custom-input-title">
         {props.label}
         {props.sub ? <sub>{props.sub}</sub> : null}
