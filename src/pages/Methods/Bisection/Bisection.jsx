@@ -1,16 +1,22 @@
 import React from 'react';
-import CustomInput from '../components/CustomInput/CustomInput';
-import CustomSelectInput from '../components/CustomSelectInput/CustomSelectInput';
-import CustomButton from '../components/CustomButton/CustomButton';
 import './style.scss';
+import { bisection } from '../Methods';
+
+import CustomInput from '../components/CustomInput/CustomInput';
+import CustomButton from '../components/CustomButton/CustomButton';
+import SelectMenu from '../../components/SelectMenu/SelectMenu';
 
 // import mathjs
 // load math.js (using node.js)
 import { create, all } from 'mathjs';
+import { useRef } from 'react';
 
 const Bisection = () => {
   const config = {};
   const math = create(all, config);
+
+  const myRef = useRef(null);
+  const executeScroll = () => myRef.current.scrollIntoView();
 
   const [fx, setFx] = React.useState(null);
   const [xl, setXl] = React.useState(null);
@@ -24,89 +30,141 @@ const Bisection = () => {
 
   const [errorMsg, setErrorMsg] = React.useState('');
 
-  const f = (x) => {
-    return math.evaluate(fx, { x: x });
-  };
+  const examples = [
+    {
+      fx: '-2 + 7x - 5x^2 + 6x^3',
+      xl: 0,
+      xu: 1,
+      conditionType: 'es',
+      es: 10,
+    },
+    {
+      fx: '4x^3 - 6x^2 + 7x - 2.3',
+      xl: 0,
+      xu: 1,
+      conditionType: 'es',
+      es: 1,
+    },
+    {
+      fx: 'x^3 - 4x^2 - 8x -1',
+      xl: 2,
+      xu: 3,
+      conditionType: 'es',
+      es: 0.5,
+    },
+    {
+      fx: '-0.6x^2 + 2.4x + 5.5',
+      xl: 5,
+      xu: 10,
+      conditionType: 'es',
+      es: 0.5,
+    },
+    {
+      fx: '-13 - 20x + 19x^2 - 3x^3',
+      xl: -1,
+      xu: 0,
+      conditionType: 'it',
+      it: 10,
+    },
+    {
+      fx: 'x^3 + 3x - 5',
+      xl: 1,
+      xu: 2,
+      conditionType: 'es',
+      es: 2,
+    },
+    {
+      fx: 'x^4 - 8x^3 - 35x^2 + 450x - 1001',
+      xl: 4.5,
+      xu: 6,
+      conditionType: 'es',
+      es: 0.1,
+    },
+    {
+      fx: 'x^3 - 8',
+      xl: -10,
+      xu: 10,
+      conditionType: 'es',
+      es: 5,
+    },
+    {
+      fx: 'x^5 - x^4 - x^3 - 1',
+      xl: 1,
+      xu: 2,
+      conditionType: 'es',
+      es: 0.5,
+    },
+    {
+      fx: 'x^3 + 2x^2 + 10x - 20',
+      xl: 1,
+      xu: 2,
+      conditionType: 'es',
+      es: 4,
+    },
+    {
+      fx: '-26 + 82.3x - 88x^2 + 45.4x^3 - 9x^4 + 0.65x^5',
+      xl: 0.5,
+      xu: 1,
+      conditionType: 'es',
+      es: 0.2,
+    },
+  ];
 
-  //   React.useEffect(() => {
-  //     console.log(fx);
-  //     console.log(xl);
-  //     console.log(xu);
-  //     console.log(es);
-  //     console.log(conditionType);
-  //     console.log(it);
-  //   }, [fx, xl, xu, es, conditionType, it]);
-
-  const bisection = () => {
-    let xl_ = xl;
-    let xu_ = xu;
-    let xr = 0;
-    let xrOld = 0;
-    let ea = 0;
-    let i = 0;
-    let data = [];
+  const calculate = () => {
     let error = false;
 
     if (fx === null) {
       setErrorMsg('Please enter a function');
+      setShowSolution(false);
       error = true;
     }
     if (xl === null) {
-      setErrorMsg('Please enter a value for xl');
+      setErrorMsg('Please enter a value for Xl');
+      setShowSolution(false);
       error = true;
     }
     if (xu === null) {
-      setErrorMsg('Please enter a value for xu');
+      setErrorMsg('Please enter a value for Xu');
+      setShowSolution(false);
       error = true;
     }
-    if (es === null && conditionType === 'es') {
-      setErrorMsg('Please enter a value for es');
+    if (es === 0 && conditionType === 'es') {
+      setErrorMsg('Please enter a value for Es');
+      setShowSolution(false);
       error = true;
     }
-    if (it === null && conditionType === 'it') {
-      setErrorMsg('Please enter a value for it');
+    if (it === 0 && conditionType === 'it') {
+      setErrorMsg('Please enter a value for Maximum Iterations');
+      setShowSolution(false);
       error = true;
     }
     if (error) {
       return;
     }
-    // check if there is a root in the range
-    if (f(xl_) * f(xu_) > 0) {
-      setErrorMsg('No root in this range');
+
+    console.log(fx, xl, xu, es, it, conditionType);
+
+    const result = bisection(fx, xl, xu, es, it, conditionType);
+
+    if (result.error) {
+      setErrorMsg(result.error);
+      setShowSolution(false);
       return;
     }
-
-    do {
-      xrOld = xr;
-      xr = (xl_ + xu_) / 2;
-      if (f(xr) * f(xu_) < 0) {
-        xl_ = xr;
-      } else {
-        xu_ = xr;
-      }
-      console.log({ xl_, xu_ });
-      i++;
-      ea = Math.abs((xr - xrOld) / xr) * 100;
-      // round ea to 1 decimal point
-      ea = Math.round(ea * 10) / 10;
-
-      data.push({
-        i: i,
-        xl: xl_,
-        fxl: f(xl_),
-        xr: xr,
-        fxr: f(xr),
-        xu: xu_,
-        fxu: f(xu_),
-        ea: ea + '%',
-      });
-      console.log(data);
-      console.log(conditionType === 'es' ? ea > es : i < it);
-    } while (conditionType === 'es' ? ea > es : i < it);
-
-    setData(data);
+    setErrorMsg('');
     setShowSolution(true);
-    console.log(data);
+    setData(result);
+  };
+
+  const clear = () => {
+    setFx('');
+    setXl('');
+    setXu('');
+    setEs('');
+    setIt('');
+    setConditionType('es');
+    setShowSolution(false);
+    setErrorMsg('');
   };
 
   return (
@@ -116,11 +174,11 @@ const Bisection = () => {
         <div className="variables-block">
           <div className="variables-title">Variables</div>
 
-          <CustomInput label="F(x)" type="text" placeholder="Mathematical Function" onChange={setFx} />
+          <CustomInput label="F(x)" type="text" placeholder="Mathematical Function" value={fx} onChange={setFx} />
         </div>
         <div className="variables-inline">
-          <CustomInput label="X" sub="l" type="number" placeholder="eXtreme Lower" onChange={setXl} />
-          <CustomInput label="X" sub="u" type="number" placeholder="eXtreme Upper" onChange={setXu} />
+          <CustomInput label="X" sub="l" type="number" placeholder="eXtreme Lower" value={xl} onChange={setXl} />
+          <CustomInput label="X" sub="u" type="number" placeholder="eXtreme Upper" value={xu} onChange={setXu} />
         </div>
         <div className="variables-block">
           <div className="variables-title">Condition</div>
@@ -128,8 +186,8 @@ const Bisection = () => {
             label="ES"
             type="number"
             placeholder="Error Sum %"
-            withSelect={true}
             onChange={setEs}
+            value={es}
             options={[
               { label: '=', value: '=' },
               { label: '<', value: '<' },
@@ -147,6 +205,7 @@ const Bisection = () => {
             type="number"
             placeholder="Max Iteration"
             withCheckbox={true}
+            value={it}
             onChange={setIt}
             name="it"
             onClick={setConditionType}
@@ -154,23 +213,28 @@ const Bisection = () => {
           />
         </div>
       </div>
-      <div className="error-msg">{errorMsg}</div>
-      <CustomButton label="Calculate" onClick={bisection} />
+      {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
+      <div className="buttons-container">
+        <CustomButton label="Calculate" onClick={calculate} type="primary" />
+        <CustomButton label="Clear" onClick={clear} type="secondary" />
+      </div>
       {showSolution && (
         <>
           <hr className="line-divider"></hr>
-          <div className="center-title">Solution</div>
+          <div ref={myRef} className="center-title" name="solution">
+            Solution
+          </div>
           <div className="solution-table-container">
             <table className="solution-table">
               <tr>
                 <th>i</th>
-                <th>xl</th>
-                <th>fxl</th>
-                <th>xr</th>
-                <th>fxr</th>
-                <th>xu</th>
-                <th>fxu</th>
-                <th>ea</th>
+                <th>Xl</th>
+                <th>f(xl)</th>
+                <th>Xr</th>
+                <th>f(xr)</th>
+                <th>Xu</th>
+                <th>f(xu)</th>
+                <th>Ea</th>
               </tr>
 
               {data.map((item, index) => {
@@ -179,7 +243,7 @@ const Bisection = () => {
                     <td>{item.i}</td>
                     <td>{item.xl}</td>
                     <td>{item.fxl}</td>
-                    <td>{item.xr}</td>
+                    <td className="xr">{item.xr}</td>
                     <td>{item.fxr}</td>
                     <td>{item.xu}</td>
                     <td>{item.fxu}</td>
@@ -191,6 +255,24 @@ const Bisection = () => {
           </div>
         </>
       )}
+      <hr className="line-divider"></hr>
+      <div className="center-title">Examples</div>
+      <div className="examples-container">
+        <SelectMenu
+          examples={examples}
+          type="examples"
+          setFx={setFx}
+          setXl={setXl}
+          setXu={setXu}
+          setConditionType={setConditionType}
+          setEs={setEs}
+          setIt={setIt}
+          setShowSolution={setShowSolution}
+          setErrorMsg={setErrorMsg}
+          setData={setData}
+          scrollToRef={executeScroll}
+        />
+      </div>
     </div>
   );
 };
