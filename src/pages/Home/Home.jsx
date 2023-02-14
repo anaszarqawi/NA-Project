@@ -30,7 +30,7 @@ const Home = () => {
     <div className="page">
       <div className="center-title">Choose The Method :)</div>
       <div className="chapters">
-        <SelectMenu chapters={Chapters} />
+        <SelectMenu chapters={Chapters} type="methods" />
       </div>
     </div>
   );
