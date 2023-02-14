@@ -7,12 +7,14 @@ const CustomInput = (props) => {
   return (
     <div className="custom-input">
       {props.withCheckbox && (
-        <div
-          className={`custom-input-checkbox ${props.condition === props.name && 'checked'}`}
-          onClick={() => {
-            props.onClick(props.name);
-            setChecked(!checked);
-          }}></div>
+        <div className="custom-input-checkbox-container">
+          <div
+            className={`custom-input-checkbox ${props.condition === props.name && 'checked'}`}
+            onClick={() => {
+              props.onClick(props.name);
+              setChecked(!checked);
+            }}></div>
+        </div>
       )}
       <div className="custom-input-title">
         {props.label}
@@ -37,6 +39,9 @@ const CustomInput = (props) => {
           props.onChange
             ? (e) => {
                 props.onChange(e.target.value);
+                if (props.type === 'number') {
+                  props.onChange(+e.target.value);
+                }
               }
             : null
         }

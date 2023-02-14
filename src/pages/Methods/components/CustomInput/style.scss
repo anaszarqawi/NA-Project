@@ -27,17 +27,20 @@
         &:focus {
             border: 1px solid var(--color-3);
         }
+
+        display: flex;
     }
     .custom-select-input {
         width: 10%;
     }
     .custom-input-checkbox {
-        width: 29px;
-        height: 25px;
+        width: 20px;
+        height: 20px;
         border-radius: 5px;
         border: 1px solid var(--color-3-50);
         cursor: pointer;
         transition: var(--transition-1);
+
         &:hover {
             border: 1px solid var(--color-3);
         }
@@ -71,4 +74,13 @@
         margin-bottom: var(--space-50);
         display: block;
     }
+}
+
+.line-divider {
+    width: 98%;
+    height: 1px;
+    border-width: 0;
+    color: var(--color-2);
+    background-color: var(--color-2);
+    margin-top: var(--space-3);
 }
