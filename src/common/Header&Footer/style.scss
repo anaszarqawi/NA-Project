@@ -10,6 +10,7 @@
     display: flex;
     justify-content: center;
     background-color: var(--color-1);
+
     // backdrop-filter: blur(15px);
     // -webkit-backdrop-filter: blur(15px);
     .header-container,
@@ -20,13 +21,16 @@
         justify-content: space-between;
         align-items: center;
         padding: var(--space-50) var(--space-1);
+
         .logo {
             width: 230px;
+
             svg {
                 width: 70px;
                 fill: var(--color-3);
             }
         }
+
         .title {
             font-size: var(--font-size-1);
             font-weight: var(--font-weight-2);
@@ -34,6 +38,7 @@
             margin: 0;
             padding: 0;
         }
+
         .header-buttons,
         .footer-buttons {
             display: flex;
@@ -41,11 +46,13 @@
             align-items: center;
             // gap: var(--space-1);
             width: 230px;
+
             .header-button {
                 color: var(--color-3-60);
                 transition: var(--transition-1);
                 padding: var(--space-50);
                 cursor: pointer;
+
                 &:hover {
                     color: var(--color-3);
                 }
@@ -57,12 +64,14 @@
 .footer {
     top: auto;
     bottom: 0;
-    border-top: 1px solid var(--color-3-20);
     border-bottom: none;
-    position: static;
+
+    // position: static;
     .footer-container {
+        border-top: 1px solid var(--color-3-20);
         border-bottom: none;
     }
+
     .copyright {
         display: flex;
         flex-direction: row;
@@ -70,25 +79,31 @@
         gap: 5px;
         font-size: 13px;
         font-weight: 300;
+
         .logo {
             width: auto;
+
             svg {
                 fill: var(--color-3-60) !important;
                 width: 50px !important;
             }
         }
+
         .text {
             color: var(--color-3-60);
         }
     }
+
     .version {
         color: var(--color-3-60);
         transition: var(--transition-1);
         cursor: pointer;
+
         &:hover {
             color: var(--color-3);
         }
     }
+
     .social {
         width: 180px;
         display: flex;
@@ -96,12 +111,14 @@
         align-items: center;
         justify-content: flex-end;
         gap: 10px;
+
         .social-icon {
             width: 20px;
             height: 20px;
             fill: var(--color-3-60);
             transition: var(--transition-1);
             cursor: pointer;
+
             &:hover {
                 fill: var(--color-3);
             }
@@ -113,6 +130,7 @@
     .logo {
         width: 150px;
     }
+
     .title {
         display: none;
     }

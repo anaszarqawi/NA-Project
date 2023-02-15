@@ -1,33 +1,42 @@
 .select-menu {
-    margin-top: var(--space-2);
-    .select-menu-title {
-        font-size: var(--font-size-5);
-        font-weight: var(--font-weight-1);
-        color: var(--color-3);
-        margin-bottom: var(--space-50);
+  margin-top: var(--space-2);
+
+  .select-menu-title {
+    font-size: var(--font-size-5);
+    font-weight: var(--font-weight-1);
+    color: var(--color-3);
+    margin-bottom: var(--space-50);
+  }
+
+  .select-menu-list {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-2);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+
+    .select-menu-item {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      padding: var(--space-1);
+      border-bottom: 1px solid var(--color-3-20);
+      transition: var(--transition-1);
+      color: var(--color-3);
+      cursor: pointer;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background-color: var(--color-3-10);
+      }
+
+      .select-menu-item-title {
+        font-weight: var(--font-weight-4);
+      }
     }
-    .select-menu-list {
-        display: flex;
-        flex-direction: column;
-        background-color: var(--color-2);
-        border-radius: var(--border-radius);
-        overflow: hidden;
-        .select-menu-item {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            width: 100%;
-            padding: var(--space-1);
-            border-bottom: 1px solid var(--color-3-20);
-            transition: var(--transition-1);
-            color: var(--color-3);
-            cursor: pointer;
-            &:last-child {
-                border-bottom: none;
-            }
-            &:hover {
-                background-color: var(--color-3-10);
-            }
-        }
-    }
+  }
 }
