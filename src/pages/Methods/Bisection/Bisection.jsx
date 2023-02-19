@@ -81,13 +81,6 @@ const Bisection = () => {
       es: 0.1,
     },
     {
-      fx: 'x^3 - 8',
-      xl: -10,
-      xu: 10,
-      conditionType: 'es',
-      es: 5,
-    },
-    {
       fx: 'x^5 - x^4 - x^3 - 1',
       xl: 1,
       xu: 2,
@@ -259,6 +252,7 @@ const Bisection = () => {
       <div className="center-title">Examples</div>
       <div className="examples-container">
         <SelectMenu
+          method={bisection}
           examples={examples}
           type="examples"
           setFx={setFx}
