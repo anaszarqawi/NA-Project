@@ -40,7 +40,7 @@ const SelectMenu = (props) => {
                   example.it && props.setIt(example.it);
                   example.es && props.setEs(example.es);
 
-                  const result = bisection(
+                  const result = props.method(
                     example.fx,
                     example.xl,
                     example.xu,

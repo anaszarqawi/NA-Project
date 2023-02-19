@@ -8,6 +8,7 @@ import Footer from '../common/Header&Footer/Footer';
 
 // Methods
 import Bisection from '../pages/Methods/Bisection/Bisection';
+import FalsePosition from '../pages/Methods/FalsePosition/FalsePosition';
 
 const AppRouter = () => {
   const routes = [
@@ -18,6 +19,10 @@ const AppRouter = () => {
     {
       path: '/bisection-method',
       component: <Bisection />,
+    },
+    {
+      path: '/false-position-method',
+      component: <FalsePosition />,
     },
   ];
 
