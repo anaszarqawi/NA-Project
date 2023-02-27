@@ -14,7 +14,7 @@ const Home = () => {
           name: 'False Position',
         },
         {
-          name: 'Fixed Point',
+          name: 'Simple Fixed Point',
         },
         {
           name: 'Newton Raphson',

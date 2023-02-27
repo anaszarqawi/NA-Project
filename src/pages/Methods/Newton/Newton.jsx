@@ -1,6 +1,6 @@
 import React from 'react';
 import './style.scss';
-import { bisection, falsePosition } from '../Methods';
+import { newton } from '../Methods';
 
 import CustomInput from '../components/CustomInput/CustomInput';
 import CustomButton from '../components/CustomButton/CustomButton';
@@ -10,20 +10,16 @@ import SelectMenu from '../../components/SelectMenu/SelectMenu';
 // load math.js (using node.js)
 import { create, all } from 'mathjs';
 import { useRef } from 'react';
-import { useX } from '../../../context/xContext';
 
-const FalsePosition = () => {
+const Newton = () => {
   const config = {};
   const math = create(all, config);
 
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
 
-  const { currentExample } = useX();
-
   const [fx, setFx] = React.useState(null);
-  const [xl, setXl] = React.useState(null);
-  const [xu, setXu] = React.useState(null);
+  const [xo, setXo] = React.useState(null);
   const [es, setEs] = React.useState(null);
   const [it, setIt] = React.useState(null);
 
@@ -35,74 +31,16 @@ const FalsePosition = () => {
 
   const examples = [
     {
-      fx: '-2 + 7x - 5x^2 + 6x^3',
-      xl: 0,
-      xu: 1,
+      fx: '-0.9x^2 + 1.7x + 2.5',
+      xo: 5,
+      es: 0.7,
       conditionType: 'es',
-      es: 10,
     },
     {
-      fx: '4x^3 - 6x^2 + 7x - 2.3',
-      xl: 0,
-      xu: 1,
-      conditionType: 'es',
-      es: 1,
-    },
-    {
-      fx: 'x^3 - 4x^2 - 8x -1',
-      xl: 2,
-      xu: 3,
-      conditionType: 'es',
-      es: 0.5,
-    },
-    {
-      fx: '-0.6x^2 + 2.4x + 5.5',
-      xl: 5,
-      xu: 10,
-      conditionType: 'es',
-      es: 0.5,
-    },
-    {
-      fx: '-13 - 20x + 19x^2 - 3x^3',
-      xl: -1,
-      xu: 0,
+      fx: '(-x)^2 + 1.8x + 2.5',
+      xo: 5,
+      it: 5,
       conditionType: 'it',
-      it: 10,
-    },
-    {
-      fx: 'x^3 + 3x - 5',
-      xl: 1,
-      xu: 2,
-      conditionType: 'es',
-      es: 2,
-    },
-    {
-      fx: 'x^4 - 8x^3 - 35x^2 + 450x - 1001',
-      xl: 4.5,
-      xu: 6,
-      conditionType: 'es',
-      es: 0.1,
-    },
-    {
-      fx: 'x^5 - x^4 - x^3 - 1',
-      xl: 1,
-      xu: 2,
-      conditionType: 'es',
-      es: 0.5,
-    },
-    {
-      fx: 'x^3 + 2x^2 + 10x - 20',
-      xl: 1,
-      xu: 2,
-      conditionType: 'es',
-      es: 4,
-    },
-    {
-      fx: '-26 + 82.3x - 88x^2 + 45.4x^3 - 9x^4 + 0.65x^5',
-      xl: 0.5,
-      xu: 1,
-      conditionType: 'es',
-      es: 0.2,
     },
   ];
 
@@ -114,13 +52,8 @@ const FalsePosition = () => {
       setShowSolution(false);
       error = true;
     }
-    if (xl === null) {
-      setErrorMsg('Please enter a value for Xl');
-      setShowSolution(false);
-      error = true;
-    }
-    if (xu === null) {
-      setErrorMsg('Please enter a value for Xu');
+    if (xo === null) {
+      setErrorMsg('Please enter a value for Xo');
       setShowSolution(false);
       error = true;
     }
@@ -138,7 +71,9 @@ const FalsePosition = () => {
       return;
     }
 
-    const result = falsePosition(fx, xl, xu, es, it, conditionType);
+    console.log(fx, xo, es, it, conditionType);
+
+    const result = newton(fx, xo, es, it, conditionType);
 
     if (result.error) {
       setErrorMsg(result.error);
@@ -152,8 +87,7 @@ const FalsePosition = () => {
 
   const clear = () => {
     setFx('');
-    setXl('');
-    setXu('');
+    setXo('');
     setEs('');
     setIt('');
     setConditionType('es');
@@ -163,14 +97,12 @@ const FalsePosition = () => {
 
   const setExample = (example) => {
     setFx(example.fx);
-    setXl(example.xl);
-    setXu(example.xu);
+    setXo(example.xo);
     setEs(example.es);
     setIt(example.it);
     setConditionType(example.conditionType);
 
-    const result = falsePosition(example.fx, example.xl, example.xu, example.es, example.it, example.conditionType);
-    console.log({ result });
+    const result = newton(example.fx, example.xo, example.es, example.it, example.conditionType);
 
     if (result.error) {
       setErrorMsg(result.error);
@@ -184,7 +116,7 @@ const FalsePosition = () => {
 
   return (
     <div className="page">
-      <div className="center-title">False Position Method</div>
+      <div className="center-title">Newton Method</div>
       <div className="variables">
         <div className="variables-block">
           <div className="variables-title">Variables</div>
@@ -192,8 +124,7 @@ const FalsePosition = () => {
           <CustomInput label="F(x)" type="text" placeholder="Mathematical Function" value={fx} onChange={setFx} />
         </div>
         <div className="variables-inline">
-          <CustomInput label="X" sub="l" type="number" placeholder="eXtreme Lower" value={xl} onChange={setXl} />
-          <CustomInput label="X" sub="u" type="number" placeholder="eXtreme Upper" value={xu} onChange={setXu} />
+          <CustomInput label="X" sub="o" type="number" placeholder="eXtreme node" value={xo} onChange={setXo} />
         </div>
         <div className="variables-block">
           <div className="variables-title">Condition</div>
@@ -243,12 +174,9 @@ const FalsePosition = () => {
             <table className="solution-table">
               <tr>
                 <th>i</th>
-                <th>Xl</th>
-                <th>f(xl)</th>
-                <th>Xr</th>
-                <th>f(xr)</th>
-                <th>Xu</th>
-                <th>f(xu)</th>
+                <th>xi</th>
+                <th>f(xi)</th>
+                <th>f'(xi)</th>
                 <th>Ea</th>
               </tr>
 
@@ -256,12 +184,9 @@ const FalsePosition = () => {
                 return (
                   <tr key={index}>
                     <td>{item.i}</td>
-                    <td>{item.xl}</td>
-                    <td>{item.fxl}</td>
-                    <td className="xr">{item.xr}</td>
-                    <td>{item.fxr}</td>
-                    <td>{item.xu}</td>
-                    <td>{item.fxu}</td>
+                    <td className="xr">{item.xi}</td>
+                    <td>{item.fxi}</td>
+                    <td>{item.dfxi}</td>
                     <td>{item.ea}</td>
                   </tr>
                 );
@@ -279,4 +204,4 @@ const FalsePosition = () => {
   );
 };
 
-export default FalsePosition;
+export default Newton;

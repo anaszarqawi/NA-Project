@@ -10,6 +10,7 @@ import SelectMenu from '../../components/SelectMenu/SelectMenu';
 // load math.js (using node.js)
 import { create, all } from 'mathjs';
 import { useRef } from 'react';
+import { useX } from '../../../context/xContext';
 
 const Bisection = () => {
   const config = {};
@@ -17,6 +18,8 @@ const Bisection = () => {
 
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
+
+  const { currentExample } = useX();
 
   const [fx, setFx] = React.useState(null);
   const [xl, setXl] = React.useState(null);
@@ -160,6 +163,27 @@ const Bisection = () => {
     setErrorMsg('');
   };
 
+  const setExample = (example) => {
+    setFx(example.fx);
+    setXl(example.xl);
+    setXu(example.xu);
+    setEs(example.es);
+    setIt(example.it);
+    setConditionType(example.conditionType);
+
+    const result = bisection(example.fx, example.xl, example.xu, example.es, example.it, example.conditionType);
+    console.log({ result });
+
+    if (result.error) {
+      setErrorMsg(result.error);
+      setShowSolution(false);
+      return;
+    }
+    setErrorMsg('');
+    setShowSolution(true);
+    setData(result);
+  };
+
   return (
     <div className="page">
       <div className="center-title">Bisection Method</div>
@@ -251,21 +275,7 @@ const Bisection = () => {
       <hr className="line-divider"></hr>
       <div className="center-title">Examples</div>
       <div className="examples-container">
-        <SelectMenu
-          method={bisection}
-          examples={examples}
-          type="examples"
-          setFx={setFx}
-          setXl={setXl}
-          setXu={setXu}
-          setConditionType={setConditionType}
-          setEs={setEs}
-          setIt={setIt}
-          setShowSolution={setShowSolution}
-          setErrorMsg={setErrorMsg}
-          setData={setData}
-          scrollToRef={executeScroll}
-        />
+        <SelectMenu examples={examples} type="examples" setter={setExample} />
       </div>
     </div>
   );

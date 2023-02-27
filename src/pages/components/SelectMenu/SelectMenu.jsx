@@ -3,8 +3,32 @@ import { BrowserRouter as Router, Link } from 'react-router-dom';
 import './style.scss';
 import { bisection } from '../../Methods/Methods';
 import $ from 'jquery';
+import { useX } from '../../../context/xContext';
 
 const SelectMenu = (props) => {
+  const { setCurrentExample, currentExample } = useX();
+
+  const generateDetails = (example) => {
+    let details = {};
+    example.fx && (details.fx = example.fx);
+    example.xl && (details.xl = example.xl);
+    example.xu && (details.xu = example.xu);
+    example.xo && (details.xo = example.xo);
+    example.conditionType === 'es' && (details.es = example.es);
+    example.conditionType === 'it' && (details.it = example.it);
+
+    // create string and add '|' between each detail
+    let detailsString = '';
+    for (let detail in details) {
+      if (detail !== 'fx') {
+        detailsString += detail + ': ' + details[detail] + ' | ';
+      }
+    }
+
+    console.log(details);
+    return detailsString;
+  };
+
   if (props.type === 'methods') {
     return props.chapters.map((chapter) => {
       return (
@@ -33,44 +57,12 @@ const SelectMenu = (props) => {
               <div
                 className="select-menu-item"
                 onClick={() => {
-                  props.setFx(example.fx);
-                  props.setXl(example.xl);
-                  props.setXu(example.xu);
-                  props.setConditionType(example.conditionType);
-                  example.it && props.setIt(example.it);
-                  example.es && props.setEs(example.es);
-
-                  const result = props.method(
-                    example.fx,
-                    example.xl,
-                    example.xu,
-                    example.es,
-                    example.it,
-                    example.conditionType
-                  );
-
-                  if (result.error) {
-                    props.setErrorMsg(result.error);
-                    props.setShowSolution(false);
-                    return;
-                  }
-                  props.setShowSolution(true);
-                  props.setData(result);
-                  props.setErrorMsg('');
-
-                  // const SolutionTitle = $('.center-title[name="solution"]');
-                  // if (SolutionTitle) {
-                  //   SolutionTitle.scrollIntoView({ behavior: 'smooth' });
-                  // }
-
-                  props.scrollToRef();
+                  // setCurrentExample(example);
+                  props.setter(example);
                 }}>
                 <div className="select-menu-item-title">{example.fx}</div>
                 <div className="select-menu-item-details">
-                  <div className="select-menu-item-detail">
-                    {'Xl = ' + example.xl} | {'Xu = ' + example.xu} |{' '}
-                    {example.conditionType === 'it' ? 'It = ' + example.it : 'Es = ' + example.es + '%'}
-                  </div>
+                  <div className="select-menu-item-detail">{generateDetails(example)}</div>
                 </div>
               </div>
             );

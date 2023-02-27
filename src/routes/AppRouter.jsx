@@ -9,6 +9,8 @@ import Footer from '../common/Header&Footer/Footer';
 // Methods
 import Bisection from '../pages/Methods/Bisection/Bisection';
 import FalsePosition from '../pages/Methods/FalsePosition/FalsePosition';
+import SimpleFixedPoint from '../pages/Methods/SimpleFixedPoint/SimpleFixedPoint';
+import Newton from '../pages/Methods/Newton/Newton';
 
 const AppRouter = () => {
   const routes = [
@@ -23,6 +25,14 @@ const AppRouter = () => {
     {
       path: '/false-position-method',
       component: <FalsePosition />,
+    },
+    {
+      path: '/simple-fixed-point-method',
+      component: <SimpleFixedPoint />,
+    },
+    {
+      path: '/newton-raphson-method',
+      component: <Newton />,
     },
   ];
 
