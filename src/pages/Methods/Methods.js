@@ -117,9 +117,9 @@ export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
 
   let fxi = fx + ' = 0';
 
-  // const fxi2 = nerdamer(fxi);
-  let sfp = nerdamer.solve(fxi, 'x');
-  // sfp = nerdamer(`simplify(${sfp})`).toString();
+  const fxi2 = nerdamer(fxi);
+  let sfp = fxi2.solveFor('x').toString();
+  // sfp = nerdamer(`simplify(${sfp})`)
 
   console.log({ fxi, sfp });
 
@@ -182,3 +182,5 @@ export const newton = (fx, xo, es, it, conditionType) => {
 
   return data;
 };
+
+export const secant = (fx, x_1, x0) => {};
