@@ -104,7 +104,13 @@ export const falsePosition = (fx, xl, xu, es, it, conditionType) => {
   return data;
 };
 
+const getGx = (fx) => {
+  const xs = fx.match(/x\^\d|x/g);
+  console.log(xs);
+};
+
 export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
+  console.clear();
   console.log('SimpleFixedPoint');
   let xr = xo;
   let xrOld = 0;
@@ -112,8 +118,7 @@ export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
   let i = 0;
   let data = [];
 
-  // let fxi = fx.replace(/x\^2/g, 'y^2');
-  // fxi = fxi.replace(/x\)\^2/g, 'y)^2');
+  getGx(fx);
 
   let fxi = fx + ' = 0';
 
@@ -121,10 +126,9 @@ export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
   let sfp = fxi2.solveFor('x').toString();
   // sfp = nerdamer(`simplify(${sfp})`)
 
-  console.log({ fxi, sfp });
+  console.log({ fxi, fxi2, sfp });
 
   do {
-    console.log({ xo: xr });
     if (i !== 0) {
       xrOld = xr;
       xr = f(sfp, xrOld);
