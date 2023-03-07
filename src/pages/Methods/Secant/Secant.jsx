@@ -1,6 +1,6 @@
 import React from 'react';
 import './style.scss';
-import { newton } from '../Methods';
+import { secant } from '../Methods';
 
 import CustomInput from '../components/CustomInput/CustomInput';
 import CustomButton from '../components/CustomButton/CustomButton';
@@ -11,7 +11,7 @@ import SelectMenu from '../../components/SelectMenu/SelectMenu';
 import { create, all } from 'mathjs';
 import { useRef } from 'react';
 
-const Newton = () => {
+const Secant = () => {
   const config = {};
   const math = create(all, config);
 
@@ -19,7 +19,8 @@ const Newton = () => {
   const executeScroll = () => myRef.current.scrollIntoView();
 
   const [fx, setFx] = React.useState(null);
-  const [xo, setXo] = React.useState(null);
+  const [xa, setXa] = React.useState(null);
+  const [xb, setXb] = React.useState(null);
   const [es, setEs] = React.useState(null);
   const [it, setIt] = React.useState(null);
 
@@ -31,24 +32,82 @@ const Newton = () => {
 
   const examples = [
     {
-      fx: '-0.9x^2 + 1.7x + 2.5',
-      xo: 5,
-      es: 0.7,
+      fx: '0.95x^3 - 5.9x^2 + 10.9x - 6',
+      xa: 2.5,
+      xb: 3.5,
       conditionType: 'es',
+      es: 0.5,
     },
     {
-      fx: '(-x)^2 + 1.8x + 2.5',
-      xo: 5,
-      it: 5,
-      conditionType: 'it',
+      fx: '2x^3 - 11.7x^2 + 17.7x - 5',
+      xa: 3,
+      xb: 4,
+      conditionType: 'es',
+      es: 0.5,
     },
     {
-      fx: '2sin(sqrt(x))-x',
-      xo: 0.5,
-      es: 0.001,
+      fx: 'x^4 - 3x^2 + 1.5x -3',
+      xa: 1.5,
+      xb: 2,
       conditionType: 'es',
+      es: 0.01,
+    },
+    {
+      fx: '-1 + 5.5x - 4x^2 + 0.5x^3',
+      xa: 1.5,
+      xb: 2,
+      conditionType: 'es',
+      es: 0.2,
+    },
+    {
+      fx: '-x^3 + 7.89x + 11',
+      xa: 3,
+      xb: 5,
+      conditionType: 'es',
+      es: 0.1,
+    },
+    {
+      fx: '-x^3 + 7.89x + 11',
+      xa: 3,
+      xb: 5,
+      conditionType: 'es',
+      es: 0.1,
+    },
+    {
+      fx: 'x^3 - 6x^2 + 11x - 6.1',
+      xa: 0,
+      xb: 0.5,
+      conditionType: 'es',
+      es: 0.5,
+    },
+    {
+      fx: 'x^7 - 1.5x^2 + 7x - 6',
+      xa: 0,
+      xb: 0.5,
+      conditionType: 'es',
+      es: 0.1,
     },
   ];
+
+  const setExample = (example) => {
+    setFx(example.fx);
+    setXa(example.xa);
+    setXb(example.xb);
+    setEs(example.es);
+    setIt(example.it);
+    setConditionType(example.conditionType);
+
+    const result = secant(example.fx, example.xa, example.xb, example.es, example.it, example.conditionType);
+
+    if (result.error) {
+      setErrorMsg(result.error);
+      setShowSolution(false);
+      return;
+    }
+    setErrorMsg('');
+    setShowSolution(true);
+    setData(result);
+  };
 
   const calculate = () => {
     let error = false;
@@ -58,8 +117,13 @@ const Newton = () => {
       setShowSolution(false);
       error = true;
     }
-    if (xo === null) {
-      setErrorMsg('Please enter a value for Xo');
+    if (xa === null) {
+      setErrorMsg('Please enter a value for X-1');
+      setShowSolution(false);
+      error = true;
+    }
+    if (xb === null) {
+      setErrorMsg('Please enter a value for X0');
       setShowSolution(false);
       error = true;
     }
@@ -77,9 +141,7 @@ const Newton = () => {
       return;
     }
 
-    console.log(fx, xo, es, it, conditionType);
-
-    const result = newton(fx, xo, es, it, conditionType);
+    const result = secant(fx, xa, xb, es, it, conditionType);
 
     if (result.error) {
       setErrorMsg(result.error);
@@ -93,7 +155,8 @@ const Newton = () => {
 
   const clear = () => {
     setFx('');
-    setXo('');
+    setXa('');
+    setXb('');
     setEs('');
     setIt('');
     setConditionType('es');
@@ -101,28 +164,9 @@ const Newton = () => {
     setErrorMsg('');
   };
 
-  const setExample = (example) => {
-    setFx(example.fx);
-    setXo(example.xo);
-    setEs(example.es);
-    setIt(example.it);
-    setConditionType(example.conditionType);
-
-    const result = newton(example.fx, example.xo, example.es, example.it, example.conditionType);
-
-    if (result.error) {
-      setErrorMsg(result.error);
-      setShowSolution(false);
-      return;
-    }
-    setErrorMsg('');
-    setShowSolution(true);
-    setData(result);
-  };
-
   return (
     <div className="page">
-      <div className="center-title">Newton Method</div>
+      <div className="center-title">Secant Method</div>
       <div className="variables">
         <div className="variables-block">
           <div className="variables-title">Variables</div>
@@ -130,7 +174,8 @@ const Newton = () => {
           <CustomInput label="F(x)" type="text" placeholder="Mathematical Function" value={fx} onChange={setFx} />
         </div>
         <div className="variables-inline">
-          <CustomInput label="X" sub="o" type="number" placeholder="eXtreme node" value={xo} onChange={setXo} />
+          <CustomInput label="X" sub="a" type="number" placeholder="eXtreme node" value={xa} onChange={setXa} />
+          <CustomInput label="X" sub="b" type="number" placeholder="eXtreme node" value={xb} onChange={setXb} />
         </div>
         <div className="variables-block">
           <div className="variables-title">Condition</div>
@@ -180,19 +225,29 @@ const Newton = () => {
             <table className="solution-table">
               <tr>
                 <th>i</th>
-                <th>xi</th>
-                <th>f(xi)</th>
-                <th>f'(xi)</th>
-                <th>Ea</th>
+                <th>
+                  X<sub>i-1</sub>
+                </th>
+                <th>
+                  f(x<sub>i-1</sub>)
+                </th>
+                <th>
+                  x<sub>i</sub>
+                </th>
+                <th>
+                  f(x<sub>i</sub>)
+                </th>
+                <th>Ea%</th>
               </tr>
 
               {data.map((item, index) => {
                 return (
                   <tr key={index}>
                     <td>{item.i}</td>
-                    <td className="xr">{item.xi}</td>
-                    <td>{item.fxi}</td>
-                    <td>{item.dfxi}</td>
+                    <td>{item.xa}</td>
+                    <td>{item.fxa}</td>
+                    <td>{item.xb}</td>
+                    <td>{item.fxb}</td>
                     <td>{item.ea}</td>
                   </tr>
                 );
@@ -210,4 +265,4 @@ const Newton = () => {
   );
 };
 
-export default Newton;
+export default Secant;
