@@ -5,13 +5,17 @@
     margin-bottom: var(--space-2);
     border-radius: var(--border-radius);
     overflow: hidden;
+    color: var(--color-3);
+
     th {
         text-align: left;
         background-color: var(--color-2);
     }
+
     td:first-child {
         background-color: var(--color-2);
     }
+
     tr:last-child {
         .xr {
             background-color: var(--color-2);

@@ -11,6 +11,7 @@ import Bisection from '../pages/Methods/Bisection/Bisection';
 import FalsePosition from '../pages/Methods/FalsePosition/FalsePosition';
 import SimpleFixedPoint from '../pages/Methods/SimpleFixedPoint/SimpleFixedPoint';
 import Newton from '../pages/Methods/Newton/Newton';
+import Secant from '../pages/Methods/Secant/Secant';
 
 const AppRouter = () => {
   const routes = [
@@ -33,6 +34,10 @@ const AppRouter = () => {
     {
       path: '/newton-raphson-method',
       component: <Newton />,
+    },
+    {
+      path: '/secant-method',
+      component: <Secant />,
     },
   ];
 

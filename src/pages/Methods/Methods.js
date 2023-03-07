@@ -79,8 +79,6 @@ export const falsePosition = (fx, xl, xu, es, it, conditionType) => {
     const fxl = f(fx, xl);
     const fxu = f(fx, xu);
 
-    const xr1 = (fxu * (xl - xu)) / fxl - fxu;
-
     xr = xu - (fxu * (xl - xu)) / (fxl - fxu);
 
     if (f(fx, xr) * f(fx, xl) < 0) xu = xr;
@@ -104,7 +102,21 @@ export const falsePosition = (fx, xl, xu, es, it, conditionType) => {
   return data;
 };
 
+const getSfp = (fx) => {
+  const xs = fx.match(/x\^\d|x/g);
+  let maxPower = 1;
+  xs.map((x) => {
+    const power = +x.match(/\d/g);
+    if (power !== null) {
+      maxPower = power > maxPower ? power : maxPower;
+    }
+  });
+  const fxNew = fx.replace(`x^${maxPower}`, `y^${maxPower}`) + '= 0';
+  return nerdamer(fxNew).solveFor('y').toString();
+};
+
 export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
+  console.clear();
   console.log('SimpleFixedPoint');
   let xr = xo;
   let xrOld = 0;
@@ -112,19 +124,10 @@ export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
   let i = 0;
   let data = [];
 
-  // let fxi = fx.replace(/x\^2/g, 'y^2');
-  // fxi = fxi.replace(/x\)\^2/g, 'y)^2');
-
-  let fxi = fx + ' = 0';
-
-  // const fxi2 = nerdamer(fxi);
-  let sfp = nerdamer.solve(fxi, 'x');
-  // sfp = nerdamer(`simplify(${sfp})`).toString();
-
-  console.log({ fxi, sfp });
+  const sfp = getSfp(fx);
+  console.log({ sfp: sfp });
 
   do {
-    console.log({ xo: xr });
     if (i !== 0) {
       xrOld = xr;
       xr = f(sfp, xrOld);
@@ -145,6 +148,7 @@ export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
 };
 
 export const newton = (fx, xo, es, it, conditionType) => {
+  console.clear();
   console.log('newton');
   let xr = xo;
   let xrOld = 0;
@@ -175,7 +179,44 @@ export const newton = (fx, xo, es, it, conditionType) => {
       xi: round(xr, 5),
       fxi: round(f(fx, xr), 5),
       dfxi: round(f(dfx, xr), 5),
-      ea: i === 0 ? '-' : round(ea, 2) + '%',
+      ea: i === 0 ? '-' : round(ea, 3) + '%',
+    });
+    i++;
+  } while (conditionType === 'es' ? ea > es : i < it + 1);
+
+  return data;
+};
+
+export const secant = (fx, xa, xb, es, it, conditionType) => {
+  console.clear();
+  console.log('Secant');
+  let xr = 0;
+  let ea = 0;
+  let i = 0;
+  let data = [];
+
+  do {
+    if (i !== 0) {
+      console.log({ i, xa, xb, ea });
+
+      const fxa = f(fx, xb);
+      const fxb = f(fx, xa);
+      xr = xb - (fxa * (xa - xb)) / (fxb - fxa);
+      console.log(`${xb} - (${fxb} * (${xa} - ${xb})) / (${fxb} - ${fxa})`);
+
+      xa = xb;
+      xb = xr;
+    }
+
+    ea = Math.abs((xb - xa) / xb) * 100;
+
+    data.push({
+      i: i,
+      xa: round(xa, 5),
+      fxa: round(f(fx, xa), 5),
+      xb: round(xb, 5),
+      fxb: round(f(fx, xb), 5),
+      ea: i === 0 ? '-' : round(ea, 3) + '%',
     });
     i++;
   } while (conditionType === 'es' ? ea > es : i < it);

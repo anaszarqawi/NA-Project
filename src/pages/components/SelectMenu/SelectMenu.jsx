@@ -14,6 +14,8 @@ const SelectMenu = (props) => {
     example.xl && (details.xl = example.xl);
     example.xu && (details.xu = example.xu);
     example.xo && (details.xo = example.xo);
+    example.xa && (details.xa = example.xa);
+    example.xb && (details.xb = example.xb);
     example.conditionType === 'es' && (details.es = example.es);
     example.conditionType === 'it' && (details.it = example.it);
 
@@ -21,7 +23,7 @@ const SelectMenu = (props) => {
     let detailsString = '';
     for (let detail in details) {
       if (detail !== 'fx') {
-        detailsString += detail + ': ' + details[detail] + ' | ';
+        detailsString += ' | ' + detail + ': ' + details[detail];
       }
     }
 
