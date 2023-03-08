@@ -43,9 +43,21 @@ const Newton = () => {
       conditionType: 'it',
     },
     {
-      fx: '2sin(sqrt(x))-x',
+      fx: '2sin(sqrt(x)) - x',
       xo: 0.5,
       es: 0.001,
+      conditionType: 'es',
+    },
+    {
+      fx: '-12 - 21x + 18x^2 - 2.4x^3',
+      xo: 1,
+      es: 2,
+      conditionType: 'es',
+    },
+    {
+      fx: '-1 + 5.5x -4x^2 + 0.5x^3',
+      xo: 5,
+      es: 5,
       conditionType: 'es',
     },
   ];

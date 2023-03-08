@@ -3,31 +3,40 @@
 .footer {
     width: 100%;
     background-color: var(--color-1-80);
+    font-size: var(--font-size-0);
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1;
     display: flex;
     justify-content: center;
-    background-color: var(--color-1);
+    // backdrop-filter: blur(100px);
+    backdrop-filter: blur(15px);
 
-    // backdrop-filter: blur(15px);
-    // -webkit-backdrop-filter: blur(15px);
+    // -webkit-backdrop-filter: blur(60px);
+    // box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
     .header-container,
     .footer-container {
-        border-bottom: 1px solid var(--color-3-20);
         width: var(--page-width);
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: var(--space-50) var(--space-1);
+        border-bottom: 1px solid var(--color-3-20);
 
         .logo {
-            width: 230px;
+            width: 100px;
+            display: flex;
+
+            &:hover>svg {
+                fill: var(--color-3);
+            }
 
             svg {
+                display: flex;
+                transition: var(--transition-1);
                 width: 70px;
-                fill: var(--color-3);
+                fill: var(--color-3-60);
             }
         }
 
@@ -35,8 +44,14 @@
             font-size: var(--font-size-1);
             font-weight: var(--font-weight-2);
             color: var(--color-3-60);
+            transition: var(--transition-1);
+            cursor: pointer;
             margin: 0;
             padding: 0;
+
+            &:hover {
+                color: var(--color-3);
+            }
         }
 
         .header-buttons,
@@ -45,7 +60,7 @@
             justify-content: flex-end;
             align-items: center;
             // gap: var(--space-1);
-            width: 230px;
+            width: 100px;
 
             .header-button {
                 color: var(--color-3-60);
@@ -53,8 +68,16 @@
                 padding: var(--space-50);
                 cursor: pointer;
 
-                &:hover {
-                    color: var(--color-3);
+                &:hover>svg {
+                    fill: var(--color-3);
+                }
+
+                svg {
+                    display: flex;
+                    cursor: pointer;
+                    width: 20px;
+                    transition: var(--transition-1);
+                    fill: var(--color-3-60);
                 }
             }
         }
@@ -66,10 +89,10 @@
     bottom: 0;
     border-bottom: none;
 
-    // position: static;
     .footer-container {
         border-top: 1px solid var(--color-3-20);
         border-bottom: none;
+        height: 67px;
     }
 
     .copyright {
@@ -77,7 +100,8 @@
         flex-direction: row;
         align-items: center;
         gap: 5px;
-        font-size: 13px;
+        // font-size: 13px;
+        font-size: var(--font-size-0);
         font-weight: 300;
 
         .logo {
@@ -110,28 +134,56 @@
         flex-direction: row;
         align-items: center;
         justify-content: flex-end;
-        gap: 10px;
+        gap: var(--space-25);
 
-        .social-icon {
-            width: 20px;
-            height: 20px;
-            fill: var(--color-3-60);
-            transition: var(--transition-1);
-            cursor: pointer;
+        .social-icon-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-25);
 
-            &:hover {
+            &:hover>.social-icon {
                 fill: var(--color-3);
+            }
+
+            .social-icon {
+                width: 20px;
+                height: 20px;
+                fill: var(--color-3-60);
+                transition: var(--transition-1);
+                cursor: pointer;
             }
         }
     }
 }
 
-@media only screen and (max-width: 600px) {
-    .logo {
-        width: 150px;
-    }
-
-    .title {
-        display: none;
-    }
-}
+// @media only screen and (max-width: 600px) {
+//     .logo {
+//         width: 60px !important;
+//     }
+//     .header-buttons {
+//         width: 60px !important;
+//     }
+//     .title {
+//         font-size: var(--font-size-0) !important;
+//         // display: none;
+//     }
+//     .copyright {
+//         .logo {
+//             display: none !important;
+//         }
+//     }
+//     .footer-container {
+//         padding: var(--space-1) !important;
+//     }
+//     .social {
+//         width: auto !important;
+//     }
+//     .social-icon {
+//         width: 18px;
+//         height: 18px;
+//     }
+//     .version {
+//         display: none !important;
+//     }
+// }
