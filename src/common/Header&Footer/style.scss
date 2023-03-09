@@ -68,6 +68,10 @@
                 padding: var(--space-50);
                 cursor: pointer;
 
+                &:hover {
+                    color: var(--color-3);
+                }
+
                 &:hover>svg {
                     fill: var(--color-3);
                 }

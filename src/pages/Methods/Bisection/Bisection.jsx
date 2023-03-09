@@ -5,6 +5,7 @@ import { bisection } from '../Methods';
 import CustomInput from '../components/CustomInput/CustomInput';
 import CustomButton from '../components/CustomButton/CustomButton';
 import SelectMenu from '../../components/SelectMenu/SelectMenu';
+import CustomTable from '../components/CustomTable/CustomTable';
 
 // import mathjs
 // load math.js (using node.js)
@@ -242,33 +243,21 @@ const Bisection = () => {
             Solution
           </div>
           <div className="solution-table-container">
-            <table className="solution-table">
-              <tr>
-                <th>i</th>
-                <th>Xl</th>
-                <th>f(xl)</th>
-                <th>Xr</th>
-                <th>f(xr)</th>
-                <th>Xu</th>
-                <th>f(xu)</th>
-                <th>Ea</th>
-              </tr>
-
-              {data.map((item, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{item.i}</td>
-                    <td>{item.xl}</td>
-                    <td>{item.fxl}</td>
-                    <td className="xr">{item.xr}</td>
-                    <td>{item.fxr}</td>
-                    <td>{item.xu}</td>
-                    <td>{item.fxu}</td>
-                    <td>{item.ea}</td>
-                  </tr>
-                );
-              })}
-            </table>
+            <CustomTable
+              headers={[
+                { name: 'i' },
+                { name: 'X', sub: 'l' },
+                { name: 'f(xl)' },
+                { name: 'X', sub: 'r' },
+                { name: 'f(xr)' },
+                { name: 'X', sub: 'u' },
+                { name: 'f(xu)' },
+                { name: 'Ea' },
+              ]}
+              data={data}
+              priority={['i', 'xl', 'fxl', 'xr', 'fxr', 'xu', 'fxu', 'ea']}
+              highlight="xr"
+            />
           </div>
         </>
       )}

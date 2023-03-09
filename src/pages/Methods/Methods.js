@@ -13,10 +13,12 @@ const f = (fx, x) => {
 };
 
 const round = (value, decimals) => {
+  // TODO: Fix Rounding
   return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
 };
 
 export const bisection = (fx, xl, xu, es, it, conditionType) => {
+  console.clear();
   console.log('Bisection');
   let xr = 0;
   let xrOld = 0;
@@ -61,6 +63,7 @@ export const bisection = (fx, xl, xu, es, it, conditionType) => {
 };
 
 export const falsePosition = (fx, xl, xu, es, it, conditionType) => {
+  console.clear();
   console.log('falsePosition');
   let xr = 0;
   let xrOld = 0;
@@ -102,19 +105,6 @@ export const falsePosition = (fx, xl, xu, es, it, conditionType) => {
   return data;
 };
 
-const getSfp = (fx) => {
-  const xs = fx.match(/x\^\d|x/g);
-  let maxPower = 1;
-  xs.map((x) => {
-    const power = +x.match(/\d/g);
-    if (power !== null) {
-      maxPower = power > maxPower ? power : maxPower;
-    }
-  });
-  const fxNew = fx.replace(`x^${maxPower}`, `y^${maxPower}`) + '= 0';
-  return nerdamer(fxNew).solveFor('y').toString();
-};
-
 export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
   console.clear();
   console.log('SimpleFixedPoint');
@@ -123,6 +113,19 @@ export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
   let ea = 0;
   let i = 0;
   let data = [];
+
+  const getSfp = (fx) => {
+    const xs = fx.match(/x\^\d|x/g);
+    let maxPower = 1;
+    xs.map((x) => {
+      const power = +x.match(/\d/g);
+      if (power !== null) {
+        maxPower = power > maxPower ? power : maxPower;
+      }
+    });
+    const fxNew = fx.replace(`x^${maxPower}`, `y^${maxPower}`) + '= 0';
+    return nerdamer(fxNew).solveFor('y').toString();
+  };
 
   const sfp = getSfp(fx);
   console.log({ sfp: sfp });
@@ -147,16 +150,13 @@ export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
   return data;
 };
 
-export const newton = (fx, xo, es, it, conditionType) => {
+export const newton = (fx, x0, es, it, conditionType) => {
   console.clear();
   console.log('newton');
-  let xr = xo;
-  let xrOld = 0;
+  let x0Old = 0;
   let ea = 0;
   let i = 0;
   let data = [];
-
-  // Remove x from fx
 
   const NewFx = fx.replace(/\(|\)/g, '');
   console.log({ NewFx });
@@ -164,26 +164,27 @@ export const newton = (fx, xo, es, it, conditionType) => {
   const dfx = math.derivative(NewFx, 'x').toString();
 
   do {
-    // console.log({ fx, dfx, xr, xrOld, ea, i });
-    console.log({ xr, fx, fxS: f(fx, xr), dfx, dfxS: f(dfx, xr) });
-
+    // console.log({ fx, dfx, x0, x0Old, ea, i });
     if (i !== 0) {
-      xrOld = xr;
-      xr = xrOld - f(fx, xrOld) / f(dfx, xrOld);
+      x0Old = x0;
+      x0 = x0Old - f(fx, x0Old) / f(dfx, x0Old);
     }
 
-    if (xr !== 0) ea = Math.abs((xr - xrOld) / xr) * 100;
+    if (x0 !== 0) ea = Math.abs((x0 - x0Old) / x0) * 100;
+
+    console.log(i, x0, round(f(fx, x0), 5), f(dfx, x0), ea);
 
     data.push({
       i: i,
-      xi: round(xr, 5),
-      fxi: round(f(fx, xr), 5),
-      dfxi: round(f(dfx, xr), 5),
+      xi: round(x0, 5),
+      fxi: round(f(fx, x0), 5),
+      dfxi: round(f(dfx, x0), 5),
       ea: i === 0 ? '-' : round(ea, 3) + '%',
     });
     i++;
   } while (conditionType === 'es' ? ea > es : i < it + 1);
 
+  console.table(data);
   return data;
 };
 

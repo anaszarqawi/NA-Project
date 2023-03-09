@@ -31,15 +31,6 @@ const Secant = () => {
 
   const [errorMsg, setErrorMsg] = React.useState('');
 
-  const headers = [
-    { name: 'i' },
-    { name: 'X', sub: 'i-1' },
-    { name: 'f(xi-1)' },
-    { name: 'X', sub: 'i' },
-    { name: 'f(xi)' },
-    { name: 'ea' },
-  ];
-
   const examples = [
     {
       fx: '0.95x^3 - 5.9x^2 + 10.9x - 6',
@@ -232,7 +223,19 @@ const Secant = () => {
             Solution
           </div>
           <div className="solution-table-container">
-            <CustomTable headers={headers} data={data} priority={['i', 'xa', 'fxa', 'xb', 'fxb', 'ea']} />
+            <CustomTable
+              headers={[
+                { name: 'i' },
+                { name: 'X', sub: 'i-1' },
+                { name: 'f(xi-1)' },
+                { name: 'X', sub: 'i' },
+                { name: 'f(xi)' },
+                { name: 'ea' },
+              ]}
+              data={data}
+              priority={['i', 'xa', 'fxa', 'xb', 'fxb', 'ea']}
+              highlight="xb"
+            />
           </div>
         </>
       )}

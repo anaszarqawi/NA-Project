@@ -39,8 +39,8 @@ const SelectMenu = (props) => {
           <div className="select-menu-list">
             {chapter.methods.map((method) => {
               return (
-                <Link className="select-menu-item" to={method.name.toLowerCase().replace(/\s/g, '-') + '-method'}>
-                  {method.name + ' Method'}
+                <Link className="select-menu-item" to={method.toLowerCase().replace(/\s/g, '-') + '-method'}>
+                  {method + ' Method'}
                 </Link>
               );
             })}

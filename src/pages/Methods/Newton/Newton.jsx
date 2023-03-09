@@ -5,6 +5,7 @@ import { newton } from '../Methods';
 import CustomInput from '../components/CustomInput/CustomInput';
 import CustomButton from '../components/CustomButton/CustomButton';
 import SelectMenu from '../../components/SelectMenu/SelectMenu';
+import CustomTable from '../components/CustomTable/CustomTable';
 
 // import mathjs
 // load math.js (using node.js)
@@ -189,27 +190,12 @@ const Newton = () => {
             Solution
           </div>
           <div className="solution-table-container">
-            <table className="solution-table">
-              <tr>
-                <th>i</th>
-                <th>xi</th>
-                <th>f(xi)</th>
-                <th>f'(xi)</th>
-                <th>Ea</th>
-              </tr>
-
-              {data.map((item, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{item.i}</td>
-                    <td className="xr">{item.xi}</td>
-                    <td>{item.fxi}</td>
-                    <td>{item.dfxi}</td>
-                    <td>{item.ea}</td>
-                  </tr>
-                );
-              })}
-            </table>
+            <CustomTable
+              headers={[{ name: 'i' }, { name: 'X', sub: 'i' }, { name: 'f(xi)' }, { name: "f'(xi)" }, { name: 'Ea' }]}
+              data={data}
+              priority={['i', 'xi', 'fxi', 'dfxi', 'ea']}
+              highlight="xi"
+            />
           </div>
         </>
       )}
