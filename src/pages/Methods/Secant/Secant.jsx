@@ -5,6 +5,7 @@ import { secant } from '../Methods';
 import CustomInput from '../components/CustomInput/CustomInput';
 import CustomButton from '../components/CustomButton/CustomButton';
 import SelectMenu from '../../components/SelectMenu/SelectMenu';
+import CustomTable from '../components/CustomTable/CustomTable';
 
 // import mathjs
 // load math.js (using node.js)
@@ -222,37 +223,19 @@ const Secant = () => {
             Solution
           </div>
           <div className="solution-table-container">
-            <table className="solution-table">
-              <tr>
-                <th>i</th>
-                <th>
-                  X<sub>i-1</sub>
-                </th>
-                <th>
-                  f(x<sub>i-1</sub>)
-                </th>
-                <th>
-                  x<sub>i</sub>
-                </th>
-                <th>
-                  f(x<sub>i</sub>)
-                </th>
-                <th>Ea%</th>
-              </tr>
-
-              {data.map((item, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{item.i}</td>
-                    <td>{item.xa}</td>
-                    <td>{item.fxa}</td>
-                    <td>{item.xb}</td>
-                    <td>{item.fxb}</td>
-                    <td>{item.ea}</td>
-                  </tr>
-                );
-              })}
-            </table>
+            <CustomTable
+              headers={[
+                { name: 'i' },
+                { name: 'X', sub: 'i-1' },
+                { name: 'f(xi-1)' },
+                { name: 'X', sub: 'i' },
+                { name: 'f(xi)' },
+                { name: 'ea' },
+              ]}
+              data={data}
+              priority={['i', 'xa', 'fxa', 'xb', 'fxb', 'ea']}
+              highlight="xb"
+            />
           </div>
         </>
       )}

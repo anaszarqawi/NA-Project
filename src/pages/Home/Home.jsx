@@ -6,29 +6,17 @@ const Home = () => {
   const Chapters = [
     {
       name: 'Chapter 1',
-      methods: [
-        {
-          name: 'Bisection',
-        },
-        {
-          name: 'False Position',
-        },
-        {
-          name: 'Simple Fixed Point',
-        },
-        {
-          name: 'Newton Raphson',
-        },
-        {
-          name: 'Secant',
-        },
-      ],
+      methods: ['Bisection', 'False Position', 'Simple Fixed Point', 'Newton Raphson', 'Secant'],
+    },
+    {
+      name: 'Chapter 2',
+      methods: ['Gauss Elimination', 'Gauss Jordan'],
     },
   ];
 
   return (
     <div className="page">
-      <div className="center-title">Choose The Method :)</div>
+      <div className="center-title">Choose The Method 👀</div>
       <div className="chapters">
         <SelectMenu chapters={Chapters} type="methods" />
       </div>

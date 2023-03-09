@@ -23,7 +23,7 @@ const SelectMenu = (props) => {
     let detailsString = '';
     for (let detail in details) {
       if (detail !== 'fx') {
-        detailsString += ' | ' + detail + ': ' + details[detail];
+        detailsString += (detail === details[0] ? ' | ' : '') + detail + ': ' + details[detail];
       }
     }
 
@@ -39,8 +39,8 @@ const SelectMenu = (props) => {
           <div className="select-menu-list">
             {chapter.methods.map((method) => {
               return (
-                <Link className="select-menu-item" to={method.name.toLowerCase().replace(/\s/g, '-') + '-method'}>
-                  {method.name + ' Method'}
+                <Link className="select-menu-item" to={method.toLowerCase().replace(/\s/g, '-') + '-method'}>
+                  {method + ' Method'}
                 </Link>
               );
             })}
