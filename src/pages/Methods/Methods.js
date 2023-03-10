@@ -5,6 +5,11 @@ import 'nerdamer/Algebra.js';
 import 'nerdamer/Calculus.js';
 import 'nerdamer/Solve.js';
 
+import algebra from 'algebra.js';
+var Fraction = algebra.Fraction;
+var Expression = algebra.Expression;
+var Equation = algebra.Equation;
+
 const config = {};
 const math = create(all, config);
 
@@ -105,7 +110,7 @@ export const falsePosition = (fx, xl, xu, es, it, conditionType) => {
   return data;
 };
 
-export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
+export const simpleFixedPoint = (sfp, xo, es, it, conditionType) => {
   console.clear();
   console.log('SimpleFixedPoint');
   let xr = xo;
@@ -123,12 +128,18 @@ export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
         maxPower = power > maxPower ? power : maxPower;
       }
     });
-    const fxNew = fx.replace(`x^${maxPower}`, `y^${maxPower}`) + '= 0';
-    return nerdamer(fxNew).solveFor('y').toString();
+    const fxNew = fx.replace(`x^${maxPower}`, `y^${maxPower}`);
+    const expr1 = algebra.parse(fxNew);
+    var eq = new Equation(expr1, 0);
+    var yAnswer = eq.solveFor('y');
+
+    console.log({ eq: eq, yAnswer: yAnswer });
+    // return nerdamer(fx).solveFor('x').toString();
+    return yAnswer.toString();
   };
 
-  const sfp = getSfp(fx);
-  console.log({ sfp: sfp });
+  // const sfp = getSfp(fx);
+  // console.log({ sfp: sfp });
 
   do {
     if (i !== 0) {
@@ -141,7 +152,7 @@ export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
     data.push({
       i: i,
       xi: round(xr, 5),
-      fxi: round(f(fx, xr), 5),
+      fxi: round(f(sfp, xr), 5),
       ea: i === 0 ? '-' : round(ea, 2) + '%',
     });
     i++;
