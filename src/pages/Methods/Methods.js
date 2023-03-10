@@ -5,6 +5,8 @@ import 'nerdamer/Algebra.js';
 import 'nerdamer/Calculus.js';
 import 'nerdamer/Solve.js';
 
+import algebra from 'algebra.js';
+
 const config = {};
 const math = create(all, config);
 
@@ -124,6 +126,9 @@ export const simpleFixedPoint = (fx, xo, es, it, conditionType) => {
       }
     });
     const fxNew = fx.replace(`x^${maxPower}`, `y^${maxPower}`) + '= 0';
+    const eq = algebra.parse(fxNew);
+
+    console.log({ eq: eq.toString() });
     return nerdamer(fxNew).solveFor('y').toString();
   };
 
