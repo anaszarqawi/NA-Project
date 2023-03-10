@@ -22,14 +22,16 @@ const CustomTable = (props) => {
         })}
       </tr>
 
-      {props.data.map((item, index) => {
+      {props.data.map((item, i) => {
         return (
-          <tr key={index}>
-            {props.priority.map((priority) => {
+          <tr key={i}>
+            {props.priority.map((priority, j) => {
               if (priority === 'i') return <td className="i-col">{item[priority]}</td>;
               else
                 return (
-                  <td className={props.highlight === priority && index == props.data.length - 1 ? 'highlight' : ''}>
+                  <td
+                    key={j}
+                    className={props.highlight === priority && i === props.data.length - 1 ? 'highlight' : ''}>
                     {item[priority]}
                   </td>
                 );
