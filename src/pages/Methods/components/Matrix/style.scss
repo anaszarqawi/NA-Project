@@ -1,0 +1,44 @@
+.matrix-container {
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .matrix-label {
+        font-size: var(--font-size-1);
+        color: var(--color-3);
+        margin-right: var(--space-1);
+    }
+
+    .matrix,
+    .matrix-solution {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-1);
+        background-color: var(--color-2);
+        padding: var(--space-1);
+        border-radius: var(--border-radius);
+        border: 1px solid var(--color-3-20);
+        border-right: none;
+
+        .matrix-row {
+            display: flex;
+            flex-direction: row;
+            gap: var(--space-1);
+
+            .matrix-cell {
+                width: 40px;
+                text-align: center;
+            }
+        }
+    }
+
+    .matrix-solution {
+        border-right: 1px solid var(--color-3-20);
+        border-radius: 0 var(--border-radius) var(--border-radius) 0 !important;
+    }
+
+    .withSolution {
+        border-radius: var(--border-radius) 0 0 var(--border-radius) !important;
+    }
+}
