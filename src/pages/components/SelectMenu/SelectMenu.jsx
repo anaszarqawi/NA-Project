@@ -23,12 +23,11 @@ const SelectMenu = (props) => {
     let detailsString = '';
     for (let detail in details) {
       if (detail !== 'fx') {
-        detailsString += (detail === details[0] ? ' | ' : '') + detail + ': ' + details[detail];
+        detailsString += ' | ' + detail + ': ' + details[detail];
       }
     }
 
-    console.log(details);
-    return detailsString;
+    return detailsString.slice(3);
   };
 
   if (props.type === 'methods') {

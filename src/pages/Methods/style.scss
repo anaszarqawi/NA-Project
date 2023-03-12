@@ -1,0 +1,18 @@
+.solution-container {
+    padding-top: var(--space-3);
+}
+
+.steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin: var(--space-2) 0;
+}
+
+.inline-step {
+    font-size: var(--font-size-1);
+}
+
+.rule {
+    font-weight: var(--font-weight-4);
+}

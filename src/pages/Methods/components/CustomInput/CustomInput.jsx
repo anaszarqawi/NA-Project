@@ -16,10 +16,12 @@ const CustomInput = (props) => {
             }}></div>
         </div>
       )}
-      <div className="custom-input-title">
-        {props.label}
-        {props.sub ? <sub>{props.sub}</sub> : null}
-      </div>
+      {props.labelPosition === undefined && (
+        <div className="custom-input-title">
+          {props.label}
+          {props.sub ? <sub>{props.sub}</sub> : null}
+        </div>
+      )}
       {props.withSelect ? (
         <select
           className="custom-select-input"
@@ -34,8 +36,8 @@ const CustomInput = (props) => {
       <input
         className={`custom-input-field ${props.isBlock && 'block'}`}
         type={props.type}
-        placeholder={props.placeholder}
-        value={props.value}
+        placeholder={props.placeholder ? props.placeholder : null}
+        defaultValue={props.value}
         onChange={
           props.onChange
             ? (e) => {
@@ -47,6 +49,12 @@ const CustomInput = (props) => {
             : null
         }
       />
+      {props.labelPosition === 'right' ? (
+        <div className="custom-input-title">
+          {props.label}
+          {props.sub ? <sub>{props.sub}</sub> : null}
+        </div>
+      ) : null}
     </div>
   );
 };

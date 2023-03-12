@@ -12,6 +12,7 @@ import FalsePosition from '../pages/Methods/FalsePosition/FalsePosition';
 import SimpleFixedPoint from '../pages/Methods/SimpleFixedPoint/SimpleFixedPoint';
 import Newton from '../pages/Methods/Newton/Newton';
 import Secant from '../pages/Methods/Secant/Secant';
+import GaussElimination from '../pages/Methods/GaussElimination/GaussElimination';
 
 const AppRouter = () => {
   const routes = [
@@ -38,6 +39,10 @@ const AppRouter = () => {
     {
       path: '/secant-method',
       component: <Secant />,
+    },
+    {
+      path: '/gauss-elimination-method',
+      component: <GaussElimination />,
     },
   ];
 
