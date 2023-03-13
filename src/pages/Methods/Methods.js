@@ -235,3 +235,89 @@ export const secant = (fx, xa, xb, es, it, conditionType) => {
 
   return data;
 };
+
+export const gaussElimination = (matrix) => {
+  const [x1_1, x2_1, x3_1, sol_1] = matrix[0];
+  const [x1_2, x2_2, x3_2, sol_2] = matrix[1];
+  const [x1_3, x2_3, x3_3, sol_3] = matrix[2];
+
+  const m21 = x1_2 / x1_1;
+  const m31 = x1_3 / x1_1;
+
+  const matrix_2 = [
+    [x1_1, x2_1, x3_1, sol_1],
+    [x1_2 - m21 * x1_1, x2_2 - m21 * x2_1, x3_2 - m21 * x3_1, sol_2 - m21 * sol_1],
+    [x1_3 - m31 * x1_1, x2_3 - m31 * x2_1, x3_3 - m31 * x3_1, sol_3 - m31 * sol_1],
+  ];
+
+  const m32 = matrix_2[2][1] / matrix_2[1][1];
+
+  const matrix_3 = [
+    [x1_1, x2_1, x3_1, sol_1],
+    [matrix_2[1][0], matrix_2[1][1], matrix_2[1][2], matrix_2[1][3]],
+    [
+      matrix_2[2][0] - m32 * matrix_2[1][0],
+      matrix_2[2][1] - m32 * matrix_2[1][1],
+      matrix_2[2][2] - m32 * matrix_2[1][2],
+      matrix_2[2][3] - m32 * matrix_2[1][3],
+    ],
+  ];
+
+  const x3 = matrix_3[2][3] / matrix_3[2][2];
+  const x2 = (matrix_3[1][3] - matrix_3[1][2] * x3) / matrix_3[1][1];
+  const x1 = (matrix_3[0][3] - matrix_3[0][2] * x3 - matrix_3[0][1] * x2) / matrix_3[0][0];
+
+  console.log({ x1, x2, x3 });
+
+  const steps = [
+    {
+      matrix_1: matrix,
+      m21: {
+        equation: `${x1_2} / ${x1_1} = ${m21}`,
+      },
+      m31: {
+        equation: `${x1_3} / ${x1_1} = ${m31}`,
+      },
+      R2: {
+        steps: [
+          `${x1_2} - ${m21} * ${x1_1} = ${matrix_2[1][0]}`,
+          `${x2_2} - ${m21} * ${x2_1} = ${matrix_2[1][1]}`,
+          `${x3_2} - ${m21} * ${x3_1} = ${matrix_2[1][2]}`,
+          `${sol_2} - ${m21} * ${sol_1} = ${matrix_2[1][3]}`,
+        ],
+      },
+      R3: {
+        steps: [
+          `${x1_3} - ${m31} * ${x1_1} = ${matrix_2[2][0]}`,
+          `${x2_3} - ${m31} * ${x2_1} = ${matrix_2[2][1]}`,
+          `${x3_3} - ${m31} * ${x3_1} = ${matrix_2[2][2]}`,
+          `${sol_3} - ${m31} * ${sol_1} = ${matrix_2[2][3]}`,
+        ],
+      },
+    },
+    {
+      matrix_2,
+      m32: {
+        equation: `${matrix_2[2][1]} / ${matrix_2[1][1]} = ${m32}`,
+      },
+      R3: {
+        steps: [
+          `${matrix_2[2][0]} - ${m32} * ${matrix_2[1][0]} = ${matrix_3[2][0]}`,
+          `${matrix_2[2][1]} - ${m32} * ${matrix_2[1][1]} = ${matrix_3[2][1]}`,
+          `${matrix_2[2][2]} - ${m32} * ${matrix_2[1][2]} = ${matrix_3[2][2]}`,
+          `${matrix_2[2][3]} - ${m32} * ${matrix_2[1][3]} = ${matrix_3[2][3]}`,
+        ],
+      },
+    },
+    {
+      matrix_3,
+      xsValues: [
+        { name: 'x', sub: 1, value: x1 },
+        { name: 'x', sub: 2, value: x2 },
+        { name: 'x', sub: 3, value: x3 },
+      ],
+    },
+  ];
+
+  return steps;
+};
