@@ -4,22 +4,13 @@ import CustomInput from '../components/CustomInput/CustomInput';
 import CustomButton from '../components/CustomButton/CustomButton';
 import SelectMenu from '../../components/SelectMenu/SelectMenu';
 import Matrix from '../components/Matrix/Matrix';
+import XsValues from '../components/XsValues/XsValues';
+
+import { gaussElimination } from '../Methods';
 
 const GaussElimination = () => {
   const myRef = React.useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
-
-  const [matrix, setMatrix] = React.useState([
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-  ]);
-
-  const [matrix_2, setMatrix_2] = React.useState([
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
-  ]);
 
   const [x1_1, setX1_1] = React.useState(0);
   const [x2_1, setX2_1] = React.useState(0);
@@ -36,130 +27,76 @@ const GaussElimination = () => {
   const [x3_3, setX3_3] = React.useState(0);
   const [sol_3, setSol_3] = React.useState(0);
 
-  const [m21, setM21] = React.useState(0);
-  const [m31, setM31] = React.useState(0);
-  const [m32, setM32] = React.useState(0);
-
   const [errorMsg, setErrorMsg] = React.useState('');
   const [showSolution, setShowSolution] = React.useState(false);
+  const [steps, setSteps] = React.useState([]);
 
   const examples = [
     {
-      fx: '-2 + 7x - 5x^2 + 6x^3',
-      xl: 0,
-      xu: 1,
-      conditionType: 'es',
-      es: 10,
-    },
-    {
-      fx: '4x^3 - 6x^2 + 7x - 2.3',
-      xl: 0,
-      xu: 1,
-      conditionType: 'es',
-      es: 1,
-    },
-    {
-      fx: 'x^3 - 4x^2 - 8x -1',
-      xl: 2,
-      xu: 3,
-      conditionType: 'es',
-      es: 0.5,
-    },
-    {
-      fx: '-0.6x^2 + 2.4x + 5.5',
-      xl: 5,
-      xu: 10,
-      conditionType: 'es',
-      es: 0.5,
-    },
-    {
-      fx: '-13 - 20x + 19x^2 - 3x^3',
-      xl: -1,
-      xu: 0,
-      conditionType: 'it',
-      it: 10,
-    },
-    {
-      fx: 'x^3 + 3x - 5',
-      xl: 1,
-      xu: 2,
-      conditionType: 'es',
-      es: 2,
-    },
-    {
-      fx: 'x^4 - 8x^3 - 35x^2 + 450x - 1001',
-      xl: 4.5,
-      xu: 6,
-      conditionType: 'es',
-      es: 0.1,
-    },
-    {
-      fx: 'x^5 - x^4 - x^3 - 1',
-      xl: 1,
-      xu: 2,
-      conditionType: 'es',
-      es: 0.5,
-    },
-    {
-      fx: 'x^3 + 2x^2 + 10x - 20',
-      xl: 1,
-      xu: 2,
-      conditionType: 'es',
-      es: 4,
-    },
-    {
-      fx: '-26 + 82.3x - 88x^2 + 45.4x^3 - 9x^4 + 0.65x^5',
-      xl: 0.5,
-      xu: 1,
-      conditionType: 'es',
-      es: 0.2,
+      matrix: {
+        x1_1: 2,
+        x2_1: 1,
+        x3_1: 1,
+        sol_1: 8,
+
+        x1_2: 4,
+        x2_2: 1,
+        x3_2: 0,
+        sol_2: 11,
+
+        x1_3: -2,
+        x2_3: 2,
+        x3_3: 1,
+        sol_3: 3,
+      },
     },
   ];
 
-  React.useEffect(() => {
-    setMatrix([
+  const solution = () => {
+    if (x1_1 === 0 && x2_1 === 0 && x3_1 === 0) {
+      setErrorMsg('Please enter the first Equation');
+      return;
+    }
+    if (x1_2 === 0 && x2_2 === 0 && x3_2 === 0) {
+      setErrorMsg('Please enter the second Equation');
+      return;
+    }
+
+    if (x1_3 === 0 && x2_3 === 0 && x3_3 === 0) {
+      setErrorMsg('Please enter the third Equation');
+      return;
+    }
+
+    if (sol_1 === 0) {
+      setErrorMsg('Please enter the solution of the first Equation');
+      return;
+    }
+
+    if (sol_2 === 0) {
+      setErrorMsg('Please enter the solution of the second Equation');
+      return;
+    }
+
+    if (sol_3 === 0) {
+      setErrorMsg('Please enter the solution of the third Equation');
+      return;
+    }
+    console.clear();
+
+    const matrix = [
       [x1_1, x2_1, x3_1, sol_1],
       [x1_2, x2_2, x3_2, sol_2],
       [x1_3, x2_3, x3_3, sol_3],
-    ]);
+    ];
+    console.log(matrix);
+    const result = gaussElimination(matrix);
 
-    setMatrix_2([
-      [x1_1, x2_1, x3_1, sol_1],
-      [
-        x1_2 - (x1_2 / x1_1) * x1_1,
-        x2_2 - (x1_2 / x1_1) * x2_1,
-        x3_2 - (x1_2 / x1_1) * x3_1,
-        sol_2 - (x1_2 / x1_1) * sol_1,
-      ],
-      [
-        x1_3 - (x1_3 / x1_1) * x1_1,
-        x2_3 - (x1_3 / x1_1) * x2_1,
-        x3_3 - (x1_3 / x1_1) * x3_1,
-        sol_3 - (x1_3 / x1_1) * sol_1,
-      ],
-    ]);
+    setSteps(result);
 
-    setM21(x1_2 / x1_1);
-    setM31(x1_3 / x1_1);
-  }, [x1_1, x2_1, x3_1, x1_2, x2_2, x3_2, x1_3, x2_3, x3_3, sol_1, sol_2, sol_3]);
-
-  //   const gaussElimination = () => {
-  //     let n = matrix.length;
-  //     let x = new Array(n);
-
-  //     for (let i = 0; i < n; i++)
-  //       for (let j = 0; j < n; j++)
-  //         if (j !== i) {
-  //           let ratio = matrix[j][i] / matrix[i][i];
-  //           for (let k = 0; k < n + 1; k++) matrix[j][k] = matrix[j][k] - ratio * matrix[i][k];
-  //         }
-
-  //     for (let i = 0; i < n; i++) x[i] = matrix[i][n] / matrix[i][i];
-
-  //     console.table(x);
-  //   };
-
-  const gaussElimination = () => {};
+    console.log(steps);
+    setErrorMsg('');
+    setShowSolution(true);
+  };
 
   const clear = () => {
     setX1_1(0);
@@ -175,11 +112,41 @@ const GaussElimination = () => {
     setX3_3(0);
     setSol_3(0);
 
-    setMatrix([
-      [0, 0, 0],
-      [0, 0, 0],
-      [0, 0, 0],
-    ]);
+    setShowSolution(false);
+  };
+
+  const setExample = (example) => {
+    setX1_1(example.matrix.x1_1);
+    setX2_1(example.matrix.x2_1);
+    setX3_1(example.matrix.x3_1);
+    setSol_1(example.matrix.sol_1);
+    setX1_2(example.matrix.x1_2);
+    setX2_2(example.matrix.x2_2);
+    setX3_2(example.matrix.x3_2);
+    setSol_2(example.matrix.sol_2);
+    setX1_3(example.matrix.x1_3);
+    setX2_3(example.matrix.x3_3);
+    setX3_3(example.matrix.x3_3);
+    setSol_3(example.matrix.sol_3);
+
+    const matrix = [
+      [example.matrix.x1_1, example.matrix.x2_1, example.matrix.x3_1, example.matrix.sol_1],
+      [example.matrix.x1_2, example.matrix.x2_2, example.matrix.x3_2, example.matrix.sol_2],
+      [example.matrix.x1_3, example.matrix.x2_3, example.matrix.x3_3, example.matrix.sol_3],
+    ];
+
+    const result = gaussElimination(matrix);
+
+    setSteps(result);
+
+    console.log(steps);
+    setErrorMsg('');
+    setShowSolution(true);
+  };
+
+  const isOne = (value) => {
+    if (value === 1) return;
+    return value;
   };
 
   return (
@@ -208,76 +175,92 @@ const GaussElimination = () => {
       </div>
       {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
       <div className="buttons-container">
-        <CustomButton label="Calculate" onClick={gaussElimination} type="primary" />
+        <CustomButton label="Calculate" onClick={solution} type="primary" />
         <CustomButton label="Clear" onClick={clear} type="secondary" />
       </div>
-      {/* {showSolution && ( */}
-      {1 && (
+      {showSolution && steps.length > 0 && (
         <>
           <hr className="line-divider"></hr>
           <div ref={myRef} className="center-title" name="solution">
             Solution
           </div>
           <div className="solution-container">
-            <Matrix matrix={matrix} withSolution={true} label="[A/B] = " />
+            <Matrix matrix={steps[0].matrix_1} withSolution={true} label="[A/B] = " />
             <div className="steps-container">
               <div className="inline-step rule">
                 m<sub>rc</sub> = x<sub>rc</sub> / Pivot Element of R<sub>n</sub>
               </div>
               <div className="inline-step">
-                m<sub>21</sub> = {x1_2} / {x1_1} = {x1_2 / x1_1}
+                m<sub>21</sub> = {steps[0].m21.equation}
               </div>
               <div className="inline-step">
-                m<sub>31</sub> = {x1_3} / {x1_1} = {x1_3 / x1_1}
+                m<sub>31</sub> = {steps[0].m31.equation}
               </div>
             </div>
             <div className="steps-container">
               <div className="inline-step rule">
-                R<sub>2</sub> - (m<sub>21</sub> * R<sub>1</sub>) = R<sub>2</sub>
+                R<sub>2</sub> = R<sub>2</sub> - (m<sub>21</sub> * R<sub>1</sub>)
               </div>
-              <div className="inline-step">
-                {x1_2} - ({x1_2 / x1_1} * {x1_1}) = {x1_2 - (x1_2 / x1_1) * x1_1}
+              {steps[0].R2.steps.map((step, i) => {
+                return (
+                  <div className="inline-step" key={i}>
+                    R<sub>2{i}</sub> = {step}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="steps-container">
+              <div className="inline-step rule">
+                R<sub>3</sub> = R<sub>3</sub> - (m<sub>31</sub> * R<sub>1</sub>)
               </div>
+              {steps[0].R3.steps.map((step, i) => {
+                return (
+                  <div className="inline-step" key={i}>
+                    R<sub>3{i}</sub> = {step}
+                  </div>
+                );
+              })}
+            </div>
+            <Matrix matrix={steps[1].matrix_2} withSolution={true} label="[A/B] = " />
+            <div className="steps-container">
               <div className="inline-step">
-                {x2_2} - ({x1_2 / x1_1} * {x2_1}) = {x2_2 - (x1_2 / x1_1) * x2_1}
-              </div>
-              <div className="inline-step">
-                {x3_2} - ({x1_2 / x1_1} * {x3_1}) = {x3_2 - (x1_2 / x1_1) * x3_1}
-              </div>
-              <div className="inline-step">
-                {sol_2} - ({x1_2 / x1_1} * {sol_1}) = {sol_2 - (x1_2 / x1_1) * sol_1}
+                m<sub>32</sub> = {steps[1].m32.equation}
               </div>
             </div>
             <div className="steps-container">
               <div className="inline-step rule">
-                R<sub>3</sub> - (m<sub>31</sub> * R<sub>1</sub>) = R<sub>3</sub>
+                R<sub>3</sub> = R<sub>3</sub> - (m<sub>32</sub> * R<sub>2</sub>)
               </div>
-              <div className="inline-step">
-                {x1_3} - ({x1_3 / x1_1} * {x1_1}) = {x1_3 - (x1_3 / x1_1) * x1_1}
-              </div>
-              <div className="inline-step">
-                {x2_3} - ({x1_3 / x1_1} * {x2_1}) = {x2_3 - (x1_3 / x1_1) * x2_1}
-              </div>
-              <div className="inline-step">
-                {x3_3} - ({x1_3 / x1_1} * {x3_1}) = {x3_3 - (x1_3 / x1_1) * x3_1}
-              </div>
-              <div className="inline-step">
-                {sol_3} - ({x1_3 / x1_1} * {sol_1}) = {sol_3 - (x1_3 / x1_1) * sol_1}
-              </div>
+              {steps[1].R3.steps.map((step, i) => {
+                return (
+                  <div className="inline-step" key={i}>
+                    R<sub>3{i}</sub> = {step}
+                  </div>
+                );
+              })}
             </div>
-            <Matrix matrix={matrix_2} withSolution={true} label="[A/B] = " />
+            <Matrix matrix={steps[2].matrix_3} withSolution={true} label="[A/B] = " />
             <div className="steps-container">
-              <div className="inline-step">
-                {/* m<sub>32</sub> = {matrix_2[3][2]} / {matrix_2[2][2]} = {matrix_2[3][2] / matrix_2[2][2]} */}
+              <div className="inline-step rule">
+                {isOne(steps[2].matrix_3[0][0])}x<sub>1</sub> + {isOne(steps[2].matrix_3[0][1])}x<sub>2</sub> +{' '}
+                {isOne(steps[2].matrix_3[0][2])}x<sub>3</sub> = {steps[2].matrix_3[0][3]}
+              </div>
+              <div className="inline-step rule">
+                {isOne(steps[2].matrix_3[1][1])}x<sub>2</sub> + {isOne(steps[2].matrix_3[1][2])}x<sub>3</sub> ={' '}
+                {steps[2].matrix_3[1][3]}
+              </div>
+              <div className="inline-step rule">
+                {isOne(steps[2].matrix_3[2][2])}x<sub>3</sub> = {steps[2].matrix_3[2][3]}
               </div>
             </div>
+            <XsValues values={steps[2].xsValues} />
           </div>
         </>
       )}
       <hr className="line-divider"></hr>
       <div className="center-title">Examples</div>
       <div className="examples-container">
-        <SelectMenu examples={examples} type="examples" />
+        <SelectMenu examples={examples} type="examples" setter={setExample} />
       </div>
     </div>
   );

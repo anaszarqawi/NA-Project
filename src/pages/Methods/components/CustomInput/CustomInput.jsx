@@ -37,7 +37,7 @@ const CustomInput = (props) => {
         className={`custom-input-field ${props.isBlock && 'block'}`}
         type={props.type}
         placeholder={props.placeholder ? props.placeholder : null}
-        defaultValue={props.value}
+        value={props.value}
         onChange={
           props.onChange
             ? (e) => {
