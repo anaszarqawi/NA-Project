@@ -60,6 +60,7 @@ const SelectMenu = (props) => {
                 onClick={() => {
                   // setCurrentExample(example);
                   props.setter(example);
+                  console.log(example);
                 }}>
                 <div className="select-menu-item-title">{example.fx}</div>
                 <div className="select-menu-item-details">
