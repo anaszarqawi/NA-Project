@@ -9,10 +9,40 @@
     margin: var(--space-2) 0;
 }
 
+.equations-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin: var(--space-1) 0;
+}
+
+.inline-statement {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-1);
+    align-items: center;
+    margin-bottom: var(--space-1);
+}
+
 .inline-step {
     font-size: var(--font-size-1);
 }
 
 .rule {
     font-weight: var(--font-weight-4);
+    padding: var(--space-1);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    border: 1px solid var(--color-3-20);
+    border-left: none;
+    padding-left: 0;
+    margin-top: var(--space-1);
+    width: fit-content;
+}
+
+.subtitle {
+    font-size: var(--font-size-3);
+    font-weight: var(--font-weight-4);
+    margin: var(--space-2) 0;
+    margin-top: var(--space-3);
+    color: var(--color-3-60);
 }

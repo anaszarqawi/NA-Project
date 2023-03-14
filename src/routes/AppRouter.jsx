@@ -44,6 +44,10 @@ const AppRouter = () => {
       path: '/gauss-elimination-method',
       component: <GaussElimination />,
     },
+    {
+      path: '/lu-decomposition-method',
+      component: <GaussElimination />,
+    },
   ];
 
   return (

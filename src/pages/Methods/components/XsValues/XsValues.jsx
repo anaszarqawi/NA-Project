@@ -6,7 +6,7 @@ const XsValues = (props) => {
     <div className="xs-values-container">
       {props.values.map((x, i) => {
         return (
-          <div className="x-value rule">
+          <div className="x-value">
             {x.name}
             <sub>{x.sub}</sub> = {x.value}
           </div>

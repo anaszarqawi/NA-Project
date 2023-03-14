@@ -10,7 +10,7 @@ const Home = () => {
     },
     {
       name: 'Chapter 2',
-      methods: ['Gauss Elimination', 'Gauss Jordan'],
+      methods: ['Gauss Elimination', 'LU Decomposition'],
     },
   ];
 

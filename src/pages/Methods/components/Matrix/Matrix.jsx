@@ -4,7 +4,7 @@ import './style.scss';
 const Matrix = (props) => {
   return (
     <div className="matrix-container">
-      <div className="matrix-label">{props.label}</div>
+      {props.label && <div className="matrix-label">{props.label}</div>}
       <div className={`matrix ${props.withSolution ? 'withSolution' : ''}`}>
         {props.matrix.map((row, i) => {
           return (

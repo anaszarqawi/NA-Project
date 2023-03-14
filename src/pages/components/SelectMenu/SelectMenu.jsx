@@ -8,6 +8,13 @@ import { useX } from '../../../context/xContext';
 const SelectMenu = (props) => {
   const { setCurrentExample, currentExample } = useX();
 
+  const isOne = (value) => {
+    if (value === 1) return ' + ';
+    if (value === -1) return ' - ';
+    if (value > 0) return ' + ' + value;
+    if (value < 0) return ' - ' + Math.abs(value);
+  };
+
   const generateDetails = (example) => {
     let details = {};
     example.fx && (details.fx = example.fx);
@@ -18,9 +25,11 @@ const SelectMenu = (props) => {
     example.xb && (details.xb = example.xb);
     example.conditionType === 'es' && (details.es = example.es);
     example.conditionType === 'it' && (details.it = example.it);
+    example.equations && (details.equations = example.equations);
 
     // create string and add '|' between each detail
     let detailsString = '';
+
     for (let detail in details) {
       if (detail !== 'fx') {
         detailsString += ' | ' + detail + ': ' + details[detail];
@@ -56,16 +65,43 @@ const SelectMenu = (props) => {
           {props.examples.map((example) => {
             return (
               <div
-                className="select-menu-item"
+                className={`select-menu-item ${example.matrix ? 'equations' : ''}`}
                 onClick={() => {
                   // setCurrentExample(example);
                   props.setter(example);
                   console.log(example);
                 }}>
-                <div className="select-menu-item-title">{example.fx}</div>
-                <div className="select-menu-item-details">
-                  <div className="select-menu-item-detail">{generateDetails(example)}</div>
-                </div>
+                {example.matrix ? (
+                  example.matrix.map((equation) => {
+                    return (
+                      <div className="select-menu-item-equation">
+                        {equation.x1 !== 0 && (
+                          <>
+                            {equation.x1 > 0 ? equation.x1 : equation.x1}X<sub>1</sub>
+                          </>
+                        )}
+                        {equation.x2 !== 0 && (
+                          <>
+                            {isOne(equation.x2)}X<sub>2</sub>
+                          </>
+                        )}
+                        {equation.x3 !== 0 && (
+                          <>
+                            {isOne(equation.x3)}X<sub>3</sub>
+                          </>
+                        )}
+                        {` = ${equation.sol}`}
+                      </div>
+                    );
+                  })
+                ) : (
+                  <>
+                    <div className="select-menu-item-title">{example.fx}</div>
+                    <div className="select-menu-item-details">
+                      <div className="select-menu-item-detail">{generateDetails(example)}</div>
+                    </div>
+                  </>
+                )}
               </div>
             );
           })}
