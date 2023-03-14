@@ -183,6 +183,7 @@ const Bisection = () => {
     setErrorMsg('');
     setShowSolution(true);
     setData(result);
+    executeScroll();
   };
 
   return (

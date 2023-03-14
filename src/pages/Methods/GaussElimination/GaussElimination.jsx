@@ -5,8 +5,9 @@ import CustomButton from '../components/CustomButton/CustomButton';
 import SelectMenu from '../../components/SelectMenu/SelectMenu';
 import Matrix from '../components/Matrix/Matrix';
 import XsValues from '../components/XsValues/XsValues';
+import Equations from '../components/Equations/Equations';
 
-import { gaussElimination } from '../Methods';
+import { gaussElimination, luDecomposition } from '../Methods';
 
 const GaussElimination = () => {
   const myRef = React.useRef(null);
@@ -31,26 +32,62 @@ const GaussElimination = () => {
   const [showSolution, setShowSolution] = React.useState(false);
   const [steps, setSteps] = React.useState([]);
 
+  const [withLUDecomposition, setWithLUDecomposition] = React.useState(
+    window.location.pathname === '/lu-decomposition-method'
+  );
+
+  const [title, setTitle] = React.useState(withLUDecomposition ? 'LU Decomposition' : 'Gauss Elimination');
+
   const examples = [
     {
-      matrix: {
-        x1_1: 2,
-        x2_1: 1,
-        x3_1: 1,
-        sol_1: 8,
-
-        x1_2: 4,
-        x2_2: 1,
-        x3_2: 0,
-        sol_2: 11,
-
-        x1_3: -2,
-        x2_3: 2,
-        x3_3: 1,
-        sol_3: 3,
-      },
+      matrix: [
+        {
+          x1: 2,
+          x2: 1,
+          x3: 1,
+          sol: 8,
+        },
+        {
+          x1: 4,
+          x2: 1,
+          x3: 0,
+          sol: 11,
+        },
+        {
+          x1: -2,
+          x2: 2,
+          x3: 1,
+          sol: 3,
+        },
+      ],
+    },
+    {
+      matrix: [
+        {
+          x1: 2,
+          x2: 1,
+          x3: -1,
+          sol: 1,
+        },
+        {
+          x1: 5,
+          x2: 2,
+          x3: 2,
+          sol: -4,
+        },
+        {
+          x1: 3,
+          x2: 1,
+          x3: 1,
+          sol: 5,
+        },
+      ],
     },
   ];
+
+  React.useEffect(() => {
+    console.log('withLUDecomposition', withLUDecomposition);
+  }, []);
 
   const solution = () => {
     if (x1_1 === 0 && x2_1 === 0 && x3_1 === 0) {
@@ -89,7 +126,7 @@ const GaussElimination = () => {
       [x1_3, x2_3, x3_3, sol_3],
     ];
     console.log(matrix);
-    const result = gaussElimination(matrix);
+    const result = withLUDecomposition ? luDecomposition(matrix) : gaussElimination(matrix);
 
     setSteps(result);
 
@@ -116,32 +153,32 @@ const GaussElimination = () => {
   };
 
   const setExample = (example) => {
-    setX1_1(example.matrix.x1_1);
-    setX2_1(example.matrix.x2_1);
-    setX3_1(example.matrix.x3_1);
-    setSol_1(example.matrix.sol_1);
-    setX1_2(example.matrix.x1_2);
-    setX2_2(example.matrix.x2_2);
-    setX3_2(example.matrix.x3_2);
-    setSol_2(example.matrix.sol_2);
-    setX1_3(example.matrix.x1_3);
-    setX2_3(example.matrix.x3_3);
-    setX3_3(example.matrix.x3_3);
-    setSol_3(example.matrix.sol_3);
+    setX1_1(example.matrix[0].x1);
+    setX2_1(example.matrix[0].x2);
+    setX3_1(example.matrix[0].x3);
+    setSol_1(example.matrix[0].sol);
+    setX1_2(example.matrix[1].x1);
+    setX2_2(example.matrix[1].x2);
+    setX3_2(example.matrix[1].x3);
+    setSol_2(example.matrix[1].sol);
+    setX1_3(example.matrix[2].x1);
+    setX2_3(example.matrix[2].x2);
+    setX3_3(example.matrix[2].x3);
+    setSol_3(example.matrix[2].sol);
 
     const matrix = [
-      [example.matrix.x1_1, example.matrix.x2_1, example.matrix.x3_1, example.matrix.sol_1],
-      [example.matrix.x1_2, example.matrix.x2_2, example.matrix.x3_2, example.matrix.sol_2],
-      [example.matrix.x1_3, example.matrix.x2_3, example.matrix.x3_3, example.matrix.sol_3],
+      [example.matrix[0].x1, example.matrix[0].x2, example.matrix[0].x3, example.matrix[0].sol],
+      [example.matrix[1].x1, example.matrix[1].x2, example.matrix[1].x3, example.matrix[1].sol],
+      [example.matrix[2].x1, example.matrix[2].x2, example.matrix[2].x3, example.matrix[2].sol],
     ];
 
-    const result = gaussElimination(matrix);
-
+    const result = withLUDecomposition ? luDecomposition(matrix) : gaussElimination(matrix);
     setSteps(result);
 
     console.log(steps);
     setErrorMsg('');
     setShowSolution(true);
+    executeScroll();
   };
 
   const isOne = (value) => {
@@ -151,7 +188,7 @@ const GaussElimination = () => {
 
   return (
     <div className="page">
-      <div className="center-title">Gauss Elimination Method</div>
+      <div className="center-title">{title} Method</div>
       <div className="variables">
         <div className="variables-title">Variables</div>
         <div className="variables-inline">
@@ -178,30 +215,30 @@ const GaussElimination = () => {
         <CustomButton label="Calculate" onClick={solution} type="primary" />
         <CustomButton label="Clear" onClick={clear} type="secondary" />
       </div>
-      {showSolution && steps.length > 0 && (
+      {showSolution && steps && (
         <>
           <hr className="line-divider"></hr>
           <div ref={myRef} className="center-title" name="solution">
             Solution
           </div>
           <div className="solution-container">
-            <Matrix matrix={steps[0].matrix_1} withSolution={true} label="[A/B] = " />
+            <Matrix matrix={steps.matrix_1} withSolution={true} label="[A/B] = " />
             <div className="steps-container">
               <div className="inline-step rule">
                 m<sub>rc</sub> = x<sub>rc</sub> / Pivot Element of R<sub>n</sub>
               </div>
               <div className="inline-step">
-                m<sub>21</sub> = {steps[0].m21.equation}
+                m<sub>21</sub> = {steps.m21.equation}
               </div>
               <div className="inline-step">
-                m<sub>31</sub> = {steps[0].m31.equation}
+                m<sub>31</sub> = {steps.m31.equation}
               </div>
             </div>
             <div className="steps-container">
               <div className="inline-step rule">
                 R<sub>2</sub> = R<sub>2</sub> - (m<sub>21</sub> * R<sub>1</sub>)
               </div>
-              {steps[0].R2.steps.map((step, i) => {
+              {steps.R2.steps.map((step, i) => {
                 return (
                   <div className="inline-step" key={i}>
                     R<sub>2{i}</sub> = {step}
@@ -213,7 +250,7 @@ const GaussElimination = () => {
               <div className="inline-step rule">
                 R<sub>3</sub> = R<sub>3</sub> - (m<sub>31</sub> * R<sub>1</sub>)
               </div>
-              {steps[0].R3.steps.map((step, i) => {
+              {steps.R3_1.steps.map((step, i) => {
                 return (
                   <div className="inline-step" key={i}>
                     R<sub>3{i}</sub> = {step}
@@ -221,17 +258,17 @@ const GaussElimination = () => {
                 );
               })}
             </div>
-            <Matrix matrix={steps[1].matrix_2} withSolution={true} label="[A/B] = " />
+            <Matrix matrix={steps.matrix_2} withSolution={true} label="[A/B] = " />
             <div className="steps-container">
               <div className="inline-step">
-                m<sub>32</sub> = {steps[1].m32.equation}
+                m<sub>32</sub> = {steps.m32.equation}
               </div>
             </div>
             <div className="steps-container">
               <div className="inline-step rule">
                 R<sub>3</sub> = R<sub>3</sub> - (m<sub>32</sub> * R<sub>2</sub>)
               </div>
-              {steps[1].R3.steps.map((step, i) => {
+              {steps.R3_2.steps.map((step, i) => {
                 return (
                   <div className="inline-step" key={i}>
                     R<sub>3{i}</sub> = {step}
@@ -239,21 +276,43 @@ const GaussElimination = () => {
                 );
               })}
             </div>
-            <Matrix matrix={steps[2].matrix_3} withSolution={true} label="[A/B] = " />
-            <div className="steps-container">
-              <div className="inline-step rule">
-                {isOne(steps[2].matrix_3[0][0])}x<sub>1</sub> + {isOne(steps[2].matrix_3[0][1])}x<sub>2</sub> +{' '}
-                {isOne(steps[2].matrix_3[0][2])}x<sub>3</sub> = {steps[2].matrix_3[0][3]}
-              </div>
-              <div className="inline-step rule">
-                {isOne(steps[2].matrix_3[1][1])}x<sub>2</sub> + {isOne(steps[2].matrix_3[1][2])}x<sub>3</sub> ={' '}
-                {steps[2].matrix_3[1][3]}
-              </div>
-              <div className="inline-step rule">
-                {isOne(steps[2].matrix_3[2][2])}x<sub>3</sub> = {steps[2].matrix_3[2][3]}
-              </div>
-            </div>
-            <XsValues values={steps[2].xsValues} />
+            <Matrix matrix={steps.matrix_3} withSolution={true} label="[A/B] = " />
+            <Equations matrix={steps.matrix_3} var="X" withAnswer={true} />
+            <XsValues values={steps.xsValues} />
+            {withLUDecomposition && (
+              <>
+                <div className="subtitle">Solve by LU Decomposition</div>
+                <div className="steps-container">
+                  <div className="inline-statement">
+                    <Matrix matrix={steps.A} label="A = " />,
+                    <Matrix matrix={steps.B} label="B = " />
+                  </div>
+                  <div className="inline-statement">
+                    <Matrix matrix={steps.U} label="U = " />,
+                    <Matrix matrix={steps.L} label="L = " />
+                  </div>
+                  <div className="inline-step rule">L . C = B</div>
+                  <div className="inline-statement">
+                    <Matrix matrix={steps.L} />
+                    <Matrix matrix={[['C1'], ['C2'], ['C3']]} /> =
+                    <Matrix matrix={steps.B} />
+                  </div>
+                  <Equations matrix={steps.C} var="C" withAnswer={true} />
+                  <div className="inline-statement">
+                    <Matrix matrix={[['C1'], ['C2'], ['C3']]} /> =
+                    <Matrix matrix={steps.C_Values} />
+                  </div>
+                  <div className="inline-step rule">U . X = C</div>
+                  <div className="inline-statement">
+                    <Matrix matrix={steps.U} />
+                    <Matrix matrix={[['X1'], ['X2'], ['X3']]} /> =
+                    <Matrix matrix={steps.C_Values} />
+                  </div>
+                  <Equations matrix={steps.X} var="X" withAnswer={true} />
+                  <XsValues values={steps.X_Values} />
+                </div>
+              </>
+            )}
           </div>
         </>
       )}
