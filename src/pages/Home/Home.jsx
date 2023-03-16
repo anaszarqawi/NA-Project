@@ -16,7 +16,7 @@ const Home = () => {
 
   return (
     <div className="page">
-      <div className="center-title">Choose The Method 👀</div>
+      <div className="center-title">Numerical Analysis Methods</div>
       <div className="chapters">
         <SelectMenu chapters={Chapters} type="methods" />
       </div>

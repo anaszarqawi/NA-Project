@@ -283,14 +283,10 @@ const GaussElimination = () => {
               <>
                 <div className="subtitle">Solve by LU Decomposition</div>
                 <div className="steps-container">
-                  <div className="inline-statement">
-                    <Matrix matrix={steps.A} label="A = " />,
-                    <Matrix matrix={steps.B} label="B = " />
-                  </div>
-                  <div className="inline-statement">
-                    <Matrix matrix={steps.U} label="U = " />,
-                    <Matrix matrix={steps.L} label="L = " />
-                  </div>
+                  <Matrix matrix={steps.A} label="A = " />
+                  <Matrix matrix={steps.B} label="B = " />
+                  <Matrix matrix={steps.U} label="U = " />
+                  <Matrix matrix={steps.L} label="L = " />
                   <div className="inline-step rule">L . C = B</div>
                   <div className="inline-statement">
                     <Matrix matrix={steps.L} />

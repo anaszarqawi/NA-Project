@@ -48,10 +48,35 @@
           border-left: none;
         }
       }
+
+      @media only screen and (max-width: 600px) {
+        .select-menu-item-equation {
+          border-left: none;
+          padding: var(--space-50);
+        }
+      }
     }
 
     .equations {
       padding: 0;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .examples {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: var(--space-1) 0;
+
+        .select-menu-item-title {
+          text-align: center;
+          margin-bottom: var(--space-25);
+        }
+
+        .select-menu-item-details {
+          text-align: center;
+        }
+      }
     }
   }
 }

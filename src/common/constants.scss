@@ -99,13 +99,15 @@ input[type='number'] {
 .page {
   max-width: var(--page-width);
   // padding: 0 var(--space-1);
-  margin-top: calc(72px + var(--space-2));
-  margin-bottom: calc(72px + var(--space-2));
+  margin-top: calc(67px + var(--space-1));
+  margin-bottom: calc(67px + var(--space-1));
 }
 
 @media only screen and (max-width: 600px) {
   :root {
     --page-width: 100%;
+    --border-radius: 5px;
     font-size: 15px;
+    // padding: 15px;
   }
 }

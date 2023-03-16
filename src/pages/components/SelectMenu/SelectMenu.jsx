@@ -65,7 +65,7 @@ const SelectMenu = (props) => {
           {props.examples.map((example) => {
             return (
               <div
-                className={`select-menu-item ${example.matrix ? 'equations' : ''}`}
+                className={`select-menu-item ${example.matrix ? 'equations' : ''} ${props.type ? 'examples' : ''}`}
                 onClick={() => {
                   // setCurrentExample(example);
                   props.setter(example);
