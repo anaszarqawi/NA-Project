@@ -138,6 +138,12 @@
         }
     }
 
+    @media only screen and (max-width: 600px) {
+        .version {
+            display: none;
+        }
+    }
+
     .social {
         width: 180px;
         display: flex;
