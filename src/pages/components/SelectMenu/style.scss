@@ -48,10 +48,26 @@
           border-left: none;
         }
       }
+
+      @media only screen and (max-width: 600px) {
+        .select-menu-item-equation {
+          border-left: none;
+          padding: var(--space-50);
+        }
+      }
     }
 
     .equations {
       padding: 0;
     }
+
+    @media only screen and (max-width: 600px) {
+      .equations {
+        display: flex;
+        flex-direction: column;
+        padding: var(--space-50) 0;
+      }
+    }
+
   }
 }

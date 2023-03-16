@@ -34,3 +34,10 @@
   gap: var(--space-1);
   margin: var(--space-2) auto;
 }
+
+
+@media only screen and (max-width: 600px) {
+  .buttons-container {
+    width: auto;
+  }
+}
