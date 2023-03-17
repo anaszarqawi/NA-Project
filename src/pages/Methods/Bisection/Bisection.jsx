@@ -14,6 +14,10 @@ import { useRef } from 'react';
 import { useX } from '../../../context/xContext';
 
 const Bisection = () => {
+  React.useEffect(() => {
+    document.title = 'Bisection Method';
+  }, []);
+
   const config = {};
   const math = create(all, config);
 
