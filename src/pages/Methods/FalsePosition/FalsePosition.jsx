@@ -14,6 +14,10 @@ import { useRef } from 'react';
 import { useX } from '../../../context/xContext';
 
 const FalsePosition = () => {
+  React.useEffect(() => {
+    document.title = 'False Position Method';
+  }, []);
+
   const config = {};
   const math = create(all, config);
 

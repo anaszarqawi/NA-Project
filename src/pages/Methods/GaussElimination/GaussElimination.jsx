@@ -38,6 +38,10 @@ const GaussElimination = () => {
 
   const [title, setTitle] = React.useState(withLUDecomposition ? 'LU Decomposition' : 'Gauss Elimination');
 
+  React.useEffect(() => {
+    document.title = title + ' Method';
+  }, []);
+
   const examples = [
     {
       matrix: [

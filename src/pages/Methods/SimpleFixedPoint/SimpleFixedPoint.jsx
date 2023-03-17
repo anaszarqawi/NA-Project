@@ -13,6 +13,10 @@ import { create, all } from 'mathjs';
 import { useRef } from 'react';
 
 const SimpleFixedPoint = () => {
+  React.useEffect(() => {
+    document.title = 'Simple Fixed Point Method';
+  }, []);
+
   const config = {};
   const math = create(all, config);
 

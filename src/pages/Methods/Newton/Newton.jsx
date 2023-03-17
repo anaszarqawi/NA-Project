@@ -13,6 +13,10 @@ import { create, all } from 'mathjs';
 import { useRef } from 'react';
 
 const Newton = () => {
+  React.useEffect(() => {
+    document.title = 'Newton Method';
+  }, []);
+
   const config = {};
   const math = create(all, config);
 

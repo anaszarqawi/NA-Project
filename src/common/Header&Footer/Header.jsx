@@ -11,8 +11,10 @@ const Header = () => {
         <div className="logo">
           <Logo />
         </div>
-        <h1 className="title">Numerical Analysis Project</h1>
         <div className="header-buttons">
+          <Link className="header-button" to="/settings">
+            Settings
+          </Link>
           <Link className="header-button" to="/">
             Methods
           </Link>

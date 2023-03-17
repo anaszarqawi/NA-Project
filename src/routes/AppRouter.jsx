@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from '../pages/Home/Home';
 import Header from '../common/Header&Footer/Header';
 import Footer from '../common/Header&Footer/Footer';
+import Settings from '../pages/Settings/Settings';
 
 // Methods
 import Bisection from '../pages/Methods/Bisection/Bisection';
@@ -19,6 +20,10 @@ const AppRouter = () => {
     {
       path: '/',
       component: <Home />,
+    },
+    {
+      path: '/settings',
+      component: <Settings />,
     },
     {
       path: '/bisection-method',

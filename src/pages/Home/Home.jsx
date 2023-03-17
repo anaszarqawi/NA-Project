@@ -3,6 +3,10 @@ import './style.scss';
 import SelectMenu from '../components/SelectMenu/SelectMenu';
 
 const Home = () => {
+  React.useEffect(() => {
+    document.title = 'Numerical Analysis Methods';
+  }, []);
+
   const Chapters = [
     {
       name: 'Chapter 1',

@@ -13,6 +13,10 @@ import { create, all } from 'mathjs';
 import { useRef } from 'react';
 
 const Secant = () => {
+  React.useEffect(() => {
+    document.title = 'Secant Method';
+  }, []);
+
   const config = {};
   const math = create(all, config);
 
