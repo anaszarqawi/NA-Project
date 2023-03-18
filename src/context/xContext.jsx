@@ -9,6 +9,7 @@ export const useX = () => React.useContext(xContext);
 export default function XProvider({ children }) {
   const [currentExample, setCurrentExample] = React.useState();
   const [variables, setVariables] = React.useState({});
+  const [settings, setSettings] = React.useState({});
 
   // const analytics = getAnalytics(app);
 
@@ -34,6 +35,8 @@ export default function XProvider({ children }) {
     setCurrentExample,
     variables,
     setVariables,
+    settings,
+    setSettings,
   };
 
   return <xContext.Provider value={value}>{children}</xContext.Provider>;

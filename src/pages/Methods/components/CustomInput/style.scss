@@ -37,6 +37,8 @@
         width: 10%;
     }
 
+
+
     .custom-input-checkbox {
         width: 20px;
         height: 20px;
@@ -54,6 +56,10 @@
         background-color: var(--color-3);
         border: 1px solid var(--color-3);
     }
+}
+
+.settings-input {
+    // justify-content: flex-start;
 }
 
 .variables {
