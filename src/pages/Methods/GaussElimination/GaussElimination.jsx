@@ -6,6 +6,7 @@ import SelectMenu from '../../components/SelectMenu/SelectMenu';
 import Matrix from '../components/Matrix/Matrix';
 import XsValues from '../components/XsValues/XsValues';
 import Equations from '../components/Equations/Equations';
+import ExamplesAndSaved from '../components/ExamplesAndSaved/ExamplesAndSaved';
 
 import { gaussElimination, luDecomposition } from '../Methods';
 
@@ -316,11 +317,7 @@ const GaussElimination = () => {
           </div>
         </>
       )}
-      <hr className="line-divider"></hr>
-      <div className="center-title">Examples</div>
-      <div className="examples-container">
-        <SelectMenu examples={examples} type="examples" setter={setExample} />
-      </div>
+      <ExamplesAndSaved method="gaussEliminationOrLuDecomposition" examples={examples} setter={setExample} />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import CustomInput from '../components/CustomInput/CustomInput';
 import CustomButton from '../components/CustomButton/CustomButton';
 import SelectMenu from '../../components/SelectMenu/SelectMenu';
 import CustomTable from '../components/CustomTable/CustomTable';
+import ExamplesAndSaved from '../components/ExamplesAndSaved/ExamplesAndSaved';
 
 // import mathjs
 // load math.js (using node.js)
@@ -24,7 +25,7 @@ const Bisection = () => {
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
 
-  const { currentExample } = useX();
+  const { currentExample, saved, addToSaved } = useX();
 
   const [fx, setFx] = React.useState(null);
   const [xl, setXl] = React.useState(null);
@@ -35,6 +36,9 @@ const Bisection = () => {
   const [conditionType, setConditionType] = React.useState('es');
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
+  const [values, SetValues] = React.useState();
+
+  const [isSaved, setIsSaved] = React.useState(false);
 
   const [errorMsg, setErrorMsg] = React.useState('');
 
@@ -111,7 +115,18 @@ const Bisection = () => {
     },
   ];
 
-  const calculate = () => {
+  React.useEffect(() => {
+    SetValues({
+      fx,
+      xl,
+      xu,
+      es,
+      it,
+      conditionType,
+    });
+  }, [fx, xl, xu, es, it, conditionType]);
+
+  const validationData = () => {
     let error = false;
 
     if (fx === null) {
@@ -142,10 +157,21 @@ const Bisection = () => {
     if (error) {
       return;
     }
+  };
 
-    console.log(fx, xl, xu, es, it, conditionType);
+  const calculate = (toAddToSaved) => {
+    validationData();
 
-    const result = bisection(fx, xl, xu, es, it, conditionType);
+    if (toAddToSaved) {
+      addToSaved('bisection', values);
+      setIsSaved(true);
+      setInterval(() => {
+        setIsSaved(false);
+      }, 2000);
+      return;
+    }
+
+    const result = bisection(values);
 
     if (result.error) {
       setErrorMsg(result.error);
@@ -238,8 +264,9 @@ const Bisection = () => {
       </div>
       {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
       <div className="buttons-container">
-        <CustomButton label="Calculate" onClick={calculate} type="primary" />
         <CustomButton label="Clear" onClick={clear} type="secondary" />
+        <CustomButton label={isSaved ? 'Saved!' : 'Save'} onClick={() => calculate(true)} type="secondary" />
+        <CustomButton label="Calculate" onClick={calculate} type="primary" />
       </div>
       {showSolution && (
         <>
@@ -266,11 +293,7 @@ const Bisection = () => {
           </div>
         </>
       )}
-      <hr className="line-divider"></hr>
-      <div className="center-title">Examples</div>
-      <div className="examples-container">
-        <SelectMenu examples={examples} type="examples" setter={setExample} />
-      </div>
+      <ExamplesAndSaved method="bisection" examples={examples} setter={setExample} />
     </div>
   );
 };

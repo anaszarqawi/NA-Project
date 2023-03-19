@@ -6,11 +6,13 @@ import CustomInput from '../components/CustomInput/CustomInput';
 import CustomButton from '../components/CustomButton/CustomButton';
 import SelectMenu from '../../components/SelectMenu/SelectMenu';
 import CustomTable from '../components/CustomTable/CustomTable';
+import ExamplesAndSaved from '../components/ExamplesAndSaved/ExamplesAndSaved';
 
 // import mathjs
 // load math.js (using node.js)
 import { create, all } from 'mathjs';
 import { useRef } from 'react';
+import { useX } from '../../../context/xContext';
 
 const SimpleFixedPoint = () => {
   React.useEffect(() => {
@@ -20,6 +22,7 @@ const SimpleFixedPoint = () => {
   const config = {};
   const math = create(all, config);
 
+  const { addToSaved } = useX();
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
 
@@ -32,6 +35,8 @@ const SimpleFixedPoint = () => {
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
 
+  const [isSaved, setIsSaved] = React.useState(false);
+
   const [errorMsg, setErrorMsg] = React.useState('');
 
   const examples = [
@@ -43,7 +48,7 @@ const SimpleFixedPoint = () => {
     },
   ];
 
-  const calculate = () => {
+  const calculate = (toAddToSaved) => {
     let error = false;
 
     if (fx === null) {
@@ -67,6 +72,21 @@ const SimpleFixedPoint = () => {
       error = true;
     }
     if (error) {
+      return;
+    }
+
+    if (toAddToSaved) {
+      addToSaved('fixedPoint', {
+        fx,
+        xo,
+        es,
+        it,
+        conditionType,
+      });
+      setIsSaved(true);
+      setInterval(() => {
+        setIsSaved(false);
+      }, 2000);
       return;
     }
 
@@ -160,8 +180,9 @@ const SimpleFixedPoint = () => {
       </div>
       {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
       <div className="buttons-container">
-        <CustomButton label="Calculate" onClick={calculate} type="primary" />
         <CustomButton label="Clear" onClick={clear} type="secondary" />
+        <CustomButton label={isSaved ? 'Saved!' : 'Save'} onClick={() => calculate(true)} type="secondary" />
+        <CustomButton label="Calculate" onClick={calculate} type="primary" />
       </div>
       {showSolution && (
         <>
@@ -179,11 +200,7 @@ const SimpleFixedPoint = () => {
           </div>
         </>
       )}
-      <hr className="line-divider"></hr>
-      <div className="center-title">Examples</div>
-      <div className="examples-container">
-        <SelectMenu examples={examples} type="examples" setter={setExample} />
-      </div>
+      <ExamplesAndSaved method="fixedPoint" examples={examples} setter={setExample} />
     </div>
   );
 };

@@ -6,6 +6,8 @@ import CustomInput from '../components/CustomInput/CustomInput';
 import CustomButton from '../components/CustomButton/CustomButton';
 import SelectMenu from '../../components/SelectMenu/SelectMenu';
 import CustomTable from '../components/CustomTable/CustomTable';
+import ExamplesAndSaved from '../components/ExamplesAndSaved/ExamplesAndSaved';
+import { useX } from '../../../context/xContext';
 
 // import mathjs
 // load math.js (using node.js)
@@ -23,6 +25,8 @@ const Newton = () => {
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
 
+  const { addToSaved } = useX();
+
   const [fx, setFx] = React.useState(null);
   const [xo, setXo] = React.useState(null);
   const [es, setEs] = React.useState(null);
@@ -33,6 +37,8 @@ const Newton = () => {
   const [data, setData] = React.useState([]);
 
   const [errorMsg, setErrorMsg] = React.useState('');
+
+  const [isSaved, setIsSaved] = React.useState(false);
 
   const examples = [
     {
@@ -67,7 +73,7 @@ const Newton = () => {
     },
   ];
 
-  const calculate = () => {
+  const calculate = (toAddToSaved) => {
     let error = false;
 
     if (fx === null) {
@@ -94,6 +100,20 @@ const Newton = () => {
       return;
     }
 
+    if (toAddToSaved) {
+      addToSaved('newton', {
+        fx,
+        xo,
+        es,
+        it,
+        conditionType,
+      });
+      setIsSaved(true);
+      setInterval(() => {
+        setIsSaved(false);
+      }, 2000);
+      return;
+    }
     console.log(fx, xo, es, it, conditionType);
 
     const result = newton(fx, xo, es, it, conditionType);
@@ -184,8 +204,9 @@ const Newton = () => {
       </div>
       {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
       <div className="buttons-container">
-        <CustomButton label="Calculate" onClick={calculate} type="primary" />
         <CustomButton label="Clear" onClick={clear} type="secondary" />
+        <CustomButton label={isSaved ? 'Saved!' : 'Save'} onClick={() => calculate(true)} type="secondary" />
+        <CustomButton label="Calculate" onClick={calculate} type="primary" />
       </div>
       {showSolution && (
         <>
@@ -203,11 +224,7 @@ const Newton = () => {
           </div>
         </>
       )}
-      <hr className="line-divider"></hr>
-      <div className="center-title">Examples</div>
-      <div className="examples-container">
-        <SelectMenu examples={examples} type="examples" setter={setExample} />
-      </div>
+      <ExamplesAndSaved method="newton" examples={examples} setter={setExample} />
     </div>
   );
 };
