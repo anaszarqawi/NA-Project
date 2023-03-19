@@ -1,7 +1,10 @@
 import React from 'react';
 import './style.scss';
+import { useX } from '../../../../context/xContext';
 
 const CustomTable = (props) => {
+  const { settings } = useX();
+
   return (
     <table className="solution-table">
       <tr>

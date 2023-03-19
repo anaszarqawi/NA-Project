@@ -5,7 +5,7 @@ const CustomInput = (props) => {
   const [checked, setChecked] = React.useState(false);
 
   return (
-    <div className="custom-input">
+    <div className={`custom-input ${props.extraClass ? props.extraClass : ''}`}>
       {props.withCheckbox && (
         <div className="custom-input-checkbox-container">
           <div
@@ -34,7 +34,7 @@ const CustomInput = (props) => {
         </select>
       ) : null}
       <input
-        className={`custom-input-field ${props.isBlock && 'block'}`}
+        className={`custom-input-field ${props.isBlock ? 'block' : ''}`}
         type={props.type}
         placeholder={props.placeholder ? props.placeholder : null}
         value={props.value}

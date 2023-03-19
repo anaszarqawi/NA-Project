@@ -4,8 +4,8 @@ import { bisection, falsePosition } from '../Methods';
 
 import CustomInput from '../components/CustomInput/CustomInput';
 import CustomButton from '../components/CustomButton/CustomButton';
-import SelectMenu from '../../components/SelectMenu/SelectMenu';
 import CustomTable from '../components/CustomTable/CustomTable';
+import ExamplesAndSaved from '../components/ExamplesAndSaved/ExamplesAndSaved';
 
 // import mathjs
 // load math.js (using node.js)
@@ -24,7 +24,7 @@ const FalsePosition = () => {
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
 
-  const { currentExample } = useX();
+  const { currentExample, saved, addToSaved } = useX();
 
   const [fx, setFx] = React.useState(null);
   const [xl, setXl] = React.useState(null);
@@ -111,7 +111,7 @@ const FalsePosition = () => {
     },
   ];
 
-  const calculate = () => {
+  const calculate = (toAddToSaved) => {
     let error = false;
 
     if (fx === null) {
@@ -140,6 +140,19 @@ const FalsePosition = () => {
       error = true;
     }
     if (error) {
+      return;
+    }
+
+    if (toAddToSaved) {
+      addToSaved('falsePosition', {
+        fx,
+        xl,
+        xu,
+        es,
+        it,
+        conditionType,
+      });
+      console.log(saved);
       return;
     }
 
@@ -232,6 +245,7 @@ const FalsePosition = () => {
             condition={conditionType}
           />
         </div>
+        b
       </div>
       {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
       <div className="buttons-container">
@@ -263,11 +277,7 @@ const FalsePosition = () => {
           </div>
         </>
       )}
-      <hr className="line-divider"></hr>
-      <div className="center-title">Examples</div>
-      <div className="examples-container">
-        <SelectMenu examples={examples} type="examples" setter={setExample} />
-      </div>
+      <ExamplesAndSaved method="falsePosition" examples={examples} setter={setExample} />
     </div>
   );
 };
