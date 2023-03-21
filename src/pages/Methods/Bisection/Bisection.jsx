@@ -3,10 +3,9 @@ import './style.scss';
 import { bisection } from '../Methods';
 
 import CustomInput from '../components/CustomInput/CustomInput';
-import CustomButton from '../components/CustomButton/CustomButton';
-import SelectMenu from '../../components/SelectMenu/SelectMenu';
 import CustomTable from '../components/CustomTable/CustomTable';
 import ExamplesAndSaved from '../components/ExamplesAndSaved/ExamplesAndSaved';
+import MethodButtons from '../components/MethodButtons/MethodButtons';
 
 // import mathjs
 // load math.js (using node.js)
@@ -25,20 +24,18 @@ const Bisection = () => {
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
 
-  const { currentExample, saved, addToSaved } = useX();
+  const { calculate, setSaved, saved } = useX();
 
-  const [fx, setFx] = React.useState(null);
-  const [xl, setXl] = React.useState(null);
-  const [xu, setXu] = React.useState(null);
-  const [es, setEs] = React.useState(null);
-  const [it, setIt] = React.useState(null);
+  const [fx, setFx] = React.useState('');
+  const [xl, setXl] = React.useState('');
+  const [xu, setXu] = React.useState('');
+  const [es, setEs] = React.useState('');
+  const [it, setIt] = React.useState('');
 
   const [conditionType, setConditionType] = React.useState('es');
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [values, SetValues] = React.useState();
-
-  const [isSaved, setIsSaved] = React.useState(false);
 
   const [errorMsg, setErrorMsg] = React.useState('');
 
@@ -127,93 +124,75 @@ const Bisection = () => {
   }, [fx, xl, xu, es, it, conditionType]);
 
   const validationData = () => {
-    let error = false;
-
-    if (fx === null) {
-      setErrorMsg('Please enter a function');
-      setShowSolution(false);
-      error = true;
+    if (fx === '') {
+      return {
+        status: false,
+        error: 'Please enter a function',
+      };
     }
-    if (xl === null) {
-      setErrorMsg('Please enter a value for Xl');
-      setShowSolution(false);
-      error = true;
+    if (xl === '') {
+      return {
+        status: false,
+        error: 'Please enter a value for Xl',
+      };
     }
-    if (xu === null) {
-      setErrorMsg('Please enter a value for Xu');
-      setShowSolution(false);
-      error = true;
+    if (xu === '') {
+      return {
+        status: false,
+        error: 'Please enter a value for Xu',
+      };
     }
     if (es === 0 && conditionType === 'es') {
-      setErrorMsg('Please enter a value for Es');
-      setShowSolution(false);
-      error = true;
+      return {
+        status: false,
+        error: 'Please enter a value for Es',
+      };
     }
     if (it === 0 && conditionType === 'it') {
-      setErrorMsg('Please enter a value for Maximum Iterations');
-      setShowSolution(false);
-      error = true;
+      return {
+        status: false,
+        error: 'Please enter a value for Maximum Iterations',
+      };
     }
-    if (error) {
-      return;
-    }
+
+    return {
+      status: true,
+    };
   };
 
-  const calculate = (toAddToSaved) => {
-    validationData();
-
-    if (toAddToSaved) {
-      addToSaved('bisection', values);
-      setIsSaved(true);
-      setInterval(() => {
-        setIsSaved(false);
-      }, 2000);
-      return;
+  const handleCalculate = (operation, example) => {
+    if (example) {
+      setFx(example.fx);
+      setXl(example.xl);
+      setXu(example.xu);
+      setEs(example.es);
+      setIt(example.it);
+      setConditionType(example.conditionType);
     }
 
-    const result = bisection(values);
-
-    if (result.error) {
-      setErrorMsg(result.error);
-      setShowSolution(false);
-      return;
-    }
-    setErrorMsg('');
-    setShowSolution(true);
-    setData(result);
+    calculate({
+      name: 'Bisection',
+      values,
+      example,
+      validationData,
+      setShowSolution,
+      setErrorMsg,
+      operation,
+      setData,
+      executeScroll,
+    });
   };
 
   const clear = () => {
-    setFx('');
     setXl('');
     setXu('');
     setEs('');
+    setFx('');
     setIt('');
     setConditionType('es');
     setShowSolution(false);
     setErrorMsg('');
-  };
-
-  const setExample = (example) => {
-    setFx(example.fx);
-    setXl(example.xl);
-    setXu(example.xu);
-    setEs(example.es);
-    setIt(example.it);
-    setConditionType(example.conditionType);
-
-    const result = bisection(example.fx, example.xl, example.xu, example.es, example.it, example.conditionType);
-    console.log({ result });
-
-    if (result.error) {
-      setErrorMsg(result.error);
-      setShowSolution(false);
-      return;
-    }
-    setErrorMsg('');
-    setShowSolution(true);
-    setData(result);
-    executeScroll();
+    return;
   };
 
   return (
@@ -237,13 +216,6 @@ const Bisection = () => {
             placeholder="Error Sum %"
             onChange={setEs}
             value={es}
-            options={[
-              { label: '=', value: '=' },
-              { label: '<', value: '<' },
-              { label: '>', value: '>' },
-              { label: '<=', value: '<=' },
-              { label: '>=', value: '>=' },
-            ]}
             withCheckbox={true}
             name="es"
             onClick={setConditionType}
@@ -263,11 +235,7 @@ const Bisection = () => {
         </div>
       </div>
       {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
-      <div className="buttons-container">
-        <CustomButton label="Clear" onClick={clear} type="secondary" />
-        <CustomButton label={isSaved ? 'Saved!' : 'Save'} onClick={() => calculate(true)} type="secondary" />
-        <CustomButton label="Calculate" onClick={calculate} type="primary" />
-      </div>
+      <MethodButtons method="Bisection" calculate={handleCalculate} clear={clear} />
       {showSolution && (
         <>
           <hr className="line-divider"></hr>
@@ -293,7 +261,7 @@ const Bisection = () => {
           </div>
         </>
       )}
-      <ExamplesAndSaved method="bisection" examples={examples} setter={setExample} />
+      <ExamplesAndSaved method="Bisection" examples={examples} setter={handleCalculate} />
     </div>
   );
 };
