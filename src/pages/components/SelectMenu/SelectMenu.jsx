@@ -68,7 +68,7 @@ const SelectMenu = (props) => {
                 className={`select-menu-item ${example.matrix ? 'equations' : ''} ${props.type ? 'examples' : ''}`}
                 onClick={() => {
                   // setCurrentExample(example);
-                  props.setter(example);
+                  props.setter('setExample', example);
                   console.log(example);
                 }}>
                 {example.matrix ? (
