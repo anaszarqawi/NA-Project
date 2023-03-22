@@ -1,11 +1,10 @@
 import React from 'react';
 import './style.scss';
-import { bisection, falsePosition } from '../Methods';
 
 import CustomInput from '../components/CustomInput/CustomInput';
-import CustomButton from '../components/CustomButton/CustomButton';
 import CustomTable from '../components/CustomTable/CustomTable';
 import ExamplesAndSaved from '../components/ExamplesAndSaved/ExamplesAndSaved';
+import MethodButtons from '../components/MethodButtons/MethodButtons';
 
 // import mathjs
 // load math.js (using node.js)
@@ -13,28 +12,26 @@ import { create, all } from 'mathjs';
 import { useRef } from 'react';
 import { useX } from '../../../context/xContext';
 
-const FalsePosition = () => {
+const Bisection = () => {
   React.useEffect(() => {
     document.title = 'False Position Method';
   }, []);
 
-  const config = {};
-  const math = create(all, config);
-
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
 
-  const { currentExample, saved, addToSaved } = useX();
+  const { calculate } = useX();
 
-  const [fx, setFx] = React.useState(null);
-  const [xl, setXl] = React.useState(null);
-  const [xu, setXu] = React.useState(null);
-  const [es, setEs] = React.useState(null);
-  const [it, setIt] = React.useState(null);
+  const [fx, setFx] = React.useState('');
+  const [xl, setXl] = React.useState('');
+  const [xu, setXu] = React.useState('');
+  const [es, setEs] = React.useState('');
+  const [it, setIt] = React.useState('');
 
   const [conditionType, setConditionType] = React.useState('es');
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
+  const [values, SetValues] = React.useState();
 
   const [errorMsg, setErrorMsg] = React.useState('');
 
@@ -111,93 +108,87 @@ const FalsePosition = () => {
     },
   ];
 
-  const calculate = (toAddToSaved) => {
-    let error = false;
+  React.useEffect(() => {
+    SetValues({
+      fx,
+      xl,
+      xu,
+      es,
+      it,
+      conditionType,
+    });
+  }, [fx, xl, xu, es, it, conditionType]);
 
-    if (fx === null) {
-      setErrorMsg('Please enter a function');
-      setShowSolution(false);
-      error = true;
+  const validationData = () => {
+    if (fx === '') {
+      return {
+        status: false,
+        error: 'Please enter a function',
+      };
     }
-    if (xl === null) {
-      setErrorMsg('Please enter a value for Xl');
-      setShowSolution(false);
-      error = true;
+    if (xl === '') {
+      return {
+        status: false,
+        error: 'Please enter a value for Xl',
+      };
     }
-    if (xu === null) {
-      setErrorMsg('Please enter a value for Xu');
-      setShowSolution(false);
-      error = true;
+    if (xu === '') {
+      return {
+        status: false,
+        error: 'Please enter a value for Xu',
+      };
     }
     if (es === 0 && conditionType === 'es') {
-      setErrorMsg('Please enter a value for Es');
-      setShowSolution(false);
-      error = true;
+      return {
+        status: false,
+        error: 'Please enter a value for Es',
+      };
     }
     if (it === 0 && conditionType === 'it') {
-      setErrorMsg('Please enter a value for Maximum Iterations');
-      setShowSolution(false);
-      error = true;
-    }
-    if (error) {
-      return;
+      return {
+        status: false,
+        error: 'Please enter a value for Maximum Iterations',
+      };
     }
 
-    if (toAddToSaved) {
-      addToSaved('falsePosition', {
-        fx,
-        xl,
-        xu,
-        es,
-        it,
-        conditionType,
-      });
-      console.log(saved);
-      return;
+    return {
+      status: true,
+    };
+  };
+
+  const handleCalculate = (operation, example) => {
+    if (example) {
+      setFx(example.fx);
+      setXl(example.xl);
+      setXu(example.xu);
+      setEs(example.es);
+      setIt(example.it);
+      setConditionType(example.conditionType);
     }
 
-    const result = falsePosition(fx, xl, xu, es, it, conditionType);
-
-    if (result.error) {
-      setErrorMsg(result.error);
-      setShowSolution(false);
-      return;
-    }
-    setErrorMsg('');
-    setShowSolution(true);
-    setData(result);
+    calculate({
+      name: 'False Position',
+      values,
+      example,
+      validationData,
+      setShowSolution,
+      setErrorMsg,
+      operation,
+      setData,
+      executeScroll,
+    });
   };
 
   const clear = () => {
-    setFx('');
     setXl('');
     setXu('');
     setEs('');
+    setFx('');
     setIt('');
     setConditionType('es');
     setShowSolution(false);
     setErrorMsg('');
-  };
-
-  const setExample = (example) => {
-    setFx(example.fx);
-    setXl(example.xl);
-    setXu(example.xu);
-    setEs(example.es);
-    setIt(example.it);
-    setConditionType(example.conditionType);
-
-    const result = falsePosition(example.fx, example.xl, example.xu, example.es, example.it, example.conditionType);
-    console.log({ result });
-
-    if (result.error) {
-      setErrorMsg(result.error);
-      setShowSolution(false);
-      return;
-    }
-    setErrorMsg('');
-    setShowSolution(true);
-    setData(result);
+    return;
   };
 
   return (
@@ -221,13 +212,6 @@ const FalsePosition = () => {
             placeholder="Error Sum %"
             onChange={setEs}
             value={es}
-            options={[
-              { label: '=', value: '=' },
-              { label: '<', value: '<' },
-              { label: '>', value: '>' },
-              { label: '<=', value: '<=' },
-              { label: '>=', value: '>=' },
-            ]}
             withCheckbox={true}
             name="es"
             onClick={setConditionType}
@@ -245,13 +229,9 @@ const FalsePosition = () => {
             condition={conditionType}
           />
         </div>
-        b
       </div>
       {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
-      <div className="buttons-container">
-        <CustomButton label="Calculate" onClick={calculate} type="primary" />
-        <CustomButton label="Clear" onClick={clear} type="secondary" />
-      </div>
+      <MethodButtons method="False Position" calculate={handleCalculate} clear={clear} />
       {showSolution && (
         <>
           <hr className="line-divider"></hr>
@@ -277,9 +257,9 @@ const FalsePosition = () => {
           </div>
         </>
       )}
-      <ExamplesAndSaved method="falsePosition" examples={examples} setter={setExample} />
+      <ExamplesAndSaved method="False Position" examples={examples} setter={handleCalculate} />
     </div>
   );
 };
 
-export default FalsePosition;
+export default Bisection;

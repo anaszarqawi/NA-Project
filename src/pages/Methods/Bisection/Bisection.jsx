@@ -1,6 +1,5 @@
 import React from 'react';
 import './style.scss';
-import { bisection } from '../Methods';
 
 import CustomInput from '../components/CustomInput/CustomInput';
 import CustomTable from '../components/CustomTable/CustomTable';
@@ -24,7 +23,7 @@ const Bisection = () => {
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
 
-  const { calculate, setSaved, saved } = useX();
+  const { calculate } = useX();
 
   const [fx, setFx] = React.useState('');
   const [xl, setXl] = React.useState('');
