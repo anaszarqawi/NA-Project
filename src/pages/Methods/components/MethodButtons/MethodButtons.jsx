@@ -8,7 +8,13 @@ const MethodButtons = (props) => {
   return (
     <div className="buttons-container">
       <CustomButton label="Calculate" onClick={props.calculate} type="primary" />
+      <CustomButton label="Clear" onClick={props.clear} type="secondary" />
 
+      <CustomButton
+        label={isSaved ? 'Saved!' : 'Save'}
+        onClick={() => props.calculate('addToSaved')}
+        type="secondary"
+      />
       <CustomButton
         label="Clear Saved"
         onClick={() => {
@@ -16,12 +22,6 @@ const MethodButtons = (props) => {
         }}
         type="secondary"
       />
-      <CustomButton
-        label={isSaved ? 'Saved!' : 'Save'}
-        onClick={() => props.calculate('addToSaved')}
-        type="secondary"
-      />
-      <CustomButton label="Clear" onClick={props.clear} type="secondary" />
     </div>
   );
 };
