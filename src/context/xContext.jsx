@@ -11,7 +11,7 @@ export default function XProvider({ children }) {
   const [currentExample, setCurrentExample] = React.useState();
   const [variables, setVariables] = React.useState({});
   const [settings, setSettings] = React.useState({});
-  const [saved, setSaved] = React.useState(JSON.parse(localStorage.getItem('saved')) || {});
+  const [saved, setSaved] = React.useState({});
   const [isSaved, setIsSaved] = React.useState(false);
 
   const addToSaved = (method, data) => {
@@ -19,6 +19,8 @@ export default function XProvider({ children }) {
     if (temp[method]) temp[method].push(data);
     else temp[method] = [data];
     setSaved(temp);
+
+    localStorage.setItem('saved', JSON.stringify(saved));
 
     // logEvent(analytics, 'save', {
     //   method: method,
@@ -31,11 +33,14 @@ export default function XProvider({ children }) {
     }, 2000);
   };
 
-  React.useEffect(() => {
-    localStorage.setItem('saved', JSON.stringify(saved));
-  }, [saved]);
-
   // const analytics = getAnalytics(app);
+
+  React.useEffect(() => {
+    const tempSaved = JSON.parse(localStorage.getItem('saved'));
+    if (tempSaved) {
+      setSaved(tempSaved);
+    }
+  }, []);
 
   React.useEffect(() => {
     if (window.location.pathname === '/settings') {
@@ -83,8 +88,10 @@ export default function XProvider({ children }) {
       return;
     }
 
+    const tempExample = props.example;
+
     const result =
-      props.operation === 'setExample' ? matchMethod(props.name, props.example) : matchMethod(props.name, props.values);
+      props.operation === 'setExample' ? matchMethod(props.name, tempExample) : matchMethod(props.name, props.values);
 
     props.setErrorMsg('');
     props.setShowSolution(true);

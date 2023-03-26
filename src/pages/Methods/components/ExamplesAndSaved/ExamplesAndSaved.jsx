@@ -11,7 +11,7 @@ const ExamplesAndSaved = (props) => {
           <hr className="line-divider"></hr>
           <div className="center-title">Saved</div>
           <div className="examples-container">
-            <SelectMenu examples={saved[props.method]} type="examples" setter={props.setter} />
+            <SelectMenu method={props.method} examples={saved[props.method]} type="saved" setter={props.setter} />
           </div>
         </>
       )}
