@@ -5,8 +5,10 @@ import { bisection } from '../../Methods/Methods';
 import $ from 'jquery';
 import { useX } from '../../../context/xContext';
 
+import { ReactComponent as RemoveIcon } from '../../../assets/svg/delete-icon.svg';
+
 const SelectMenu = (props) => {
-  const { setCurrentExample, currentExample } = useX();
+  const { saved, setSaved } = useX();
 
   const isOne = (value) => {
     if (value === 1) return ' + ';
@@ -17,15 +19,15 @@ const SelectMenu = (props) => {
 
   const generateDetails = (example) => {
     let details = {};
-    example.fx && (details.fx = example.fx);
-    example.xl && (details.xl = example.xl);
-    example.xu && (details.xu = example.xu);
-    example.xo && (details.xo = example.xo);
-    example.xa && (details.xa = example.xa);
-    example.xb && (details.xb = example.xb);
+    example.fx !== undefined && (details.fx = example.fx);
+    example.xl !== undefined && (details.xl = example.xl);
+    example.xu !== undefined && (details.xu = example.xu);
+    example.xo !== undefined && (details.xo = example.xo);
+    example.xa !== undefined && (details.xa = example.xa);
+    example.xb !== undefined && (details.xb = example.xb);
     example.conditionType === 'es' && (details.es = example.es);
     example.conditionType === 'it' && (details.it = example.it);
-    example.equations && (details.equations = example.equations);
+    example.equations !== undefined && (details.equations = example.equations);
 
     // create string and add '|' between each detail
     let detailsString = '';
@@ -37,6 +39,14 @@ const SelectMenu = (props) => {
     }
 
     return detailsString.slice(3);
+  };
+
+  const handleRemoveItem = (index) => {
+    let newSaved = { ...saved };
+    newSaved[props.method].splice(index, 1);
+    setSaved(newSaved);
+    console.log(saved);
+    localStorage.setItem('saved', JSON.stringify(newSaved));
   };
 
   if (props.type === 'methods') {
@@ -58,18 +68,28 @@ const SelectMenu = (props) => {
     });
   }
 
-  if (props.type === 'examples') {
+  if (props.type === 'examples' || props.type === 'saved') {
     return (
       <div className="select-menu">
         <div className="select-menu-list">
-          {props.examples.map((example) => {
+          {props.examples.map((example, index) => {
             return (
               <div
-                className={`select-menu-item ${example.matrix ? 'equations' : ''} ${props.type ? 'examples' : ''}`}
-                onClick={() => {
+                className={`select-menu-item ${example.matrix ? 'equations' : ''} ${
+                  props.type === 'examples' && 'examples'
+                } ${props.type === 'saved' && 'saved'}`.replace(/false |undefined /g, '')}
+                onClick={(e) => {
                   // setCurrentExample(example);
-                  props.setter('setExample', example);
-                  console.log(example);
+                  console.log(e.target.className !== 'select-menu-item-button');
+                  console.log(e.target.tagName);
+                  if (
+                    e.target.className !== 'select-menu-item-button' &&
+                    e.target.tagName !== 'path' &&
+                    e.target.tagName !== 'svg'
+                  ) {
+                    props.setter('setExample', example);
+                    console.log(example);
+                  }
                 }}>
                 {example.matrix ? (
                   example.matrix.map((equation) => {
@@ -99,6 +119,11 @@ const SelectMenu = (props) => {
                     <div className="select-menu-item-title">{example.fx}</div>
                     <div className="select-menu-item-details">
                       <div className="select-menu-item-detail">{generateDetails(example)}</div>
+                      {props.type === 'saved' && (
+                        <div className="select-menu-item-button" onClick={() => handleRemoveItem(index)}>
+                          <RemoveIcon />
+                        </div>
+                      )}
                     </div>
                   </>
                 )}

@@ -54,13 +54,6 @@ const Bisection = () => {
       es: 1,
     },
     {
-      fx: 'x^3 - 4x^2 - 8x -1',
-      xl: 2,
-      xu: 3,
-      conditionType: 'es',
-      es: 0.5,
-    },
-    {
       fx: '-0.6x^2 + 2.4x + 5.5',
       xl: 5,
       xu: 10,
@@ -167,6 +160,18 @@ const Bisection = () => {
       setEs(example.es);
       setIt(example.it);
       setConditionType(example.conditionType);
+      console.log({ example });
+      calculate({
+        name: 'Bisection',
+        example,
+        validationData,
+        setShowSolution,
+        setErrorMsg,
+        operation,
+        setData,
+        executeScroll,
+      });
+      return;
     }
 
     calculate({
