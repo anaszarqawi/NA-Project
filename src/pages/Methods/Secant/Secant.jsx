@@ -1,24 +1,19 @@
 import React from 'react';
 import './style.scss';
-import { secant } from '../Methods';
 
 import CustomInput from '../components/CustomInput/CustomInput';
 import CustomButton from '../components/CustomButton/CustomButton';
-import SelectMenu from '../../components/SelectMenu/SelectMenu';
 import CustomTable from '../components/CustomTable/CustomTable';
+import MethodButtons from '../components/MethodButtons/MethodButtons';
+import ExamplesAndSaved from '../components/ExamplesAndSaved/ExamplesAndSaved';
 
-// import mathjs
-// load math.js (using node.js)
-import { create, all } from 'mathjs';
 import { useRef } from 'react';
+import { useX } from '../../../context/xContext';
 
 const Secant = () => {
   React.useEffect(() => {
     document.title = 'Secant Method';
   }, []);
-
-  const config = {};
-  const math = create(all, config);
 
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
@@ -32,8 +27,11 @@ const Secant = () => {
   const [conditionType, setConditionType] = React.useState('es');
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
+  const [values, SetValues] = React.useState({});
+  const methodName = 'Secant';
 
   const [errorMsg, setErrorMsg] = React.useState('');
+  const { calculate } = useX();
 
   const examples = [
     {
@@ -94,68 +92,74 @@ const Secant = () => {
     },
   ];
 
-  const setExample = (example) => {
-    setFx(example.fx);
-    setXa(example.xa);
-    setXb(example.xb);
-    setEs(example.es);
-    setIt(example.it);
-    setConditionType(example.conditionType);
+  const validationData = () => {
+    if (fx === '')
+      return {
+        status: false,
+        error: 'Please enter a function',
+      };
 
-    const result = secant(example.fx, example.xa, example.xb, example.es, example.it, example.conditionType);
+    if (xa === '')
+      return {
+        status: false,
+        error: 'Please enter a value for Xa',
+      };
 
-    if (result.error) {
-      setErrorMsg(result.error);
-      setShowSolution(false);
-      return;
-    }
-    setErrorMsg('');
-    setShowSolution(true);
-    setData(result);
+    if (xb === '')
+      return {
+        status: false,
+        error: 'Please enter a value for Xb',
+      };
+
+    if (es === 0 && conditionType === 'es')
+      return {
+        status: false,
+        error: 'Please enter a value for Es',
+      };
+
+    if (it === 0 && conditionType === 'it')
+      return {
+        status: false,
+        error: 'Please enter a value for Maximum Iterations',
+      };
+
+    return {
+      status: true,
+    };
   };
 
-  const calculate = () => {
-    let error = false;
+  React.useEffect(() => {
+    SetValues({
+      fx,
+      xa,
+      xb,
+      es,
+      it,
+      conditionType,
+    });
+  }, [fx, xa, xb, es, it, conditionType]);
 
-    if (fx === null) {
-      setErrorMsg('Please enter a function');
-      setShowSolution(false);
-      error = true;
-    }
-    if (xa === null) {
-      setErrorMsg('Please enter a value for X-1');
-      setShowSolution(false);
-      error = true;
-    }
-    if (xb === null) {
-      setErrorMsg('Please enter a value for X0');
-      setShowSolution(false);
-      error = true;
-    }
-    if (es === 0 && conditionType === 'es') {
-      setErrorMsg('Please enter a value for Es');
-      setShowSolution(false);
-      error = true;
-    }
-    if (it === 0 && conditionType === 'it') {
-      setErrorMsg('Please enter a value for Maximum Iterations');
-      setShowSolution(false);
-      error = true;
-    }
-    if (error) {
-      return;
+  const handleCalculate = (operation, example) => {
+    if (example) {
+      setFx(example.fx);
+      setXa(example.xa);
+      setXb(example.xb);
+      setEs(example.es);
+      setIt(example.it);
+      setConditionType(example.conditionType);
     }
 
-    const result = secant(fx, xa, xb, es, it, conditionType);
-
-    if (result.error) {
-      setErrorMsg(result.error);
-      setShowSolution(false);
-      return;
-    }
-    setErrorMsg('');
-    setShowSolution(true);
-    setData(result);
+    calculate({
+      name: methodName,
+      values,
+      example,
+      validationData,
+      setShowSolution,
+      setErrorMsg,
+      operation,
+      setData,
+      executeScroll,
+    });
   };
 
   const clear = () => {
@@ -190,13 +194,6 @@ const Secant = () => {
             placeholder="Error Sum %"
             onChange={setEs}
             value={es}
-            options={[
-              { label: '=', value: '=' },
-              { label: '<', value: '<' },
-              { label: '>', value: '>' },
-              { label: '<=', value: '<=' },
-              { label: '>=', value: '>=' },
-            ]}
             withCheckbox={true}
             name="es"
             onClick={setConditionType}
@@ -216,10 +213,7 @@ const Secant = () => {
         </div>
       </div>
       {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
-      <div className="buttons-container">
-        <CustomButton label="Calculate" onClick={calculate} type="primary" />
-        <CustomButton label="Clear" onClick={clear} type="secondary" />
-      </div>
+      <MethodButtons method={methodName} calculate={handleCalculate} clear={clear} />
       {showSolution && (
         <>
           <hr className="line-divider"></hr>
@@ -243,11 +237,7 @@ const Secant = () => {
           </div>
         </>
       )}
-      <hr className="line-divider"></hr>
-      <div className="center-title">Examples</div>
-      <div className="examples-container">
-        <SelectMenu examples={examples} type="examples" setter={setExample} />
-      </div>
+      <ExamplesAndSaved method={methodName} examples={examples} setter={handleCalculate} />
     </div>
   );
 };

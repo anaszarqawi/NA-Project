@@ -1,7 +1,7 @@
 import React from 'react';
 import { bisection, falsePosition, simpleFixedPoint, newton, secant } from '../pages/Methods/Methods';
-// import { app } from '../utils/firebase-config.js';
-// import { getAnalytics, logEvent } from 'firebase/analytics';
+import { app } from '../utils/firebase-config.js';
+import { getAnalytics, logEvent } from 'firebase/analytics';
 
 const xContext = React.createContext({});
 
@@ -22,10 +22,7 @@ export default function XProvider({ children }) {
 
     localStorage.setItem('saved', JSON.stringify(saved));
 
-    // logEvent(analytics, 'save', {
-    //   method: method,
-    //   data: data,
-    // });
+    logEvent(analytics, 'save');
 
     setIsSaved(true);
     setTimeout(() => {
@@ -33,7 +30,7 @@ export default function XProvider({ children }) {
     }, 2000);
   };
 
-  // const analytics = getAnalytics(app);
+  const analytics = getAnalytics(app);
 
   React.useEffect(() => {
     const tempSaved = JSON.parse(localStorage.getItem('saved'));
@@ -89,9 +86,17 @@ export default function XProvider({ children }) {
     }
 
     const tempExample = props.example;
+    let result = [];
 
-    const result =
-      props.operation === 'setExample' ? matchMethod(props.name, tempExample) : matchMethod(props.name, props.values);
+    if (props.operation === 'setExample') {
+      logEvent(analytics, 'example');
+      result = matchMethod(props.name, tempExample);
+    }
+
+    if (props.operation === 'calculate') {
+      logEvent(analytics, 'calculate');
+      result = matchMethod(props.name, props.values);
+    }
 
     props.setErrorMsg('');
     props.setShowSolution(true);

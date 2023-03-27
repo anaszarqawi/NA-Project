@@ -31,7 +31,7 @@ const Bisection = () => {
   const [conditionType, setConditionType] = React.useState('es');
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
-  const [values, SetValues] = React.useState();
+  const [values, SetValues] = React.useState({});
 
   const [errorMsg, setErrorMsg] = React.useState('');
 
@@ -49,13 +49,6 @@ const Bisection = () => {
       xu: 1,
       conditionType: 'es',
       es: 1,
-    },
-    {
-      fx: 'x^3 - 4x^2 - 8x -1',
-      xl: 2,
-      xu: 3,
-      conditionType: 'es',
-      es: 0.5,
     },
     {
       fx: '-0.6x^2 + 2.4x + 5.5',
