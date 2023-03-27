@@ -5,6 +5,10 @@ import { useX } from '../../../../context/xContext';
 const CustomTable = (props) => {
   const { settings } = useX();
 
+  React.useEffect(() => {
+    console.log({ data: props.data });
+  }, [props.data]);
+
   return (
     <table className="solution-table">
       <tr>

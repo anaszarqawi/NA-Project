@@ -37,6 +37,7 @@ const Bisection = () => {
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [values, setValues] = React.useState({});
+  const methodName = 'Bisection';
 
   const [errorMsg, setErrorMsg] = React.useState('');
 
@@ -109,10 +110,10 @@ const Bisection = () => {
   React.useEffect(() => {
     setValues({
       fx,
-      xl,
-      xu,
-      es,
-      it,
+      xl: xl,
+      xu: xu,
+      es: es,
+      it: it,
       conditionType,
     });
     // setSearchParams({ fx, xl, xu, es, it, conditionType });
@@ -133,36 +134,43 @@ const Bisection = () => {
   // }, []);
 
   const validationData = () => {
-    if (fx === '') {
+    if (fx === '')
       return {
         status: false,
         error: 'Please enter a function',
       };
-    }
-    if (xl === '') {
+
+    if (xl === '')
       return {
         status: false,
         error: 'Please enter a value for Xl',
       };
-    }
-    if (xu === '') {
+
+    if (xu === '')
       return {
         status: false,
         error: 'Please enter a value for Xu',
       };
-    }
-    if (es === 0 && conditionType === 'es') {
+
+    if ((es === '' || es === null || es === undefined) && conditionType === 'es')
       return {
         status: false,
         error: 'Please enter a value for Es',
       };
-    }
-    if (it === 0 && conditionType === 'it') {
+
+    if ((it === '' || it === null || it === undefined) && conditionType === 'it')
       return {
         status: false,
         error: 'Please enter a value for Maximum Iterations',
       };
-    }
+
+    if (xl >= xu)
+      return {
+        status: false,
+        error: 'Xl must be less than Xu',
+      };
+
+    console.log({ validation: { fx, xl, xu, es, it, conditionType } });
 
     return {
       status: true,
@@ -177,24 +185,11 @@ const Bisection = () => {
       setEs(example.es);
       setIt(example.it);
       setConditionType(example.conditionType);
-
-      calculate({
-        name: 'Bisection',
-        example,
-        validationData,
-        setShowSolution,
-        setErrorMsg,
-        operation,
-        setData,
-        executeScroll,
-      });
-
-      return;
     }
 
     calculate({
-      name: 'Bisection',
-      values,
+      name: methodName,
+      values: operation === 'setExample' ? example : values,
       validationData,
       setShowSolution,
       setErrorMsg,
@@ -226,14 +221,14 @@ const Bisection = () => {
           <CustomInput label="F(x)" type="text" placeholder="Mathematical Function" value={fx} onChange={setFx} />
         </div>
         <div className="variables-inline">
-          <CustomInput label="X" sub="l" type="number" placeholder="eXtreme Lower" value={xl} onChange={setXl} />
-          <CustomInput label="X" sub="u" type="number" placeholder="eXtreme Upper" value={xu} onChange={setXu} />
+          <CustomInput label="X" sub="l" type="text" placeholder="eXtreme Lower" value={xl} onChange={setXl} />
+          <CustomInput label="X" sub="u" type="text" placeholder="eXtreme Upper" value={xu} onChange={setXu} />
         </div>
         <div className="variables-block">
           <div className="variables-title">Condition</div>
           <CustomInput
             label="ES"
-            type="number"
+            type="text"
             placeholder="Error Sum %"
             onChange={setEs}
             value={es}
@@ -244,7 +239,7 @@ const Bisection = () => {
           />
           <CustomInput
             label="MAXi"
-            type="number"
+            type="text"
             placeholder="Max Iteration"
             withCheckbox={true}
             value={it}

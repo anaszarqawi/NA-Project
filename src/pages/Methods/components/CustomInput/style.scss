@@ -58,14 +58,10 @@
     }
 }
 
-.settings-input {
-    // justify-content: flex-start;
-}
 
 .variables {
     display: flex;
     flex-direction: column;
-    margin-top: var(--space-2);
 
     .variables-block {
         display: flex;

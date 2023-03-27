@@ -1,5 +1,5 @@
 .custom-button {
-  min-width: fit-content;
+  // min-width: fit-content;
   padding: var(--space-50) var(--space-2);
   border-radius: var(--border-radius);
   border: 1px solid var(--color-3-20);
@@ -10,6 +10,7 @@
   background-color: var(--color-2);
   outline: none;
   text-align: center;
+  flex: 1 0 0;
   // margin: var(--space-1) auto;
   cursor: pointer;
 
@@ -28,24 +29,30 @@
 
 .buttons-container {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   justify-content: center;
-  // width: 50%;
+  width: fit-content;
   gap: var(--space-1);
   margin: var(--space-2) auto;
 }
 
 @media only screen and (max-width: 600px) {
-  .custom-button {
-    padding: var(--space-50) var(--space-1);
-
-    &:first-child {
-      flex: 2 0 100%
-    }
+  .buttons-container {
+    width: 100%;
   }
 
-  .buttons-container {
-    width: auto;
-    flex-wrap: wrap;
+  .custom-button {
+    padding: var(--space-50) var(--space-1);
+    flex: 1 0 0;
+
+    //   &:first-child {
+    //     flex: 2 0 100%
+    //   }
+    // }
+
+    // .buttons-container {
+    //   width: auto;
+    //   flex-wrap: wrap;
+    // }
   }
 }

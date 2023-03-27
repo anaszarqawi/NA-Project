@@ -46,6 +46,7 @@ const SimpleFixedPoint = () => {
       es: 0.7,
     },
   ];
+
   React.useEffect(() => {
     SetValues({
       fx,
