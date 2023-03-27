@@ -32,6 +32,7 @@ const Bisection = () => {
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [values, SetValues] = React.useState({});
+  const methodName = 'False Position';
 
   const [errorMsg, setErrorMsg] = React.useState('');
 
@@ -113,36 +114,41 @@ const Bisection = () => {
   }, [fx, xl, xu, es, it, conditionType]);
 
   const validationData = () => {
-    if (fx === '') {
+    if (fx === '')
       return {
         status: false,
         error: 'Please enter a function',
       };
-    }
-    if (xl === '') {
+
+    if (xl === '')
       return {
         status: false,
         error: 'Please enter a value for Xl',
       };
-    }
-    if (xu === '') {
+
+    if (xu === '')
       return {
         status: false,
         error: 'Please enter a value for Xu',
       };
-    }
-    if (es === 0 && conditionType === 'es') {
+
+    if (es === 0 && conditionType === 'es')
       return {
         status: false,
         error: 'Please enter a value for Es',
       };
-    }
-    if (it === 0 && conditionType === 'it') {
+
+    if (it === 0 && conditionType === 'it')
       return {
         status: false,
         error: 'Please enter a value for Maximum Iterations',
       };
-    }
+
+    if (xl >= xu)
+      return {
+        status: false,
+        error: 'Xl must be less than Xu',
+      };
 
     return {
       status: true,
@@ -160,9 +166,8 @@ const Bisection = () => {
     }
 
     calculate({
-      name: 'False Position',
-      values,
-      example,
+      name: methodName,
+      values: operation === 'setExample' ? example : values,
       validationData,
       setShowSolution,
       setErrorMsg,
@@ -224,7 +229,7 @@ const Bisection = () => {
         </div>
       </div>
       {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
-      <MethodButtons method="False Position" calculate={handleCalculate} clear={clear} />
+      <MethodButtons method={methodName} calculate={handleCalculate} clear={clear} />
       {showSolution && (
         <>
           <hr className="line-divider"></hr>
@@ -250,7 +255,7 @@ const Bisection = () => {
           </div>
         </>
       )}
-      <ExamplesAndSaved method="False Position" examples={examples} setter={handleCalculate} />
+      <ExamplesAndSaved method={methodName} examples={examples} setter={handleCalculate} />
     </div>
   );
 };

@@ -24,6 +24,8 @@ const Settings = (props) => {
 
   return (
     <div className="page">
+      <div className="center-title">Settings</div>
+
       <div className="settings-section">
         <div className="settings-section-title">Decimal precision</div>
         <CustomInput

@@ -5,13 +5,16 @@
     margin-bottom: var(--space-2);
     border-radius: var(--border-radius);
     overflow: hidden;
+
     th {
         text-align: left;
         background-color: var(--color-2);
     }
+
     td:first-child {
         background-color: var(--color-2);
     }
+
     tr:last-child {
         .xr {
             background-color: var(--color-2);
@@ -33,4 +36,5 @@ td {
     width: fit-content;
     margin: var(--space-2) auto;
     border-radius: var(--border-radius);
+    text-align: center;
 }

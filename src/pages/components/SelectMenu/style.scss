@@ -1,11 +1,19 @@
 .select-menu {
-  margin-top: var(--space-2);
+
+  &:first-child {
+    .select-menu-title {
+      padding-top: 0;
+    }
+  }
 
   .select-menu-title {
     font-size: var(--font-size-5);
     font-weight: var(--font-weight-1);
     color: var(--color-3);
     margin-bottom: var(--space-50);
+    padding-top: var(--space-2);
+
+
   }
 
   .select-menu-list {
@@ -87,7 +95,9 @@
     }
 
     @media only screen and (max-width: 600px) {
-      .examples {
+
+      .examples,
+      .saved {
         display: flex;
         flex-direction: column;
         justify-content: center;
