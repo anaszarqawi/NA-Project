@@ -4,14 +4,21 @@ import { useX } from '../../../../context/xContext';
 
 const ExamplesAndSaved = (props) => {
   const { saved } = useX();
+  const [methodName, setMethodName] = React.useState(props.method.replace(/ /g, ''));
+
+  const isInSaved = () => {
+    if (Object.keys(saved).length !== 0) if (methodName in saved) if (saved[methodName].length !== 0) return true;
+    return false;
+  };
+
   return (
     <div>
-      {Object.keys(saved).length !== 0 && saved[props.method].length !== 0 && (
+      {isInSaved() && (
         <>
           <hr className="line-divider"></hr>
           <div className="center-title">Saved</div>
           <div className="examples-container">
-            <SelectMenu method={props.method} examples={saved[props.method]} type="saved" setter={props.setter} />
+            <SelectMenu method={methodName} examples={saved[methodName]} type="saved" setter={props.setter} />
           </div>
         </>
       )}

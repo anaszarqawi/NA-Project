@@ -1,4 +1,5 @@
 import React from 'react';
+// import { useSearchParams } from 'react-router-dom';
 import './style.scss';
 
 import CustomInput from '../components/CustomInput/CustomInput';
@@ -24,6 +25,7 @@ const Bisection = () => {
   const executeScroll = () => myRef.current.scrollIntoView();
 
   const { calculate } = useX();
+  // const [searchParams, setSearchParams] = useSearchParams();
 
   const [fx, setFx] = React.useState('');
   const [xl, setXl] = React.useState('');
@@ -34,7 +36,7 @@ const Bisection = () => {
   const [conditionType, setConditionType] = React.useState('es');
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
-  const [values, SetValues] = React.useState();
+  const [values, setValues] = React.useState({});
 
   const [errorMsg, setErrorMsg] = React.useState('');
 
@@ -105,7 +107,7 @@ const Bisection = () => {
   ];
 
   React.useEffect(() => {
-    SetValues({
+    setValues({
       fx,
       xl,
       xu,
@@ -113,7 +115,22 @@ const Bisection = () => {
       it,
       conditionType,
     });
+    // setSearchParams({ fx, xl, xu, es, it, conditionType });
   }, [fx, xl, xu, es, it, conditionType]);
+
+  // React.useEffect(() => {
+  //   if (searchParams.get('fx')) {
+  //     setFx(searchParams.get('fx'));
+  //     setXl(searchParams.get('xl'));
+  //     setXu(searchParams.get('xu'));
+  //     setEs(searchParams.get('es'));
+  //     setIt(searchParams.get('it'));
+  //     setConditionType(searchParams.get('conditionType'));
+
+  //     React.lazy(() => handleCalculate());
+  //     //
+  //   }
+  // }, []);
 
   const validationData = () => {
     if (fx === '') {
@@ -160,7 +177,7 @@ const Bisection = () => {
       setEs(example.es);
       setIt(example.it);
       setConditionType(example.conditionType);
-      console.log({ example });
+
       calculate({
         name: 'Bisection',
         example,
@@ -171,13 +188,13 @@ const Bisection = () => {
         setData,
         executeScroll,
       });
+
       return;
     }
 
     calculate({
       name: 'Bisection',
       values,
-      example,
       validationData,
       setShowSolution,
       setErrorMsg,

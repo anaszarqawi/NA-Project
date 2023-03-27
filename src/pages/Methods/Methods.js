@@ -112,10 +112,9 @@ export const falsePosition = (values) => {
   return data;
 };
 
-export const simpleFixedPoint = (sfp, xo, es, it, conditionType) => {
-  console.clear();
+export const simpleFixedPoint = ({ ...values }) => {
   console.log('SimpleFixedPoint');
-  let xr = xo;
+  let xr = values.x0;
   let xrOld = 0;
   let ea = 0;
   let i = 0;
@@ -140,13 +139,10 @@ export const simpleFixedPoint = (sfp, xo, es, it, conditionType) => {
     return yAnswer.toString();
   };
 
-  // const sfp = getSfp(fx);
-  // console.log({ sfp: sfp });
-
   do {
     if (i !== 0) {
       xrOld = xr;
-      xr = f(sfp, xrOld);
+      xr = f(values.fx, xrOld);
     }
 
     if (xr !== 0) ea = Math.abs((xr - xrOld) / xr) * 100;
@@ -154,16 +150,16 @@ export const simpleFixedPoint = (sfp, xo, es, it, conditionType) => {
     data.push({
       i: i,
       xi: round(xr, 5),
-      fxi: round(f(sfp, xr), 5),
+      fxi: round(f(values.fx, xr), 5),
       ea: i === 0 ? '-' : round(ea, 2) + '%',
     });
     i++;
-  } while (conditionType === 'es' ? ea > es : i < it);
+  } while (values.conditionType === 'es' ? ea > values.es : i < values.it);
 
   return data;
 };
 
-export const newton = (fx, x0, es, it, conditionType) => {
+export const newton = ({ ...values }) => {
   console.clear();
   console.log('newton');
   let x0Old = 0;
@@ -171,31 +167,28 @@ export const newton = (fx, x0, es, it, conditionType) => {
   let i = 0;
   let data = [];
 
-  const NewFx = fx.replace(/\(|\)/g, '');
-  console.log({ NewFx });
+  const NewFx = values.fx.replace(/\(|\)/g, '');
 
   const dfx = math.derivative(NewFx, 'x').toString();
 
   do {
-    // console.log({ fx, dfx, x0, x0Old, ea, i });
     if (i !== 0) {
-      x0Old = x0;
-      x0 = x0Old - f(fx, x0Old) / f(dfx, x0Old);
+      x0Old = values.x0;
+      values.x0 = x0Old - f(values.fx, x0Old) / f(dfx, x0Old);
     }
 
-    if (x0 !== 0) ea = Math.abs((x0 - x0Old) / x0) * 100;
+    if (values.x0 !== 0) ea = Math.abs((values.x0 - x0Old) / values.x0) * 100;
 
-    console.log(i, x0, round(f(fx, x0), 5), f(dfx, x0), ea);
-
+    // TODO: Fix NaN for last iteration for fxi
     data.push({
       i: i,
-      xi: round(x0, 5),
-      fxi: round(f(fx, x0), 5),
-      dfxi: round(f(dfx, x0), 5),
+      xi: round(values.x0, 5),
+      fxi: round(f(values.fx, values.x0), 5),
+      dfxi: round(f(dfx, values.x0), 5),
       ea: i === 0 ? '-' : round(ea, 3) + '%',
     });
     i++;
-  } while (conditionType === 'es' ? ea > es : i < it + 1);
+  } while (values.conditionType === 'es' ? ea > values.es : i < values.it + 1);
 
   console.table(data);
   return data;

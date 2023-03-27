@@ -22,7 +22,7 @@ const SelectMenu = (props) => {
     example.fx !== undefined && (details.fx = example.fx);
     example.xl !== undefined && (details.xl = example.xl);
     example.xu !== undefined && (details.xu = example.xu);
-    example.xo !== undefined && (details.xo = example.xo);
+    example.x0 !== undefined && (details.x0 = example.x0);
     example.xa !== undefined && (details.xa = example.xa);
     example.xb !== undefined && (details.xb = example.xb);
     example.conditionType === 'es' && (details.es = example.es);

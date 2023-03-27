@@ -1,12 +1,10 @@
 import React from 'react';
 import './style.scss';
-import { simpleFixedPoint } from '../Methods';
 
 import CustomInput from '../components/CustomInput/CustomInput';
-import CustomButton from '../components/CustomButton/CustomButton';
-import SelectMenu from '../../components/SelectMenu/SelectMenu';
 import CustomTable from '../components/CustomTable/CustomTable';
 import ExamplesAndSaved from '../components/ExamplesAndSaved/ExamplesAndSaved';
+import MethodButtons from '../components/MethodButtons/MethodButtons';
 
 // import mathjs
 // load math.js (using node.js)
@@ -22,115 +20,103 @@ const SimpleFixedPoint = () => {
   const config = {};
   const math = create(all, config);
 
-  const { addToSaved } = useX();
   const myRef = useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
 
   const [fx, setFx] = React.useState(null);
-  const [xo, setXo] = React.useState(null);
+  const [x0, setX0] = React.useState(null);
   const [es, setEs] = React.useState(null);
   const [it, setIt] = React.useState(null);
 
   const [conditionType, setConditionType] = React.useState('es');
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
-
-  const [isSaved, setIsSaved] = React.useState(false);
+  const [values, SetValues] = React.useState({});
+  const methodName = 'Simple Fixed Point';
 
   const [errorMsg, setErrorMsg] = React.useState('');
+
+  const { calculate } = useX();
 
   const examples = [
     {
       fx: 'sqrt(1.9x + 2.8)',
-      xo: 5,
+      x0: 5,
       conditionType: 'es',
       es: 0.7,
     },
   ];
+  React.useEffect(() => {
+    SetValues({
+      fx,
+      x0,
+      es,
+      it,
+      conditionType,
+    });
+  }, [fx, x0, es, it, conditionType]);
 
-  const calculate = (toAddToSaved) => {
-    let error = false;
-
-    if (fx === null) {
-      setErrorMsg('Please enter a function');
-      setShowSolution(false);
-      error = true;
+  const validationData = () => {
+    if (fx === '') {
+      return {
+        status: false,
+        error: 'Please enter a function',
+      };
     }
-    if (xo === null) {
-      setErrorMsg('Please enter a value for Xo');
-      setShowSolution(false);
-      error = true;
+    if (x0 === '') {
+      return {
+        status: false,
+        error: 'Please enter a value for X0',
+      };
     }
     if (es === 0 && conditionType === 'es') {
-      setErrorMsg('Please enter a value for Es');
-      setShowSolution(false);
-      error = true;
+      return {
+        status: false,
+        error: 'Please enter a value for Es',
+      };
     }
     if (it === 0 && conditionType === 'it') {
-      setErrorMsg('Please enter a value for Maximum Iterations');
-      setShowSolution(false);
-      error = true;
-    }
-    if (error) {
-      return;
+      return {
+        status: false,
+        error: 'Please enter a value for Maximum Iterations',
+      };
     }
 
-    if (toAddToSaved) {
-      addToSaved('fixedPoint', {
-        fx,
-        xo,
-        es,
-        it,
-        conditionType,
-      });
-      setIsSaved(true);
-      setInterval(() => {
-        setIsSaved(false);
-      }, 2000);
-      return;
+    return {
+      status: true,
+    };
+  };
+
+  const handleCalculate = (operation, example) => {
+    if (example) {
+      setFx(example.fx);
+      setX0(example.x0);
+      setEs(example.es);
+      setIt(example.it);
+      setConditionType(example.conditionType);
     }
 
-    console.log(fx, xo, es, it, conditionType);
-
-    const result = simpleFixedPoint(fx, xo, es, it, conditionType);
-
-    if (result.error) {
-      setErrorMsg(result.error);
-      setShowSolution(false);
-      return;
-    }
-    setErrorMsg('');
-    setShowSolution(true);
-    setData(result);
+    calculate({
+      name: methodName,
+      values,
+      example,
+      validationData,
+      setShowSolution,
+      setErrorMsg,
+      operation,
+      setData,
+      executeScroll,
+    });
   };
 
   const clear = () => {
     setFx('');
-    setXo('');
+    setX0('');
     setEs('');
     setIt('');
     setConditionType('es');
     setShowSolution(false);
     setErrorMsg('');
-  };
-
-  const setExample = (example) => {
-    setFx(example.fx);
-    setXo(example.xo);
-    setEs(example.es);
-    setIt(example.it);
-    setConditionType(example.conditionType);
-
-    const result = simpleFixedPoint(example.fx, example.xo, example.es, example.it, example.conditionType);
-
-    if (result.error) {
-      setErrorMsg(result.error);
-      setShowSolution(false);
-      return;
-    }
-    setErrorMsg('');
-    setShowSolution(true);
-    setData(result);
   };
 
   return (
@@ -143,7 +129,7 @@ const SimpleFixedPoint = () => {
           <CustomInput label="SFP" type="text" placeholder="Simple Fixed Point" value={fx} onChange={setFx} />
         </div>
         <div className="variables-inline">
-          <CustomInput label="X" sub="o" type="number" placeholder="eXtreme node" value={xo} onChange={setXo} />
+          <CustomInput label="X" sub="0" type="number" placeholder="eXtreme node" value={x0} onChange={setX0} />
         </div>
         <div className="variables-block">
           <div className="variables-title">Condition</div>
@@ -153,13 +139,6 @@ const SimpleFixedPoint = () => {
             placeholder="Error Sum %"
             onChange={setEs}
             value={es}
-            options={[
-              { label: '=', value: '=' },
-              { label: '<', value: '<' },
-              { label: '>', value: '>' },
-              { label: '<=', value: '<=' },
-              { label: '>=', value: '>=' },
-            ]}
             withCheckbox={true}
             name="es"
             onClick={setConditionType}
@@ -179,11 +158,8 @@ const SimpleFixedPoint = () => {
         </div>
       </div>
       {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
-      <div className="buttons-container">
-        <CustomButton label="Clear" onClick={clear} type="secondary" />
-        <CustomButton label={isSaved ? 'Saved!' : 'Save'} onClick={() => calculate(true)} type="secondary" />
-        <CustomButton label="Calculate" onClick={calculate} type="primary" />
-      </div>
+      <MethodButtons method={methodName} calculate={handleCalculate} clear={clear} />
+
       {showSolution && (
         <>
           <hr className="line-divider"></hr>
@@ -200,7 +176,7 @@ const SimpleFixedPoint = () => {
           </div>
         </>
       )}
-      <ExamplesAndSaved method="fixedPoint" examples={examples} setter={setExample} />
+      <ExamplesAndSaved method={methodName} examples={examples} setter={handleCalculate} />
     </div>
   );
 };

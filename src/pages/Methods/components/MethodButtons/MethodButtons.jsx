@@ -7,7 +7,7 @@ const MethodButtons = (props) => {
 
   return (
     <div className="buttons-container">
-      <CustomButton label="Calculate" onClick={props.calculate} type="primary" />
+      <CustomButton label="Calculate" onClick={() => props.calculate('calculate')} type="primary" />
       <CustomButton label="Clear" onClick={props.clear} type="secondary" />
 
       <CustomButton
