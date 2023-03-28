@@ -3,6 +3,8 @@ import { bisection, falsePosition, simpleFixedPoint, newton, secant } from '../p
 import { app } from '../utils/firebase-config.js';
 import { getAnalytics, logEvent } from 'firebase/analytics';
 
+import { ToastContainer, toast } from 'react-toastify';
+
 const xContext = React.createContext({});
 
 export const useX = () => React.useContext(xContext);
@@ -56,48 +58,6 @@ export default function XProvider({ children }) {
       .replace(/\b\w/g, (l) => l.toUpperCase());
   }, []);
 
-  // const validationData = (values) => {
-  //   if (values.fx === undefined && values.fx === '')
-  //     return {
-  //       status: false,
-  //       error: 'Please enter a function',
-  //     };
-
-  //   if (values.xl === undefined && values.xl === '')
-  //     return {
-  //       status: false,
-  //       error: 'Please enter a value for Xl',
-  //     };
-
-  //   if (values.xu === undefined && values.xu === '')
-  //     return {
-  //       status: false,
-  //       error: 'Please enter a value for Xu',
-  //     };
-
-  //   if ((values.es === '' || values.es === null || values.es === undefined) && values.conditionType === 'es')
-  //     return {
-  //       status: false,
-  //       error: 'Please enter a value for Es',
-  //     };
-
-  //   if ((values.it === '' || values.it === null || values.it === undefined) && values.conditionType === 'it')
-  //     return {
-  //       status: false,
-  //       error: 'Please enter a value for Maximum Iterations',
-  //     };
-
-  //   if (values.xl >= values.xu)
-  //     return {
-  //       status: false,
-  //       error: 'Xl must be less than Xu',
-  //     };
-
-  //   return {
-  //     status: true,
-  //   };
-  // };
-
   const matchMethod = (name, values) => {
     if (name === 'Bisection') return bisection(values);
     else if (name === 'False Position') return falsePosition(values);
@@ -111,7 +71,8 @@ export default function XProvider({ children }) {
       const isValidData = props.validationData();
       if (!isValidData.status) {
         props.setShowSolution(false);
-        props.setErrorMsg(isValidData.error);
+        // props.setErrorMsg(isValidData.error);
+        toast.error(isValidData.error);
         return;
       }
     }
