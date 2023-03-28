@@ -103,6 +103,51 @@ input[type='number'] {
   margin-bottom: calc(67px + var(--space-1));
 }
 
+// .Toastify {
+//   background-color: var(--color-2);
+//   color: var(--color-3);
+//   border-radius: var(--border-radius);
+// }
+// .Toastify__toast-theme--dark {
+//   background-color: var(--color-3) !important;
+//   color: var(--color-1) !important;
+//   // border: 1px solid var(--color-3-20) !important;
+//   // padding: space;
+// }
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.zoomIn {
+  animation-name: zoomIn;
+}
+
+@keyframes zoomOut {
+  from {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.zoomOut {
+  animation-name: zoomOut;
+}
+
 @media only screen and (max-width: 600px) {
   :root {
     --page-width: 100%;

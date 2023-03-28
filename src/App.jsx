@@ -5,6 +5,7 @@ import XContextProvider from './context/xContext';
 import './common/constants.scss';
 import './style.scss';
 import './pages/Methods/style.scss';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (

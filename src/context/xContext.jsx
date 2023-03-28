@@ -3,7 +3,7 @@ import { bisection, falsePosition, simpleFixedPoint, newton, secant } from '../p
 import { app } from '../utils/firebase-config.js';
 import { getAnalytics, logEvent } from 'firebase/analytics';
 
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, cssTransition, toast } from 'react-toastify';
 
 const xContext = React.createContext({});
 
@@ -66,13 +66,73 @@ export default function XProvider({ children }) {
     else if (name === 'Secant') return secant(values);
   };
 
+  const Zoom = cssTransition({
+    enter: 'zoomIn',
+    exit: 'zoomOut',
+  });
+
+  const showError = (type, msg) => {
+    if (type === 'error')
+      toast.error(msg, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        closeButton: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Zoom,
+        theme: 'colored',
+      });
+    else if (type === 'success')
+      toast.success(msg, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        closeButton: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Zoom,
+        theme: 'colored',
+      });
+    else if (type === 'info')
+      toast.info(msg, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        closeButton: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Zoom,
+        theme: 'colored',
+      });
+    else if (type === 'warning')
+      toast.warning(msg, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        closeButton: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Zoom,
+        theme: 'colored',
+      });
+  };
+
   const calculate = (props) => {
     if (props.operation !== 'setExample') {
       const isValidData = props.validationData();
       if (!isValidData.status) {
         props.setShowSolution(false);
         // props.setErrorMsg(isValidData.error);
-        toast.error(isValidData.error);
+        showError('error', isValidData.error);
         return;
       }
     }
@@ -92,6 +152,12 @@ export default function XProvider({ children }) {
     if (props.operation === 'calculate') {
       logEvent(analytics, 'calculate');
       result = matchMethod(props.name, props.values);
+    }
+
+    if (result.error) {
+      showError('error', result.error);
+      props.setShowSolution(false);
+      return;
     }
 
     props.setErrorMsg('');

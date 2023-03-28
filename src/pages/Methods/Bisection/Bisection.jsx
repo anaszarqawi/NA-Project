@@ -57,6 +57,13 @@ const Bisection = () => {
       es: 1,
     },
     {
+      fx: 'x^3 - 4x^2 - 8x - 1',
+      xl: 2,
+      xu: 3,
+      conditionType: 'es',
+      es: 0.5,
+    },
+    {
       fx: '-0.6x^2 + 2.4x + 5.5',
       xl: 5,
       xu: 10,
@@ -134,6 +141,8 @@ const Bisection = () => {
   // }, []);
 
   const validationData = () => {
+    console.log({ validation: { fx, xl, xu, es, it, conditionType } });
+
     if (fx === '')
       return {
         status: false,
@@ -164,13 +173,11 @@ const Bisection = () => {
         error: 'Please enter a value for Maximum Iterations',
       };
 
-    if (xl >= xu)
+    if (+xl >= +xu)
       return {
         status: false,
         error: 'Xl must be less than Xu',
       };
-
-    console.log({ validation: { fx, xl, xu, es, it, conditionType } });
 
     return {
       status: true,
