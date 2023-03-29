@@ -23,15 +23,19 @@ const round = (value, decimals) => {
 };
 
 export const bisection = (values) => {
+  console.clear();
+
   console.log('Bisection');
+  let xu = +values.xu;
+  let xl = +values.xl;
+
+  console.log({ xl: xl, xu: xu, fxl: f(values.fx, xl), fxu: f(values.fx, xu) });
+
   let xr = 0;
   let xrOld = 0;
   let ea = 0;
   let i = 0;
   let data = [];
-
-  let xu = values.xu;
-  let xl = values.xl;
 
   if (f(values.fx, xl) * f(values.fx, xu) > 0) {
     return {
@@ -42,16 +46,11 @@ export const bisection = (values) => {
   do {
     xrOld = xr;
     xr = (xl + xu) / 2;
-    // console.log({ f: f(fx, xr) * f(fx, xu) });
-    console.log({ xl: xl, xu: xu, fxl: f(values.fx, xl), fxu: f(values.fx, xu) });
 
     if (f(values.fx, xr) * f(values.fx, xu) < 0) xl = xr;
     else xu = xr;
 
     ea = Math.abs((xr - xrOld) / xr) * 100;
-    // console.log({ abs: ((xr - xrOld) / xr) * 100 });
-
-    // console.log({ xl, xr, xu, ea });
 
     data.push({
       i: i,
@@ -66,6 +65,11 @@ export const bisection = (values) => {
     i++;
   } while (values.conditionType === 'es' ? ea > values.es : i < values.it);
 
+  if (data.length === 0) {
+    return {
+      error: 'No root in this range',
+    };
+  }
   return data;
 };
 

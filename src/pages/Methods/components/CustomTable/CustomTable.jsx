@@ -6,7 +6,7 @@ const CustomTable = (props) => {
   const { settings } = useX();
 
   React.useEffect(() => {
-    console.log({ data: props.data });
+    console.log({ dataInTable: props.data });
   }, [props.data]);
 
   return (

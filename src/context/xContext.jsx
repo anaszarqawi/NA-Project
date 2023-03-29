@@ -3,6 +3,8 @@ import { bisection, falsePosition, simpleFixedPoint, newton, secant } from '../p
 import { app } from '../utils/firebase-config.js';
 import { getAnalytics, logEvent } from 'firebase/analytics';
 
+import { ToastContainer, cssTransition, toast } from 'react-toastify';
+
 const xContext = React.createContext({});
 
 export const useX = () => React.useContext(xContext);
@@ -56,48 +58,6 @@ export default function XProvider({ children }) {
       .replace(/\b\w/g, (l) => l.toUpperCase());
   }, []);
 
-  // const validationData = (values) => {
-  //   if (values.fx === undefined && values.fx === '')
-  //     return {
-  //       status: false,
-  //       error: 'Please enter a function',
-  //     };
-
-  //   if (values.xl === undefined && values.xl === '')
-  //     return {
-  //       status: false,
-  //       error: 'Please enter a value for Xl',
-  //     };
-
-  //   if (values.xu === undefined && values.xu === '')
-  //     return {
-  //       status: false,
-  //       error: 'Please enter a value for Xu',
-  //     };
-
-  //   if ((values.es === '' || values.es === null || values.es === undefined) && values.conditionType === 'es')
-  //     return {
-  //       status: false,
-  //       error: 'Please enter a value for Es',
-  //     };
-
-  //   if ((values.it === '' || values.it === null || values.it === undefined) && values.conditionType === 'it')
-  //     return {
-  //       status: false,
-  //       error: 'Please enter a value for Maximum Iterations',
-  //     };
-
-  //   if (values.xl >= values.xu)
-  //     return {
-  //       status: false,
-  //       error: 'Xl must be less than Xu',
-  //     };
-
-  //   return {
-  //     status: true,
-  //   };
-  // };
-
   const matchMethod = (name, values) => {
     if (name === 'Bisection') return bisection(values);
     else if (name === 'False Position') return falsePosition(values);
@@ -106,12 +66,76 @@ export default function XProvider({ children }) {
     else if (name === 'Secant') return secant(values);
   };
 
+  const ToastTransition = cssTransition({
+    enter: 'animate__animated animate__fadeInUp animate__faster',
+    exit: 'animate__animated animate__fadeOutDown animate__faster',
+    appendPosition: false,
+    collapse: false,
+    collapseDuration: 1,
+  });
+
+  const showError = (type, msg) => {
+    if (type === 'error')
+      toast.error(msg, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        closeButton: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: ToastTransition,
+        theme: 'colored',
+      });
+    else if (type === 'success')
+      toast.success(msg, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        closeButton: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: ToastTransition,
+        theme: 'colored',
+      });
+    else if (type === 'info')
+      toast.info(msg, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        closeButton: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: ToastTransition,
+        theme: 'colored',
+      });
+    else if (type === 'warning')
+      toast.warning(msg, {
+        position: 'bottom-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        closeButton: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: ToastTransition,
+        theme: 'colored',
+      });
+  };
+
   const calculate = (props) => {
     if (props.operation !== 'setExample') {
       const isValidData = props.validationData();
       if (!isValidData.status) {
         props.setShowSolution(false);
-        props.setErrorMsg(isValidData.error);
+        // props.setErrorMsg(isValidData.error);
+        showError('error', isValidData.error);
         return;
       }
     }
@@ -131,6 +155,12 @@ export default function XProvider({ children }) {
     if (props.operation === 'calculate') {
       logEvent(analytics, 'calculate');
       result = matchMethod(props.name, props.values);
+    }
+
+    if (result.error) {
+      showError('warning', result.error);
+      props.setShowSolution(false);
+      return;
     }
 
     props.setErrorMsg('');

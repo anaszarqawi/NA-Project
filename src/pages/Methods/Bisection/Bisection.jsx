@@ -57,6 +57,13 @@ const Bisection = () => {
       es: 1,
     },
     {
+      fx: 'x^3 - 4x^2 - 8x - 1',
+      xl: 2,
+      xu: 3,
+      conditionType: 'es',
+      es: 0.5,
+    },
+    {
       fx: '-0.6x^2 + 2.4x + 5.5',
       xl: 5,
       xu: 10,
@@ -134,6 +141,8 @@ const Bisection = () => {
   // }, []);
 
   const validationData = () => {
+    console.log({ validation: { fx, xl, xu, es, it, conditionType } });
+
     if (fx === '')
       return {
         status: false,
@@ -164,13 +173,11 @@ const Bisection = () => {
         error: 'Please enter a value for Maximum Iterations',
       };
 
-    if (xl >= xu)
+    if (+xl >= +xu)
       return {
         status: false,
         error: 'Xl must be less than Xu',
       };
-
-    console.log({ validation: { fx, xl, xu, es, it, conditionType } });
 
     return {
       status: true,
@@ -221,8 +228,8 @@ const Bisection = () => {
           <CustomInput label="F(x)" type="text" placeholder="Mathematical Function" value={fx} onChange={setFx} />
         </div>
         <div className="variables-inline">
-          <CustomInput label="X" sub="l" type="text" placeholder="eXtreme Lower" value={xl} onChange={setXl} />
-          <CustomInput label="X" sub="u" type="text" placeholder="eXtreme Upper" value={xu} onChange={setXu} />
+          <CustomInput label="X" sub="l" type="text" placeholder="X Lower" value={xl} onChange={setXl} />
+          <CustomInput label="X" sub="u" type="text" placeholder="X Upper" value={xu} onChange={setXu} />
         </div>
         <div className="variables-block">
           <div className="variables-title">Condition</div>

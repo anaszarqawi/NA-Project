@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 
 // components
 import Home from '../pages/Home/Home';
@@ -63,6 +64,7 @@ const AppRouter = () => {
           <Route key={index} path={route.path} element={route.component} />
         ))}
       </Routes>
+      <ToastContainer toastClassName="toast" limit={3} />
       <Footer />
     </Router>
   );

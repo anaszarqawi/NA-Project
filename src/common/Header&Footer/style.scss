@@ -13,8 +13,7 @@
     // backdrop-filter: blur(100px);
     backdrop-filter: blur(15px);
 
-    // -webkit-backdrop-filter: blur(60px);
-    // box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+
     .header-container,
     .footer-container {
         width: var(--page-width);
@@ -23,6 +22,7 @@
         align-items: center;
         padding: var(--space-50) var(--space-1);
         border-bottom: 1px solid var(--color-3-20);
+        // box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 30px;
 
         .logo {
             width: 100px;
