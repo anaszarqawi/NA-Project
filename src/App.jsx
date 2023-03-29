@@ -6,6 +6,7 @@ import './common/constants.scss';
 import './style.scss';
 import './pages/Methods/style.scss';
 import 'react-toastify/dist/ReactToastify.css';
+import 'animate.css';
 
 function App() {
   return (

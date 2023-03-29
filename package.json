@@ -7,6 +7,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "algebra.js": "^0.2.6",
+    "animate.css": "^4.1.1",
     "firebase": "^9.18.0",
     "jquery": "^3.6.3",
     "mathjs": "^11.5.1",

@@ -228,8 +228,8 @@ const Bisection = () => {
           <CustomInput label="F(x)" type="text" placeholder="Mathematical Function" value={fx} onChange={setFx} />
         </div>
         <div className="variables-inline">
-          <CustomInput label="X" sub="l" type="text" placeholder="eXtreme Lower" value={xl} onChange={setXl} />
-          <CustomInput label="X" sub="u" type="text" placeholder="eXtreme Upper" value={xu} onChange={setXu} />
+          <CustomInput label="X" sub="l" type="text" placeholder="X Lower" value={xl} onChange={setXl} />
+          <CustomInput label="X" sub="u" type="text" placeholder="X Upper" value={xu} onChange={setXu} />
         </div>
         <div className="variables-block">
           <div className="variables-title">Condition</div>

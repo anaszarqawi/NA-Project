@@ -53,3 +53,29 @@
     //underline
     border-bottom: 1px solid var(--color-3-20);
 }
+
+.toast {
+    padding: var(--space-1) !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: none !important;
+
+}
+
+@media only screen and (max-width: 600px) {
+    .Toastify__toast-container {
+        .toast {
+            transition: var(--transition-1);
+            border-radius: 0 !important;
+            border-bottom: 1px solid var(--color-3) !important;
+
+            &:first-child {
+                border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+            }
+
+            &:last-child {
+                border-bottom: none !important;
+            }
+        }
+    }
+
+}

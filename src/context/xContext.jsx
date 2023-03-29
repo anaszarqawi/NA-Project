@@ -66,9 +66,12 @@ export default function XProvider({ children }) {
     else if (name === 'Secant') return secant(values);
   };
 
-  const Zoom = cssTransition({
-    enter: 'zoomIn',
-    exit: 'zoomOut',
+  const ToastTransition = cssTransition({
+    enter: 'animate__animated animate__fadeInUp animate__faster',
+    exit: 'animate__animated animate__fadeOutDown animate__faster',
+    appendPosition: false,
+    collapse: false,
+    collapseDuration: 1,
   });
 
   const showError = (type, msg) => {
@@ -82,7 +85,7 @@ export default function XProvider({ children }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        transition: Zoom,
+        transition: ToastTransition,
         theme: 'colored',
       });
     else if (type === 'success')
@@ -95,7 +98,7 @@ export default function XProvider({ children }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        transition: Zoom,
+        transition: ToastTransition,
         theme: 'colored',
       });
     else if (type === 'info')
@@ -108,7 +111,7 @@ export default function XProvider({ children }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        transition: Zoom,
+        transition: ToastTransition,
         theme: 'colored',
       });
     else if (type === 'warning')
@@ -121,7 +124,7 @@ export default function XProvider({ children }) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        transition: Zoom,
+        transition: ToastTransition,
         theme: 'colored',
       });
   };
@@ -155,7 +158,7 @@ export default function XProvider({ children }) {
     }
 
     if (result.error) {
-      showError('error', result.error);
+      showError('warning', result.error);
       props.setShowSolution(false);
       return;
     }

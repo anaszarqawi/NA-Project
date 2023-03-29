@@ -64,7 +64,7 @@ const AppRouter = () => {
           <Route key={index} path={route.path} element={route.component} />
         ))}
       </Routes>
-      <ToastContainer limit={3} />
+      <ToastContainer toastClassName="toast" limit={3} />
       <Footer />
     </Router>
   );
