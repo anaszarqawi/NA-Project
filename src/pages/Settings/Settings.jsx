@@ -2,25 +2,14 @@ import React from 'react';
 import CustomInput from '../Methods/components/CustomInput/CustomInput';
 import './style.scss';
 import { useX } from '../../context/xContext';
+import CustomCheckButton from '../Methods/components/CustomCheckButton/CustomCheckButton';
 
 const Settings = (props) => {
   React.useEffect(() => {
     document.title = 'Settings';
   }, []);
 
-  const { settings, setSettings } = useX();
-  const [decimalPoints, setDecimalPoints] = React.useState(3);
-
-  React.useEffect(() => {
-    const tempSettings = {
-      decimalPrecision: {
-        decimalPoints: 3,
-        withRounding: true,
-      },
-    };
-
-    setSettings(tempSettings);
-  }, []);
+  const { settings, setSettings, decimalPoints, setDecimalPoints, withRounding, setWithRounding } = useX();
 
   return (
     <div className="page">
@@ -29,13 +18,14 @@ const Settings = (props) => {
       <div className="settings-section">
         <div className="settings-section-title">Decimal precision</div>
         <CustomInput
-          type="number"
+          type="text"
           label="Decimal Points"
           labelPosition="right"
           value={decimalPoints}
           onChange={setDecimalPoints}
           extraClass="settings-input"
         />
+        <CustomCheckButton value={withRounding} setValue={setWithRounding} label="With Rounding ?" />
       </div>
     </div>
   );

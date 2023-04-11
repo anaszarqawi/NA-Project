@@ -1,5 +1,4 @@
 import React from 'react';
-import './style.scss';
 
 import CustomInput from '../components/CustomInput/CustomInput';
 import CustomButton from '../components/CustomButton/CustomButton';
@@ -116,8 +115,7 @@ const Newton = () => {
 
     calculate({
       name: methodName,
-      values,
-      example,
+      values: operation === 'setExample' ? example : values,
       validationData,
       setShowSolution,
       setErrorMsg,

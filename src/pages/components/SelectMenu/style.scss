@@ -58,22 +58,23 @@
         align-items: center;
 
 
-        .select-menu-item-button {
-          display: flex;
-          align-items: center;
-          padding: var(--space-25);
-          margin-left: var(--space-1);
+      }
 
-          svg {
-            fill: var(--color-3-60);
-            width: 20px;
-            height: 20px;
-            transition: var(--transition-1);
-          }
+      .select-menu-item-button {
+        display: flex;
+        align-items: center;
+        padding: var(--space-25);
+        margin-left: var(--space-1);
 
-          &:hover>svg {
-            fill: var(--color-3);
-          }
+        svg {
+          fill: var(--color-3-60);
+          width: 20px;
+          height: 20px;
+          transition: var(--transition-1);
+        }
+
+        &:hover>svg {
+          fill: var(--color-3);
         }
       }
 
@@ -87,6 +88,7 @@
         &:first-child {
           border-left: none;
         }
+
       }
 
       @media only screen and (max-width: 600px) {
@@ -99,6 +101,12 @@
 
     .equations {
       padding: 0;
+
+      .select-menu-item-button {
+
+        margin-left: 0;
+        padding: var(--space-1);
+      }
     }
 
     @media only screen and (max-width: 600px) {

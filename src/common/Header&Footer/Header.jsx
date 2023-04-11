@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react';
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 import './style.scss';
+import { useX } from '../../context/xContext';
 
 const usePathname = () => {
   const location = useLocation();
@@ -11,6 +13,7 @@ const usePathname = () => {
 };
 
 const Header = () => {
+  const { lastMethod } = useX();
   const menuItems = [
     {
       name: 'Settings',
@@ -25,10 +28,17 @@ const Header = () => {
   return (
     <div className="header">
       <div className="header-container">
-        <div className="logo">
-          <Logo />
-        </div>
+        <a href="https://github.com/Anaszarqawi">
+          <div className="logo">
+            <Logo />
+          </div>
+        </a>
         <div className="header-buttons">
+          {lastMethod !== null && usePathname() === '/settings' && (
+            <Link className="header-button" to={`/${lastMethod}`}>
+              Back
+            </Link>
+          )}
           {menuItems.map((item) => (
             // eslint-disable-next-line react-hooks/rules-of-hooks
             <Link className={`header-button ${usePathname() === item.path && 'active-page'}`} to={item.path}>

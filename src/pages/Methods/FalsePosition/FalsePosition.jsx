@@ -1,5 +1,4 @@
 import React from 'react';
-import './style.scss';
 
 import CustomInput from '../components/CustomInput/CustomInput';
 import CustomTable from '../components/CustomTable/CustomTable';

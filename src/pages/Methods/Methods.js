@@ -1,13 +1,10 @@
 import { create, all, fix } from 'mathjs';
-// import nerdamer
 import nerdamer from 'nerdamer/nerdamer.core.js';
 import 'nerdamer/Algebra.js';
 import 'nerdamer/Calculus.js';
 import 'nerdamer/Solve.js';
 
 import algebra from 'algebra.js';
-var Fraction = algebra.Fraction;
-var Expression = algebra.Expression;
 var Equation = algebra.Equation;
 
 const config = {};
@@ -17,12 +14,7 @@ const f = (fx, x) => {
   return math.evaluate(fx, { x: x });
 };
 
-const round = (value, decimals) => {
-  // TODO: Fix Rounding
-  return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
-};
-
-export const bisection = (values) => {
+export const bisection = ({ ...values }) => {
   console.clear();
 
   console.log('Bisection');
@@ -52,16 +44,18 @@ export const bisection = (values) => {
 
     ea = Math.abs((xr - xrOld) / xr) * 100;
 
+    // data push without round
     data.push({
       i: i,
-      xl: round(xl, 5),
-      fxl: round(f(values.fx, xl), 5),
-      xr: round(xr, 5),
-      fxr: round(f(values.fx, xr), 5),
-      xu: round(xu, 5),
-      fxu: round(f(values.fx, xu), 5),
-      ea: i === 0 ? '-' : round(ea, 2) + '%',
+      xl: xl,
+      fxl: f(values.fx, xl),
+      xr: xr,
+      fxr: f(values.fx, xr),
+      xu: xu,
+      fxu: f(values.fx, xu),
+      ea: ea,
     });
+
     i++;
   } while (values.conditionType === 'es' ? ea > values.es : i < values.it);
 
@@ -73,7 +67,7 @@ export const bisection = (values) => {
   return data;
 };
 
-export const falsePosition = (values) => {
+export const falsePosition = ({ ...values }) => {
   console.clear();
   console.log('falsePosition');
   let xr = 0;
@@ -102,14 +96,15 @@ export const falsePosition = (values) => {
 
     data.push({
       i: i,
-      xl: round(values.xl, 5),
-      fxl: round(f(values.fx, values.xl), 5),
-      xr: round(xr, 5),
-      fxr: round(f(values.fx, xr), 5),
-      xu: round(values.xu, 5),
-      fxu: round(f(values.fx, values.xu), 5),
-      ea: i === 0 ? '-' : round(ea, 2) + '%',
+      xl: values.xl,
+      fxl: f(values.fx, values.xl),
+      xr: xr,
+      fxr: f(values.fx, xr),
+      xu: values.xu,
+      fxu: f(values.fx, values.xu),
+      ea: ea,
     });
+
     i++;
   } while (values.conditionType === 'es' ? ea > values.es : i < it);
 
@@ -124,24 +119,24 @@ export const simpleFixedPoint = ({ ...values }) => {
   let i = 0;
   let data = [];
 
-  const getSfp = (fx) => {
-    const xs = fx.match(/x\^\d|x/g);
-    let maxPower = 1;
-    xs.map((x) => {
-      const power = +x.match(/\d/g);
-      if (power !== null) {
-        maxPower = power > maxPower ? power : maxPower;
-      }
-    });
-    const fxNew = fx.replace(`x^${maxPower}`, `y^${maxPower}`);
-    const expr1 = algebra.parse(fxNew);
-    var eq = new Equation(expr1, 0);
-    var yAnswer = eq.solveFor('y');
+  // const getSfp = (fx) => {
+  //   const xs = fx.match(/x\^\d|x/g);
+  //   let maxPower = 1;
+  //   xs.map((x) => {
+  //     const power = +x.match(/\d/g);
+  //     if (power !== null) {
+  //       maxPower = power > maxPower ? power : maxPower;
+  //     }
+  //   });
+  //   const fxNew = fx.replace(`x^${maxPower}`, `y^${maxPower}`);
+  //   const expr1 = algebra.parse(fxNew);
+  //   var eq = new Equation(expr1, 0);
+  //   var yAnswer = eq.solveFor('y');
 
-    console.log({ eq: eq, yAnswer: yAnswer });
-    // return nerdamer(fx).solveFor('x').toString();
-    return yAnswer.toString();
-  };
+  //   console.log({ eq: eq, yAnswer: yAnswer });
+  //   // return nerdamer(fx).solveFor('x').toString();
+  //   return yAnswer.toString();
+  // };
 
   do {
     if (i !== 0) {
@@ -153,9 +148,9 @@ export const simpleFixedPoint = ({ ...values }) => {
 
     data.push({
       i: i,
-      xi: round(xr, 5),
-      fxi: round(f(values.fx, xr), 5),
-      ea: i === 0 ? '-' : round(ea, 2) + '%',
+      xi: xr,
+      fxi: f(values.fx, xr),
+      ea,
     });
     i++;
   } while (values.conditionType === 'es' ? ea > values.es : i < values.it);
@@ -183,13 +178,12 @@ export const newton = ({ ...values }) => {
 
     if (values.x0 !== 0) ea = Math.abs((values.x0 - x0Old) / values.x0) * 100;
 
-    // TODO: Fix NaN for last iteration for fxi
     data.push({
       i: i,
-      xi: round(values.x0, 5),
-      fxi: round(f(values.fx, values.x0), 5),
-      dfxi: round(f(dfx, values.x0), 5),
-      ea: i === 0 ? '-' : round(ea, 3) + '%',
+      xi: values.x0,
+      fxi: f(values.fx, values.x0),
+      dfxi: f(dfx, values.x0),
+      ea,
     });
     i++;
   } while (values.conditionType === 'es' ? ea > values.es : i < values.it + 1);
@@ -198,7 +192,7 @@ export const newton = ({ ...values }) => {
   return data;
 };
 
-export const secant = (values) => {
+export const secant = ({ ...values }) => {
   console.clear();
   console.log('Secant');
   let xr = 0;
@@ -221,12 +215,13 @@ export const secant = (values) => {
 
     data.push({
       i: i,
-      xa: round(values.xa, 5),
-      fxa: round(f(values.fx, values.xa), 5),
-      xb: round(values.xb, 5),
-      fxb: round(f(values.fx, values.xb), 5),
-      ea: i === 0 ? '-' : round(ea, 3) + '%',
+      xa: values.xa,
+      fxa: f(values.fx, values.xa),
+      xb: values.xb,
+      fxb: f(values.fx, values.xb),
+      ea,
     });
+
     i++;
   } while (values.conditionType === 'es' ? ea > values.es : i < it);
 

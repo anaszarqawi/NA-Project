@@ -6,27 +6,37 @@ import { ReactComponent as Instagram } from '../../assets/svg/Instagram - Negati
 import { ReactComponent as Discord } from '../../assets/svg/Discord - Negative.svg';
 import { ReactComponent as Telegram } from '../../assets/svg/Telegram - Negative.svg';
 
+import { getAnalytics, logEvent } from 'firebase/analytics';
+import { app } from '../../utils/firebase-config.js';
+
 import './style.scss';
 
 const Footer = () => {
+  const analytics = getAnalytics(app);
+
   const social = [
     {
+      name: 'Github',
       link: 'https://www.linkedin.com/in/anas-zarqawi/',
       icon: <Linkedin className="social-icon" />,
     },
     {
+      name: 'Linkedin',
       link: 'https://github.com/anaszarqawi',
       icon: <Github className="social-icon" />,
     },
     {
+      name: 'Instagram',
       link: 'https://www.instagram.com/anaszarqawi_/',
       icon: <Instagram className="social-icon" />,
     },
     {
+      name: 'Discord',
       link: 'https://discordapp.com/users/823643786499981324',
       icon: <Discord className="social-icon" />,
     },
     {
+      name: 'Telegram',
       link: 'https://www.t.me/anaszarqawi',
       icon: <Telegram className="social-icon" />,
     },
@@ -37,18 +47,17 @@ const Footer = () => {
         <div className="copyright">
           <span className="text">© {new Date().getFullYear()} anaszarqawi.</span>
         </div>
-        <a
-          href="https://github.com/anaszarqawi/College-GPA-Calculator/releases/tag/v2.0.0"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="version">
-          v1.0
-        </a>
+        <div className="version">v1.0</div>
 
         <div className="social">
           {social.map((site) => {
             return (
-              <a href={site.link} target="_blank" rel="noopener noreferrer" className="social-icon-container">
+              <a
+                href={site.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-icon-container"
+                onClick={() => logEvent(analytics, `social_${site.name}`)}>
                 {site.icon}
               </a>
             );

@@ -1,6 +1,9 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Numerical Calculator",
+  "name": "Numerical Analysis Methods Calculator",
+  "description": "This application allows users to enter mathematical functions and apply different numerical algorithms to find their roots.",
+  "version": "1.0",
+  "author": "anaszarqawi_",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +23,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#1a1e22",
+  "homepage_url": "https://anaszarqawi.com/numerical-calculator"
 }
