@@ -1,5 +1,13 @@
 import React from 'react';
-import { bisection, falsePosition, simpleFixedPoint, newton, secant } from '../pages/Methods/Methods';
+import {
+  bisection,
+  falsePosition,
+  simpleFixedPoint,
+  newton,
+  secant,
+  gaussElimination,
+  luDecomposition,
+} from '../pages/Methods/Methods';
 import { app } from '../utils/firebase-config.js';
 import { getAnalytics, logEvent } from 'firebase/analytics';
 
@@ -10,11 +18,16 @@ const xContext = React.createContext({});
 export const useX = () => React.useContext(xContext);
 
 export default function XProvider({ children }) {
+  const [lastMethod, setLastMethod] = React.useState(null);
   const [currentExample, setCurrentExample] = React.useState();
   const [variables, setVariables] = React.useState({});
   const [settings, setSettings] = React.useState({});
   const [saved, setSaved] = React.useState({});
-  const [isSaved, setIsSaved] = React.useState(false);
+
+  const [decimalPoints, setDecimalPoints] = React.useState(3);
+  const [withRounding, setWithRounding] = React.useState(false);
+
+  const analytics = getAnalytics(app);
 
   const addToSaved = (method, data) => {
     let temp = saved;
@@ -26,13 +39,8 @@ export default function XProvider({ children }) {
 
     logEvent(analytics, 'save');
 
-    setIsSaved(true);
-    setTimeout(() => {
-      setIsSaved(false);
-    }, 2000);
+    showMsg('success', 'Saved successfully!');
   };
-
-  const analytics = getAnalytics(app);
 
   React.useEffect(() => {
     const tempSaved = JSON.parse(localStorage.getItem('saved'));
@@ -64,6 +72,8 @@ export default function XProvider({ children }) {
     else if (name === 'Simple Fixed Point') return simpleFixedPoint(values);
     else if (name === 'Newton') return newton(values);
     else if (name === 'Secant') return secant(values);
+    else if (name === 'Gauss Elimination') return gaussElimination(values);
+    else if (name === 'LU Decomposition') return luDecomposition(values);
   };
 
   const ToastTransition = cssTransition({
@@ -74,7 +84,7 @@ export default function XProvider({ children }) {
     collapseDuration: 1,
   });
 
-  const showError = (type, msg) => {
+  const showMsg = (type, msg) => {
     if (type === 'error')
       toast.error(msg, {
         position: 'bottom-center',
@@ -130,12 +140,13 @@ export default function XProvider({ children }) {
   };
 
   const calculate = (props) => {
+    console.log(props);
     if (props.operation !== 'setExample') {
       const isValidData = props.validationData();
       if (!isValidData.status) {
         props.setShowSolution(false);
         // props.setErrorMsg(isValidData.error);
-        showError('error', isValidData.error);
+        showMsg('error', isValidData.error);
         return;
       }
     }
@@ -143,6 +154,7 @@ export default function XProvider({ children }) {
     let result = [];
 
     if (props.operation === 'addToSaved') {
+      logEvent(analytics, 'save');
       addToSaved(props.name.replace(/ /g, ''), props.values);
       return;
     }
@@ -150,6 +162,7 @@ export default function XProvider({ children }) {
     if (props.operation === 'setExample') {
       logEvent(analytics, 'example');
       result = matchMethod(props.name, props.values);
+      console.log(result);
     }
 
     if (props.operation === 'calculate') {
@@ -158,7 +171,7 @@ export default function XProvider({ children }) {
     }
 
     if (result.error) {
-      showError('warning', result.error);
+      showMsg('warning', result.error);
       props.setShowSolution(false);
       return;
     }
@@ -167,6 +180,22 @@ export default function XProvider({ children }) {
     props.setShowSolution(true);
     props.setData(result);
     props.executeScroll();
+  };
+
+  const round = (value) => {
+    if (value.toString().includes('.')) {
+      if (withRounding) {
+        return Number(Math.round(value + 'e' + decimalPoints) + 'e-' + decimalPoints);
+      } else {
+        let tempArr = value.toString().split('.');
+        if (tempArr[1]) {
+          if (tempArr[1].length > decimalPoints) return Number(tempArr[0] + '.' + tempArr[1].slice(0, decimalPoints));
+          else return value;
+        }
+      }
+    } else {
+      return value;
+    }
   };
 
   const value = {
@@ -180,7 +209,14 @@ export default function XProvider({ children }) {
     setSaved,
     addToSaved,
     calculate,
-    isSaved,
+    decimalPoints,
+    setDecimalPoints,
+    withRounding,
+    setWithRounding,
+    round,
+    lastMethod,
+    setLastMethod,
+    showMsg,
   };
 
   return <xContext.Provider value={value}>{children}</xContext.Provider>;

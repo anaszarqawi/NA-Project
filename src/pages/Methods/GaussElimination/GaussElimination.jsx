@@ -7,12 +7,17 @@ import Matrix from '../components/Matrix/Matrix';
 import XsValues from '../components/XsValues/XsValues';
 import Equations from '../components/Equations/Equations';
 import ExamplesAndSaved from '../components/ExamplesAndSaved/ExamplesAndSaved';
+import MethodButtons from '../components/MethodButtons/MethodButtons';
+
+import { useX } from '../../../context/xContext';
 
 import { gaussElimination, luDecomposition } from '../Methods';
 
 const GaussElimination = () => {
   const myRef = React.useRef(null);
   const executeScroll = () => myRef.current.scrollIntoView();
+
+  const { calculate } = useX();
 
   const [x1_1, setX1_1] = React.useState(0);
   const [x2_1, setX2_1] = React.useState(0);
@@ -32,6 +37,7 @@ const GaussElimination = () => {
   const [errorMsg, setErrorMsg] = React.useState('');
   const [showSolution, setShowSolution] = React.useState(false);
   const [steps, setSteps] = React.useState([]);
+  const [values, setValues] = React.useState([]);
 
   const [withLUDecomposition, setWithLUDecomposition] = React.useState(
     window.location.pathname === '/lu-decomposition-method'
@@ -91,53 +97,81 @@ const GaussElimination = () => {
   ];
 
   React.useEffect(() => {
-    console.log('withLUDecomposition', withLUDecomposition);
-  }, []);
-
-  const solution = () => {
-    if (x1_1 === 0 && x2_1 === 0 && x3_1 === 0) {
-      setErrorMsg('Please enter the first Equation');
-      return;
-    }
-    if (x1_2 === 0 && x2_2 === 0 && x3_2 === 0) {
-      setErrorMsg('Please enter the second Equation');
-      return;
-    }
-
-    if (x1_3 === 0 && x2_3 === 0 && x3_3 === 0) {
-      setErrorMsg('Please enter the third Equation');
-      return;
-    }
-
-    if (sol_1 === 0) {
-      setErrorMsg('Please enter the solution of the first Equation');
-      return;
-    }
-
-    if (sol_2 === 0) {
-      setErrorMsg('Please enter the solution of the second Equation');
-      return;
-    }
-
-    if (sol_3 === 0) {
-      setErrorMsg('Please enter the solution of the third Equation');
-      return;
-    }
-    console.clear();
-
-    const matrix = [
+    setValues([
       [x1_1, x2_1, x3_1, sol_1],
       [x1_2, x2_2, x3_2, sol_2],
       [x1_3, x2_3, x3_3, sol_3],
-    ];
-    console.log(matrix);
-    const result = withLUDecomposition ? luDecomposition(matrix) : gaussElimination(matrix);
+    ]);
+  }, [x1_1, x2_1, x3_1, sol_1, x1_2, x2_2, x3_2, sol_2, x1_3, x2_3, x3_3, sol_3]);
 
-    setSteps(result);
+  const validationData = () => {
+    if (x1_1 === 0 && x2_1 === 0 && x3_1 === 0) return { status: false, error: 'Please enter the first Equation' };
+    if (x1_2 === 0 && x2_2 === 0 && x3_2 === 0) return { status: false, error: 'Please enter the second Equation' };
+    if (x1_3 === 0 && x2_3 === 0 && x3_3 === 0) return { status: false, error: 'Please enter the third Equation' };
+    if (sol_1 === 0) return { status: false, error: 'Please enter the solution of the first Equation' };
+    if (sol_2 === 0) return { status: false, error: 'Please enter the solution of the second Equation' };
+    if (sol_3 === 0) return { status: false, error: 'Please enter the solution of the third Equation' };
 
-    console.log(steps);
-    setErrorMsg('');
-    setShowSolution(true);
+    return { status: true };
+  };
+  const handleCalculate = (operation, example) => {
+    if (example && operation === 'setExample') {
+      setX1_1(example.matrix[0].x1);
+      setX2_1(example.matrix[0].x2);
+      setX3_1(example.matrix[0].x3);
+      setSol_1(example.matrix[0].sol);
+      setX1_2(example.matrix[1].x1);
+      setX2_2(example.matrix[1].x2);
+      setX3_2(example.matrix[1].x3);
+      setSol_2(example.matrix[1].sol);
+      setX1_3(example.matrix[2].x1);
+      setX2_3(example.matrix[2].x2);
+      setX3_3(example.matrix[2].x3);
+      setSol_3(example.matrix[2].sol);
+
+      example = [
+        [example.matrix[0].x1, example.matrix[0].x2, example.matrix[0].x3, example.matrix[0].sol],
+        [example.matrix[1].x1, example.matrix[1].x2, example.matrix[1].x3, example.matrix[1].sol],
+        [example.matrix[2].x1, example.matrix[2].x2, example.matrix[2].x3, example.matrix[2].sol],
+      ];
+    }
+
+    if (operation === 'addToSaved') {
+      example = {
+        matrix: [
+          {
+            x1: x1_1,
+            x2: x2_1,
+            x3: x3_1,
+            sol: sol_1,
+          },
+          {
+            x1: x1_2,
+            x2: x2_2,
+            x3: x3_2,
+            sol: sol_2,
+          },
+          {
+            x1: x1_3,
+            x2: x2_3,
+            x3: x3_3,
+            sol: sol_3,
+          },
+        ],
+      };
+      console.log(example);
+    }
+
+    calculate({
+      name: title,
+      values: operation === 'setExample' || operation === 'addToSaved' ? example : values,
+      validationData,
+      setShowSolution,
+      setErrorMsg,
+      operation,
+      setData: setSteps,
+      executeScroll,
+    });
   };
 
   const clear = () => {
@@ -157,69 +191,33 @@ const GaussElimination = () => {
     setShowSolution(false);
   };
 
-  const setExample = (example) => {
-    setX1_1(example.matrix[0].x1);
-    setX2_1(example.matrix[0].x2);
-    setX3_1(example.matrix[0].x3);
-    setSol_1(example.matrix[0].sol);
-    setX1_2(example.matrix[1].x1);
-    setX2_2(example.matrix[1].x2);
-    setX3_2(example.matrix[1].x3);
-    setSol_2(example.matrix[1].sol);
-    setX1_3(example.matrix[2].x1);
-    setX2_3(example.matrix[2].x2);
-    setX3_3(example.matrix[2].x3);
-    setSol_3(example.matrix[2].sol);
-
-    const matrix = [
-      [example.matrix[0].x1, example.matrix[0].x2, example.matrix[0].x3, example.matrix[0].sol],
-      [example.matrix[1].x1, example.matrix[1].x2, example.matrix[1].x3, example.matrix[1].sol],
-      [example.matrix[2].x1, example.matrix[2].x2, example.matrix[2].x3, example.matrix[2].sol],
-    ];
-
-    const result = withLUDecomposition ? luDecomposition(matrix) : gaussElimination(matrix);
-    setSteps(result);
-
-    console.log(steps);
-    setErrorMsg('');
-    setShowSolution(true);
-    executeScroll();
-  };
-
-  const isOne = (value) => {
-    if (value === 1) return;
-    return value;
-  };
-
   return (
     <div className="page">
       <div className="center-title">{title} Method</div>
       <div className="variables">
         <div className="variables-title">Variables</div>
         <div className="variables-inline">
-          <CustomInput type="number" label="X" sub="1" labelPosition="right" value={x1_1} onChange={setX1_1} />
-          <CustomInput type="number" label="X" sub="2" labelPosition="right" value={x2_1} onChange={setX2_1} />
-          <CustomInput type="number" label="X" sub="3" labelPosition="right" value={x3_1} onChange={setX3_1} />
-          <CustomInput type="number" label="=" value={sol_1} onChange={setSol_1} />
+          <CustomInput type="text" label="X" sub="1" labelPosition="right" value={x1_1} onChange={setX1_1} />
+          <CustomInput type="text" label="X" sub="2" labelPosition="right" value={x2_1} onChange={setX2_1} />
+          <CustomInput type="text" label="X" sub="3" labelPosition="right" value={x3_1} onChange={setX3_1} />
+          <CustomInput type="text" label="=" value={sol_1} onChange={setSol_1} />
         </div>
         <div className="variables-inline">
-          <CustomInput type="number" label="X" sub="1" labelPosition="right" value={x1_2} onChange={setX1_2} />
-          <CustomInput type="number" label="X" sub="2" labelPosition="right" value={x2_2} onChange={setX2_2} />
-          <CustomInput type="number" label="X" sub="3" labelPosition="right" value={x3_2} onChange={setX3_2} />
-          <CustomInput type="number" label="=" value={sol_2} onChange={setSol_2} />
+          <CustomInput type="text" label="X" sub="1" labelPosition="right" value={x1_2} onChange={setX1_2} />
+          <CustomInput type="text" label="X" sub="2" labelPosition="right" value={x2_2} onChange={setX2_2} />
+          <CustomInput type="text" label="X" sub="3" labelPosition="right" value={x3_2} onChange={setX3_2} />
+          <CustomInput type="text" label="=" value={sol_2} onChange={setSol_2} />
         </div>
         <div className="variables-inline">
-          <CustomInput type="number" label="X" sub="1" labelPosition="right" value={x1_3} onChange={setX1_3} />
-          <CustomInput type="number" label="X" sub="2" labelPosition="right" value={x2_3} onChange={setX2_3} />
-          <CustomInput type="number" label="X" sub="3" labelPosition="right" value={x3_3} onChange={setX3_3} />
-          <CustomInput type="number" label="=" value={sol_3} onChange={setSol_3} />
+          <CustomInput type="text" label="X" sub="1" labelPosition="right" value={x1_3} onChange={setX1_3} />
+          <CustomInput type="text" label="X" sub="2" labelPosition="right" value={x2_3} onChange={setX2_3} />
+          <CustomInput type="text" label="X" sub="3" labelPosition="right" value={x3_3} onChange={setX3_3} />
+          <CustomInput type="text" label="=" value={sol_3} onChange={setSol_3} />
         </div>
       </div>
       {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
-      <div className="buttons-container">
-        <CustomButton label="Calculate" onClick={solution} type="primary" />
-        <CustomButton label="Clear" onClick={clear} type="secondary" />
-      </div>
+      <MethodButtons method={title} calculate={handleCalculate} clear={clear} />
+
       {showSolution && steps && (
         <>
           <hr className="line-divider"></hr>
@@ -317,7 +315,7 @@ const GaussElimination = () => {
           </div>
         </>
       )}
-      <ExamplesAndSaved method="gaussEliminationOrLuDecomposition" examples={examples} setter={setExample} />
+      <ExamplesAndSaved method={title} examples={examples} setter={handleCalculate} />
     </div>
   );
 };

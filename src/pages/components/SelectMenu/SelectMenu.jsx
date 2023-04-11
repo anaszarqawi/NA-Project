@@ -8,7 +8,7 @@ import { useX } from '../../../context/xContext';
 import { ReactComponent as RemoveIcon } from '../../../assets/svg/delete-icon.svg';
 
 const SelectMenu = (props) => {
-  const { saved, setSaved } = useX();
+  const { saved, setSaved, lastMethod, setLastMethod } = useX();
 
   const isOne = (value) => {
     if (value === 1) return ' + ';
@@ -56,8 +56,9 @@ const SelectMenu = (props) => {
           <div className="select-menu-title">{chapter.name}</div>
           <div className="select-menu-list">
             {chapter.methods.map((method) => {
+              const path = method.toLowerCase().replace(/\s/g, '-') + '-method';
               return (
-                <Link className="select-menu-item" to={method.toLowerCase().replace(/\s/g, '-') + '-method'}>
+                <Link className="select-menu-item" onClick={() => setLastMethod(path)} to={path}>
                   {method + ' Method'}
                 </Link>
               );
@@ -80,8 +81,6 @@ const SelectMenu = (props) => {
                 } ${props.type === 'saved' && 'saved'}`.replace(/false |undefined /g, '')}
                 onClick={(e) => {
                   // setCurrentExample(example);
-                  console.log(e.target.className !== 'select-menu-item-button');
-                  console.log(e.target.tagName);
                   if (
                     e.target.className !== 'select-menu-item-button' &&
                     e.target.tagName !== 'path' &&
@@ -92,26 +91,33 @@ const SelectMenu = (props) => {
                   }
                 }}>
                 {example.matrix ? (
-                  example.matrix.map((equation) => {
+                  example.matrix.map((equation, eqIndex) => {
                     return (
-                      <div className="select-menu-item-equation">
-                        {equation.x1 !== 0 && (
-                          <>
-                            {equation.x1 > 0 ? equation.x1 : equation.x1}X<sub>1</sub>
-                          </>
+                      <>
+                        <div className="select-menu-item-equation">
+                          {equation.x1 !== 0 && (
+                            <>
+                              {equation.x1 > 0 ? equation.x1 : equation.x1}X<sub>1</sub>
+                            </>
+                          )}
+                          {equation.x2 !== 0 && (
+                            <>
+                              {isOne(equation.x2)}X<sub>2</sub>
+                            </>
+                          )}
+                          {equation.x3 !== 0 && (
+                            <>
+                              {isOne(equation.x3)}X<sub>3</sub>
+                            </>
+                          )}
+                          {` = ${equation.sol}`}
+                        </div>
+                        {props.type === 'saved' && eqIndex === 2 && (
+                          <div className="select-menu-item-button" onClick={() => handleRemoveItem(index)}>
+                            <RemoveIcon />
+                          </div>
                         )}
-                        {equation.x2 !== 0 && (
-                          <>
-                            {isOne(equation.x2)}X<sub>2</sub>
-                          </>
-                        )}
-                        {equation.x3 !== 0 && (
-                          <>
-                            {isOne(equation.x3)}X<sub>3</sub>
-                          </>
-                        )}
-                        {` = ${equation.sol}`}
-                      </div>
+                      </>
                     );
                   })
                 ) : (

@@ -1,5 +1,4 @@
 import React from 'react';
-import './style.scss';
 
 import CustomInput from '../components/CustomInput/CustomInput';
 import CustomTable from '../components/CustomTable/CustomTable';
@@ -99,7 +98,7 @@ const SimpleFixedPoint = () => {
 
     calculate({
       name: methodName,
-      values,
+      values: operation === 'setExample' ? example : values,
       example,
       validationData,
       setShowSolution,
@@ -127,7 +126,7 @@ const SimpleFixedPoint = () => {
         <div className="variables-block">
           <div className="variables-title">Variables</div>
 
-          <CustomInput label="SFP" type="text" placeholder="Simple Fixed Point" value={fx} onChange={setFx} />
+          <CustomInput label="g(x)" type="text" placeholder="Simple Fixed Point" value={fx} onChange={setFx} />
         </div>
         <div className="variables-inline">
           <CustomInput label="X" sub="0" type="number" placeholder="eXtreme node" value={x0} onChange={setX0} />

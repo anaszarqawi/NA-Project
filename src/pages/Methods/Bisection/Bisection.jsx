@@ -1,6 +1,5 @@
 import React from 'react';
 // import { useSearchParams } from 'react-router-dom';
-import './style.scss';
 
 import CustomInput from '../components/CustomInput/CustomInput';
 import CustomTable from '../components/CustomTable/CustomTable';
@@ -141,25 +140,11 @@ const Bisection = () => {
   // }, []);
 
   const validationData = () => {
-    console.log({ validation: { fx, xl, xu, es, it, conditionType } });
+    if (fx === '') return { status: false, error: 'Please enter a function' };
 
-    if (fx === '')
-      return {
-        status: false,
-        error: 'Please enter a function',
-      };
+    if (xl === '') return { status: false, error: 'Please enter a value for Xl' };
 
-    if (xl === '')
-      return {
-        status: false,
-        error: 'Please enter a value for Xl',
-      };
-
-    if (xu === '')
-      return {
-        status: false,
-        error: 'Please enter a value for Xu',
-      };
+    if (xu === '') return { status: false, error: 'Please enter a value for Xu' };
 
     if ((es === '' || es === null || es === undefined) && conditionType === 'es')
       return {
@@ -173,11 +158,7 @@ const Bisection = () => {
         error: 'Please enter a value for Maximum Iterations',
       };
 
-    if (+xl >= +xu)
-      return {
-        status: false,
-        error: 'Xl must be less than Xu',
-      };
+    if (+xl >= +xu) return { status: false, error: 'Xl must be less than Xu' };
 
     return {
       status: true,

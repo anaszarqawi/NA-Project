@@ -58,7 +58,10 @@
     padding: var(--space-1) !important;
     border-radius: var(--border-radius) !important;
     box-shadow: none !important;
+}
 
+.toast-body {
+    width: fit-content !important;
 }
 
 @media only screen and (max-width: 600px) {
