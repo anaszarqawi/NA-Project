@@ -1,0 +1,103 @@
+.inputs_Container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    gap: var(--space-1);
+}
+
+.flex_Row {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: center;
+    gap: var(--space-1);
+    width: 100%;
+}
+
+.flexRowFitContent {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: center;
+    gap: var(--space-1);
+    width: fit-content;
+}
+
+.flexColumnFullWidth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: var(--space-2);
+}
+
+.flexColumnFitContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    width: fit-content;
+}
+
+.flexRowCenter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    width: 100%;
+}
+
+.flexRowStartContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--space-2);
+    width: 100%;
+}
+
+.flexRowEndContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    width: 100%;
+}
+
+
+
+.flexSpaceBetween {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.promoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    background-color: var(--color-black-15);
+    border: 1px solid var(--color-black-13);
+    color: var(--color-black-3);
+    width: 100%;
+    // height: 300px;
+    padding: var(--space-5) var(--space-9);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-3);
+}
+
+@media only screen and (max-width: 600px) {
+    .flexRow {
+        flex-direction: column;
+    }
+}

@@ -1,8 +1,8 @@
 import React from 'react';
-import CustomInput from '../Methods/components/CustomInput/CustomInput';
+import CustomInput from '../../../components/CustomInput';
 import './style.scss';
 import { useX } from '../../context/xContext';
-import CustomCheckButton from '../Methods/components/CustomCheckButton/CustomCheckButton';
+import CustomCheckButton from '../../../components/CustomCheckButton';
 
 const Settings = (props) => {
   React.useEffect(() => {
