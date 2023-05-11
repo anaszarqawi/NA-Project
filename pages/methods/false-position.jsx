@@ -108,7 +108,7 @@ const FalsePosition = () => {
 
   React.useEffect(() => {
     console.log(router.query);
-    if (router.query.operation === 'calculateQuery') {
+    if (router.query.operation === 'calculateQuery' && formRef.current.fx.value === '') {
       const values = {
         fx: router.query.fx && router.query.fx,
         xl: router.query.xl && +router.query.xl,
@@ -144,7 +144,7 @@ const FalsePosition = () => {
         <title>False Position Method</title>
       </Head>
       <div className="page">
-        <div className="center-title">Bisection Method</div>
+        <div className="center-title">False Position Method</div>
         <form
           ref={formRef}
           className={Styles.flexColumnFullWidth}

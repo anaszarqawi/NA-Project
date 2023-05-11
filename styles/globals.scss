@@ -54,7 +54,12 @@
     --space-8: 8rem;
     --space-9: 9rem;
     --space-10: 10rem;
-    --border-radius: 8px;
+    --border-radius-24: 24px;
+    --border-radius-16: 16px;
+    --border-radius-12: 12px;
+    --border-radius-8: 8px;
+    --border-radius-4: 4px;
+    --border-radius-2: 2px;
     --transition-1: all 0.1s ease-in-out;
   }
 
@@ -94,7 +99,45 @@
     margin: 0;
   }
 
+  /* scroll bar */
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+
+    /* border-radius: var(--border-radius-1); */
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-2);
+    border-radius: var(--border-radius-12);
+
+    /* border-radius: var(--border-radius-1); */
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color-4);
+  }
+
   input[type="radio"] {
+    /* Add if not using autoprefixer */
+    -webkit-appearance: none;
+    appearance: none;
+    /* For iOS < 15 to remove gradient background */
+    background-color: #fff;
+    /* Not removed via appearance */
+    margin: 0;
+  }
+
+  input[type="checkbox"] {
     /* Add if not using autoprefixer */
     -webkit-appearance: none;
     appearance: none;

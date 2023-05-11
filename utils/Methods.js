@@ -11,118 +11,93 @@ const config = {};
 const math = create(all, config);
 
 const f = (fx, x) => {
-  console.log({ fx, x });
   return math.evaluate(fx, { x: x });
 };
 
+const round = (value) => {
+  const settings = JSON.parse(localStorage.getItem('settings'));
+  const decimalPlaces = settings?.decimalPrecision?.decimalPlaces;
+  const withRounding = settings?.decimalPrecision?.withRounding;
+
+  if (value.toString().includes('.')) {
+    if (withRounding) {
+      return Number(Math.round(value * 10 ** decimalPlaces) / 10 ** decimalPlaces);
+    } else {
+      let tempArr = value.toString().split('.');
+      if (tempArr[1]) {
+        if (tempArr[1].length > decimalPlaces) return Number(tempArr[0] + '.' + tempArr[1].slice(0, decimalPlaces));
+        else return value;
+      }
+    }
+  } else {
+    return value;
+  }
+};
+
 export const bisection = ({ fx, xl, xu, condition }) => {
-  // console.clear();
+  let [xr, xrOld, ea, i, data] = [0, 0, 0, 0, []];
 
-  console.log('Bisection');
-  console.log({ fx, xl, xu, condition });
-
-  console.log({ xl: xl, xu: xu, fxl: f(fx, xl), fxu: f(fx, xu) });
-
-  let xr = 0;
-  let xrOld = 0;
-  let ea = 0;
-  let i = 0;
-  let data = [];
-
-  if (f(fx, xl) * f(fx, xu) > 0) {
+  if (f(fx, xl) * f(fx, xu) > 0)
     return {
       error: 'No root in this range',
     };
-  }
 
   do {
     xrOld = xr;
-    xr = (xl + xu) / 2;
+    xr = round((xl + xu) / 2);
+    ea = round(Math.abs((xr - xrOld) / xr) * 100);
 
-    if (f(fx, xr) * f(fx, xu) < 0) xl = xr;
-    else xu = xr;
-
-    ea = Math.abs((xr - xrOld) / xr) * 100;
-
-    // data push without round
     data.push({
-      i: i,
-      xl: xl,
-      fxl: f(fx, xl),
-      xr: xr,
-      fxr: f(fx, xr),
-      xu: xu,
-      fxu: f(fx, xu),
-      ea: ea,
+      i: ++i,
+      xl,
+      fxl: round(f(fx, xl)),
+      xr,
+      fxr: round(f(fx, xr)),
+      xu,
+      fxu: round(f(fx, xu)),
+      ea,
     });
 
-    i++;
+    f(fx, xr) * f(fx, xu) < 0 ? (xl = xr) : (xu = xr);
   } while (condition.type === 'es' ? ea > condition.value : i < +condition.value);
 
-  if (data.length === 0) {
-    return {
-      error: 'No root in this range',
-    };
-  }
   return data;
 };
 
 export const falsePosition = ({ fx, xl, xu, condition }) => {
-  console.clear();
-  console.log('falsePosition');
-  let xr = 0;
-  let xrOld = 0;
-  let ea = 0;
-  let i = 0;
-  let data = [];
+  let [xr, xrOld, ea, i, data] = [0, 0, 0, 0, []];
 
-  if (f(fx, xl) * f(fx, xu) > 0) {
+  if (f(fx, xl) * f(fx, xu) > 0)
     return {
       error: 'No root in this range',
     };
-  }
 
   do {
     xrOld = xr;
-    const fxl = f(fx, xl);
-    const fxu = f(fx, xu);
 
-    xr = xu - (fxu * (xl - xu)) / (fxl - fxu);
+    xr = round(xu - (f(fx, xu) * (xl - xu)) / (f(fx, xl) - f(fx, xu)));
 
-    if (f(fx, xr) * f(fx, xl) < 0) xu = xr;
-    else xl = xr;
-
-    ea = Math.abs((xr - xrOld) / xr) * 100;
+    ea = round(Math.abs((xr - xrOld) / xr) * 100);
 
     data.push({
-      i: i,
-      xl: xl,
-      fxl: f(fx, xl),
-      xr: xr,
-      fxr: f(fx, xr),
-      xu: xu,
-      fxu: f(fx, xu),
-      ea: ea,
+      i: ++i,
+      xl,
+      fxl: round(f(fx, xl)),
+      xr,
+      fxr: round(f(fx, xr)),
+      xu,
+      fxu: round(f(fx, xu)),
+      ea,
     });
 
-    i++;
+    f(fx, xr) * f(fx, xu) < 0 ? (xl = xr) : (xu = xr);
   } while (condition.type === 'es' ? ea > condition.value : i < +condition.value);
 
-  if (data.length === 0) {
-    return {
-      error: 'No root in this range',
-    };
-  }
   return data;
 };
 
 export const simpleFixedPoint = ({ fx, x0, condition }) => {
-  console.log('SimpleFixedPoint');
-  let xr = x0;
-  let xrOld = 0;
-  let ea = 0;
-  let i = 0;
-  let data = [];
+  let [xr, xrOld, ea, i, data] = [0, 0, 0, 0, []];
 
   // const getSfp = (fx) => {
   //   const xs = fx.match(/x\^\d|x/g);
@@ -146,89 +121,66 @@ export const simpleFixedPoint = ({ fx, x0, condition }) => {
   do {
     if (i !== 0) {
       xrOld = xr;
-      xr = f(fx, xrOld);
+      xr = round(f(fx, xrOld));
     }
 
-    if (xr !== 0) ea = Math.abs((xr - xrOld) / xr) * 100;
+    if (xr !== 0) ea = round(Math.abs((xr - xrOld) / xr) * 100);
 
     data.push({
-      i: i,
+      i: ++i,
       xi: xr,
-      fxi: f(fx, xr),
+      fxi: round(f(fx, xr)),
       ea,
     });
-    i++;
   } while (condition.type === 'es' ? ea > condition.value : i < +condition.value);
 
   return data;
 };
 
 export const newton = ({ fx, x0, condition }) => {
-  console.clear();
-  console.log('newton');
-  let x0Old = 0;
-  let ea = 0;
-  let i = 0;
-  let data = [];
+  let [x0Old, ea, i, data] = [0, 0, 0, []];
 
   const NewFx = fx.replace(/\(|\)/g, '');
-
   const dfx = math.derivative(NewFx, 'x').toString();
 
   do {
-    if (i !== 0) {
-      x0Old = x0;
-      x0 = x0Old - f(fx, x0Old) / f(dfx, x0Old);
-    }
-
-    if (x0 !== 0) ea = Math.abs((x0 - x0Old) / x0) * 100;
+    if (x0 !== 0) ea = round(Math.abs((x0 - x0Old) / x0) * 100);
 
     data.push({
-      i: i,
+      i: ++i,
       xi: x0,
-      fxi: f(fx, x0),
-      dfxi: f(dfx, x0),
+      fxi: round(f(fx, x0)),
+      dfxi: round(f(dfx, x0)),
       ea,
     });
-    i++;
+
+    x0Old = round(x0);
+    x0 = round(x0Old - round(f(fx, x0Old)) / round(f(dfx, x0Old)));
   } while (condition.type === 'es' ? ea > condition.value : i < +condition.value);
 
   console.table(data);
   return data;
 };
 
-export const secant = ({ ...values }) => {
-  console.clear();
-  console.log('Secant');
-  let xr = 0;
-  let ea = 0;
-  let i = 0;
-  let data = [];
+export const secant = ({ fx, x_1, x0, condition }) => {
+  let [xr, ea, i, data] = [0, 0, 0, []];
 
   do {
-    if (i !== 0) {
-      const fxa = f(values.fx, values.xb);
-      const fxb = f(values.fx, values.xa);
-      xr = values.xb - (fxa * (values.xa - values.xb)) / (fxb - fxa);
-      console.log(`${values.xb} - (${fxb} * (${values.xa} - ${values.xb})) / (${fxb} - ${fxa})`);
-
-      values.xa = values.xb;
-      values.xb = xr;
-    }
-
-    ea = Math.abs((values.xb - values.xa) / values.xb) * 100;
+    ea = round(Math.abs((x0 - x_1) / x0) * 100);
 
     data.push({
-      i: i,
-      xa: values.xa,
-      fxa: f(values.fx, values.xa),
-      xb: values.xb,
-      fxb: f(values.fx, values.xb),
+      i: ++i,
+      x_1: x_1,
+      fxa: round(f(fx, x_1)),
+      x0: x0,
+      fxb: round(f(fx, x0)),
       ea,
     });
 
-    i++;
-  } while (values.conditionType === 'es' ? ea > values.es : i < it);
+    xr = round(x0 - (f(fx, x0) * (x_1 - x0)) / (f(fx, x_1) - f(fx, x0)));
+    x_1 = x0;
+    x0 = xr;
+  } while (condition.type === 'es' ? ea > condition.value : i < +condition.value);
 
   return data;
 };

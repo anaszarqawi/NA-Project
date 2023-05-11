@@ -94,7 +94,7 @@ const SimpleFixedPoint = () => {
   };
 
   React.useEffect(() => {
-    if (router.query.operation === 'calculateQuery') {
+    if (router.query.operation === 'calculateQuery' && formRef.current.fx.value === '') {
       const values = {
         fx: router.query.fx && router.query.fx,
         x0: router.query.x0 && +router.query.x0,

@@ -35,7 +35,7 @@ const Bisection = () => {
         error: 'Please enter a value for Es',
       };
 
-    if ((condition?.type === 'it' && condition?.value === '') || !condition)
+    if ((condition?.type === 'it' && condition?.value === 0) || !condition)
       return {
         status: false,
         error: 'Please enter a value for Maximum Iterations',
@@ -91,12 +91,11 @@ const Bisection = () => {
   };
 
   React.useEffect(() => {
-    console.log(router.query);
-    if (router.query.operation === 'calculateQuery') {
+    if (router.query.operation === 'calculateQuery' && formRef.current.fx.value === '') {
       const values = {
-        fx: router.query.fx && router.query.fx,
-        xl: router.query.xl && +router.query.xl,
-        xu: router.query.xu && +router.query.xu,
+        fx: router.query.fx,
+        xl: +router.query.xl,
+        xu: +router.query.xu,
         condition: router.query?.condition && JSON.parse(router.query.condition),
       };
 

@@ -1,224 +1,187 @@
 import React from 'react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 
-import CustomInput from '../../src/pages/Methods/components/CustomInput/CustomInput';
-import CustomButton from '../../src/pages/Methods/components/CustomButton/CustomButton';
-import CustomTable from '../../src/pages/Methods/components/CustomTable/CustomTable';
-import MethodButtons from '../../src/pages/Methods/components/MethodButtons/MethodButtons';
-import ExamplesAndSaved from '../../src/pages/Methods/components/ExamplesAndSaved/ExamplesAndSaved';
+// Components
+import CustomTable from '../../components/CustomTable';
+import ExamplesAndSaved from '../../components/ExamplesAndSaved';
+import MethodButtons from '../../components/MethodButtons';
+import Input from '../../components/Input';
 
-import { useRef } from 'react';
-import { useX } from '../../../context/xContext';
+// Context
+import { useX } from '../../context/xContext';
 
-const Secant = () => {
-  React.useEffect(() => {
-    document.title = 'Secant Method';
-  }, []);
+// Styles
+import Styles from '../../styles/containers.module.scss';
 
-  const myRef = useRef(null);
-  const executeScroll = () => myRef.current.scrollIntoView();
-
-  const [fx, setFx] = React.useState(null);
-  const [xa, setXa] = React.useState(null);
-  const [xb, setXb] = React.useState(null);
-  const [es, setEs] = React.useState(null);
-  const [it, setIt] = React.useState(null);
-
-  const [conditionType, setConditionType] = React.useState('es');
+const Bisection = () => {
+  const router = useRouter();
+  const { calculate, currentExample, setCurrentExample, examples } = useX();
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
-  const [values, SetValues] = React.useState({});
   const methodName = 'Secant';
+  const formRef = React.useRef(null);
 
-  const [errorMsg, setErrorMsg] = React.useState('');
-  const { calculate } = useX();
+  const validationData = ({ fx, xl, xu, condition }) => {
+    if (fx === '') return { status: false, error: 'Please enter a function' };
 
-  const examples = [
-    {
-      fx: '0.95x^3 - 5.9x^2 + 10.9x - 6',
-      xa: 2.5,
-      xb: 3.5,
-      conditionType: 'es',
-      es: 0.5,
-    },
-    {
-      fx: '2x^3 - 11.7x^2 + 17.7x - 5',
-      xa: 3,
-      xb: 4,
-      conditionType: 'es',
-      es: 0.5,
-    },
-    {
-      fx: 'x^4 - 3x^2 + 1.5x -3',
-      xa: 1.5,
-      xb: 2,
-      conditionType: 'es',
-      es: 0.01,
-    },
-    {
-      fx: '-1 + 5.5x - 4x^2 + 0.5x^3',
-      xa: 1.5,
-      xb: 2,
-      conditionType: 'es',
-      es: 0.2,
-    },
-    {
-      fx: '-x^3 + 7.89x + 11',
-      xa: 3,
-      xb: 5,
-      conditionType: 'es',
-      es: 0.1,
-    },
-    {
-      fx: '-x^3 + 7.89x + 11',
-      xa: 3,
-      xb: 5,
-      conditionType: 'es',
-      es: 0.1,
-    },
-    {
-      fx: 'x^3 - 6x^2 + 11x - 6.1',
-      xa: 0,
-      xb: 0.5,
-      conditionType: 'es',
-      es: 0.5,
-    },
-    {
-      fx: 'x^7 - 1.5x^2 + 7x - 6',
-      xa: 0,
-      xb: 0.5,
-      conditionType: 'es',
-      es: 0.1,
-    },
-  ];
+    if (xl === '' && xl === NaN) return { status: false, error: 'Please enter a value for Xl' };
 
-  const validationData = () => {
-    if (fx === '')
-      return {
-        status: false,
-        error: 'Please enter a function',
-      };
+    if (xu === '' && xu === NaN) return { status: false, error: 'Please enter a value for Xu' };
 
-    if (xa === '')
-      return {
-        status: false,
-        error: 'Please enter a value for Xa',
-      };
-
-    if (xb === '')
-      return {
-        status: false,
-        error: 'Please enter a value for Xb',
-      };
-
-    if (es === 0 && conditionType === 'es')
+    if ((condition?.type === 'es' && (condition?.value === '' || condition?.value === NaN)) || !condition)
       return {
         status: false,
         error: 'Please enter a value for Es',
       };
 
-    if (it === 0 && conditionType === 'it')
+    if ((condition?.type === 'it' && (condition?.value === '' || condition?.value === NaN)) || !condition)
       return {
         status: false,
         error: 'Please enter a value for Maximum Iterations',
       };
+
+    if (+xl >= +xu) return { status: false, error: 'Xl must be less than Xu' };
 
     return {
       status: true,
     };
   };
 
-  React.useEffect(() => {
-    SetValues({
-      fx,
-      xa,
-      xb,
-      es,
-      it,
-      conditionType,
-    });
-  }, [fx, xa, xb, es, it, conditionType]);
+  const handleCalculate = ({ e, operation, example }) => {
+    e && e.preventDefault();
+    !e && console.log(formRef.current);
 
-  const handleCalculate = (operation, example) => {
-    if (example) {
-      setFx(example.fx);
-      setXa(example.xa);
-      setXb(example.xb);
-      setEs(example.es);
-      setIt(example.it);
-      setConditionType(example.conditionType);
+    const values = e
+      ? {
+          fx: e.target.fx.value,
+          x_1: +e.target.x_1.value,
+          x0: +e.target.x0.value,
+          condition: {
+            type: e.target.conditionType.value,
+            value: e.target.conditionType.value === 'es' ? +e.target.es.value : +e.target.it.value,
+          },
+        }
+      : !example
+      ? {
+          fx: formRef.current.fx.value,
+          x_1: +formRef.current.x_1.value,
+          x0: +formRef.current.x0.value,
+          condition: {
+            type: formRef.current.conditionType.value,
+            value: formRef.current.conditionType.value === 'es' ? +formRef.current.es.value : +formRef.current.it.value,
+          },
+        }
+      : example;
+
+    console.log(operation);
+    if (operation !== 'save' && operation !== 'calculateFromQuery' && validationData(values).status) {
+      router.query = { operation: 'calculateQuery', ...values, condition: JSON.stringify(values.condition) };
+      router.push(router);
     }
 
     calculate({
       name: methodName,
-      values: operation === 'setExample' ? example : values,
+      values,
       validationData,
       setShowSolution,
-      setErrorMsg,
       operation,
       setData,
-      executeScroll,
     });
   };
 
-  const clear = () => {
-    setFx('');
-    setXa('');
-    setXb('');
-    setEs('');
-    setIt('');
-    setConditionType('es');
+  React.useEffect(() => {
+    console.log(router.query);
+    if (router.query.operation === 'calculateQuery' && formRef.current.fx.value === '') {
+      const values = {
+        fx: router?.query?.fx,
+        x_1: +router?.query?.x_1,
+        x0: +router?.query?.x0,
+        condition: router?.query?.condition && JSON.parse(router.query.condition),
+      };
+
+      console.log({ values });
+
+      setCurrentExample(values);
+
+      calculate({
+        name: methodName,
+        values,
+        validationData,
+        setShowSolution,
+        operation: 'calculateFromQuery',
+        setData,
+      });
+    }
+  }, [router.query]);
+
+  const handleReset = (e) => {
+    setCurrentExample(null);
     setShowSolution(false);
-    setErrorMsg('');
+    setData(null);
+    router.query = {};
+    router.push(router);
+    e.target.reset();
   };
 
   return (
-    <div className="page">
-      <div className="center-title">Secant Method</div>
-      <div className="variables">
-        <div className="variables-block">
-          <div className="variables-title">Variables</div>
-
-          <CustomInput label="F(x)" type="text" placeholder="Mathematical Function" value={fx} onChange={setFx} />
-        </div>
-        <div className="variables-inline">
-          <CustomInput label="X" sub="a" type="number" placeholder="eXtreme node" value={xa} onChange={setXa} />
-          <CustomInput label="X" sub="b" type="number" placeholder="eXtreme node" value={xb} onChange={setXb} />
-        </div>
-        <div className="variables-block">
-          <div className="variables-title">Condition</div>
-          <CustomInput
-            label="ES"
-            type="number"
-            placeholder="Error Sum %"
-            onChange={setEs}
-            value={es}
-            withCheckbox={true}
-            name="es"
-            onClick={setConditionType}
-            condition={conditionType}
-          />
-          <CustomInput
-            label="MAXi"
-            type="number"
-            placeholder="Max Iteration"
-            withCheckbox={true}
-            value={it}
-            onChange={setIt}
-            name="it"
-            onClick={setConditionType}
-            condition={conditionType}
-          />
-        </div>
-      </div>
-      {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
-      <MethodButtons method={methodName} calculate={handleCalculate} clear={clear} />
-      {showSolution && (
-        <>
-          <hr className="line-divider"></hr>
-          <div ref={myRef} className="center-title" name="solution">
-            Solution
+    <>
+      <Head>
+        <title>Secant Method</title>
+      </Head>
+      <div className="page">
+        <div className="center-title">Secant Method</div>
+        <form
+          ref={formRef}
+          className={Styles.flexColumnFullWidth}
+          onSubmit={(e) => handleCalculate({ e, operation: 'calculate' })}
+          onReset={handleReset}>
+          <div className={Styles.inputs_Container}>
+            <div className="inputs-title">Variables</div>
+            <Input
+              name="fx"
+              label="F(x)"
+              type="text"
+              placeholder="Mathematical Function"
+              defaultValue={currentExample?.fx}
+            />
+            <div className={Styles.flex_Row}>
+              <Input name="x_1" label="X" sub="-1" type="number" placeholder="X-1" defaultValue={currentExample?.x_1} />
+              <Input name="x0" label="X" sub="0" type="number" placeholder="X0" defaultValue={currentExample?.x0} />
+            </div>
           </div>
-          <div className="solution-table-container">
+          <div className={Styles.inputs_Container}>
+            <div className="inputs-title">Condition</div>
+            <Input
+              name="conditionType"
+              type="radio&input"
+              inputType="number"
+              options={[
+                {
+                  label: 'ES',
+                  value: 'es',
+                  checked: currentExample?.condition?.type === 'es',
+                  placeholder: 'Error Sum %',
+                  defaultValue: currentExample?.condition?.type === 'es' ? currentExample?.condition?.value : '',
+                },
+                {
+                  label: 'MAXi',
+                  value: 'it',
+                  checked: currentExample?.condition?.type === 'it',
+                  placeholder: 'Max Iteration',
+                  defaultValue: currentExample?.condition?.type === 'it' ? currentExample?.condition?.value : '',
+                },
+              ]}
+            />
+          </div>
+          <MethodButtons method={methodName} calculate={handleCalculate} />
+        </form>
+        {showSolution && (
+          <>
+            <hr className="line-divider"></hr>
+            <div className="center-title" name="solution">
+              Solution
+            </div>
             <CustomTable
               headers={[
                 { name: 'i' },
@@ -229,15 +192,15 @@ const Secant = () => {
                 { name: 'ea' },
               ]}
               data={data}
-              priority={['i', 'xa', 'fxa', 'xb', 'fxb', 'ea']}
-              highlight="xb"
+              priority={['i', 'x_1', 'fxa', 'x0', 'fxb', 'ea']}
+              highlight="x0"
             />
-          </div>
-        </>
-      )}
-      <ExamplesAndSaved method={methodName} examples={examples} setter={handleCalculate} />
-    </div>
+          </>
+        )}
+        <ExamplesAndSaved method={methodName} examples={examples.secant} setter={handleCalculate} />
+      </div>
+    </>
   );
 };
 
-export default Secant;
+export default Bisection;

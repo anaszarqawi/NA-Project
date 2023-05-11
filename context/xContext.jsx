@@ -177,19 +177,80 @@ export default function XProvider({ children }) {
         },
       },
     ],
-  };
-
-  const addToSaved = (method, data) => {
-    let temp = saved;
-    if (temp[method]) temp[method].push(data);
-    else temp[method] = [data];
-    setSaved(temp);
-
-    localStorage.setItem('saved', JSON.stringify(saved));
-
-    // logEvent(analytics, 'save');
-
-    showMsg('success', 'Saved successfully!');
+    secant: [
+      {
+        fx: '0.95x^3 - 5.9x^2 + 10.9x - 6',
+        x_1: 2.5,
+        x0: 3.5,
+        condition: {
+          type: 'es',
+          value: 0.5,
+        },
+      },
+      {
+        fx: '2x^3 - 11.7x^2 + 17.7x - 5',
+        x_1: 3,
+        x0: 4,
+        condition: {
+          type: 'es',
+          value: 0.5,
+        },
+      },
+      {
+        fx: 'x^4 - 3x^2 + 1.5x -3',
+        x_1: 1.5,
+        x0: 2,
+        condition: {
+          type: 'es',
+          value: 0.01,
+        },
+      },
+      {
+        fx: '-1 + 5.5x - 4x^2 + 0.5x^3',
+        x_1: 1.5,
+        x0: 2,
+        condition: {
+          type: 'es',
+          value: 0.2,
+        },
+      },
+      {
+        fx: '-x^3 + 7.89x + 11',
+        x_1: 3,
+        x0: 5,
+        condition: {
+          type: 'es',
+          value: 0.1,
+        },
+      },
+      {
+        fx: '-x^3 + 7.89x + 11',
+        x_1: 3,
+        x0: 5,
+        condition: {
+          type: 'es',
+          value: 0.1,
+        },
+      },
+      {
+        fx: 'x^3 - 6x^2 + 11x - 6.1',
+        x_1: 0,
+        x0: 0.5,
+        condition: {
+          type: 'es',
+          value: 0.5,
+        },
+      },
+      {
+        fx: 'x^7 - 1.5x^2 + 7x - 6',
+        x_1: 0,
+        x0: 0.5,
+        condition: {
+          type: 'es',
+          value: 0.1,
+        },
+      },
+    ],
   };
 
   React.useEffect(() => {
@@ -220,6 +281,19 @@ export default function XProvider({ children }) {
   React.useEffect(() => {
     console.log(currentExample);
   }, [currentExample]);
+
+  const addToSaved = (method, data) => {
+    let temp = saved;
+    if (temp[method]) temp[method].push(data);
+    else temp[method] = [data];
+    setSaved(temp);
+
+    localStorage.setItem('saved', JSON.stringify(saved));
+
+    // logEvent(analytics, 'save');
+
+    showMsg('success', 'Saved successfully!');
+  };
 
   const matchMethod = (name, values) => {
     if (name === 'Bisection') return bisection(values);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useX } from '../context/xContext';
 import Styles from '../styles/table.module.scss';
+import MiniLabel from './MiniLabel';
 
 const CustomTable = (props) => {
   const { round } = useX();
@@ -11,16 +12,21 @@ const CustomTable = (props) => {
 
   const customizeValue = (header, value, row) => {
     // if header is i
-    if (header === 'i') return <td className={Styles.td + ' ' + Styles.i_col}>{round(value)}</td>;
+    if (header === 'i') return <td className={Styles.td + ' ' + Styles.i_col}>{value}</td>;
     // if row is first row put ea as '-'
     else if (header === 'ea' && row === 0) return <td className={Styles.td}>{'-'}</td>;
     // if column is ea
-    else if (header === 'ea') return <td className={Styles.td}>{round(value) + '%'}</td>;
+    else if (header === 'ea') return <td className={Styles.td}>{value + '%'}</td>;
     // if column is x and row is last row
     else if (props.highlight === header && row === props.data.length - 1)
-      return <td className={Styles.highlight + ' ' + Styles.td}>{round(value)}</td>;
+      return (
+        <td className={Styles.highlight + ' ' + Styles.td}>
+          {value}
+          {<MiniLabel label="Root" />}
+        </td>
+      );
     // if any other column
-    else return <td className={Styles.td}>{round(value)}</td>;
+    else return <td className={Styles.td}>{value}</td>;
   };
 
   return (

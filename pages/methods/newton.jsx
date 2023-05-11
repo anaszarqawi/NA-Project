@@ -94,7 +94,7 @@ const SimpleFixedPoint = () => {
   };
 
   React.useEffect(() => {
-    if (router.query.operation === 'calculateQuery') {
+    if (router.query.operation === 'calculateQuery' && formRef.current.fx.value === '') {
       const values = {
         fx: router.query.fx && router.query.fx,
         x0: router.query.x0 && +router.query.x0,
@@ -129,7 +129,7 @@ const SimpleFixedPoint = () => {
         <title>Newton Method</title>
       </Head>
       <div className="page">
-        <div className="center-title">Simple Fixed Point Method</div>
+        <div className="center-title">Newton Method</div>
         <form
           ref={formRef}
           className={Styles.flexColumnFullWidth}

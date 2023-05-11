@@ -7,6 +7,7 @@
 }
 
 .standard_input_container {
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -19,12 +20,31 @@
     font-weight: var(--font-weight-3);
     color: var(--color-3);
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 2px;
+
+}
+
+.input_label_inside_right {
+    position: absolute;
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-3);
+    color: var(--color-3);
+    cursor: pointer;
+    right: var(--space-25);
+    padding: var(--space-50) var(--space-1);
+    background-color: var(--color-2);
+    border-radius: var(--border-radius-12);
+    z-index: 999;
 }
 
 // .radio-with-input-container{ }
 
 // .radio-with-input
-.input_radio {
+.input_radio,
+.input_checkbox {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -36,7 +56,7 @@
         place-content: center;
         width: 20px;
         height: 20px;
-        border-radius: 5px;
+        border-radius: var(--border-radius-8);
         border: 1px solid var(--color-3-50);
         background-color: var(--color-1);
         transition: var(--transition-1);
@@ -46,26 +66,29 @@
             border: 1px solid var(--color-3);
         }
 
-        &[type="radio"]::before {
+        &[type="radio"]::before,
+        &[type="checkbox"]::before {
             content: "";
             width: 20px;
             height: 20px;
-            border-radius: 5px;
+            border-radius: var(--border-radius-8);
             transform: scale(0);
             transition: 120ms transform ease-in-out;
             background-color: var(--color-3);
         }
 
-        &[type="radio"]:checked::before {
+        &[type="radio"]:checked::before,
+        &[type="checkbox"]:checked::before {
             transform: scale(1);
         }
     }
 }
 
 .input_field {
+    position: relative;
     width: 100%;
     padding: var(--space-50) var(--space-1);
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius-12);
     border: 1px solid var(--color-3-20);
     transition: var(--transition-1);
     color: var(--color-3);

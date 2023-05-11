@@ -45,7 +45,7 @@ const Footer = () => {
         <div className="copyright">
           <span className="text">© {new Date().getFullYear()} anaszarqawi.</span>
         </div>
-        <div className="version">v1.0</div>
+        <div className="version">v2.0</div>
 
         <div className="social">
           {social.map((site) => {

@@ -51,7 +51,7 @@ const Home = () => {
 
   return (
     <div className="page">
-      <div className={Styles['center-title']}>Numerical Analysis Methods</div>
+      <div className="center-title">Numerical Analysis Methods</div>
       <div className="chapters">
         <SelectMenu chapters={Chapters} type="methods" />
       </div>

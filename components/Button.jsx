@@ -1,6 +1,6 @@
 import React from 'react';
 import Styles from '../styles/button.module.scss';
-import NewLabel from './NewLabel';
+import MiniLabel from './MiniLabel';
 
 const Button = (props) => {
   return (
@@ -14,7 +14,7 @@ const Button = (props) => {
       disabled={props.disabled}
       onClick={props.onClick}>
       {props.label}
-      {props.isNew && <NewLabel />}
+      {props.isNew && <MiniLabel label="New" highlight={true} />}
     </button>
   );
 };
