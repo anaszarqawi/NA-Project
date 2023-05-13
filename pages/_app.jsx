@@ -7,6 +7,7 @@ import XProvider from '../context/xContext';
 // Components
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import BackToTopBtn from '../components/BackToTopBtn';
 
 // Styles
 import '../styles/globals.scss';
@@ -25,6 +26,7 @@ const App = ({ Component, pageProps }) => {
         <Header />
         <Component {...pageProps} />
         <Footer />
+        <BackToTopBtn />
       </main>
       <ToastContainer bodyClassName="toast-body" toastClassName="toast" limit={3} />
     </XProvider>

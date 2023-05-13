@@ -9,21 +9,18 @@ import ExamplesAndSaved from '../../components/ExamplesAndSaved';
 
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import GaussElimination_steps from '../../components/gaussElimination_steps';
-import LU_steps from '../../components/lu_steps';
+import GaussJordan_steps from '../../components/gaussJordan_steps';
 
-const GaussElimination = () => {
+const GaussJordan = () => {
   const formRef = React.useRef(null);
   const router = useRouter();
 
-  const { calculate, examples } = useX();
+  const { calculate, currentExample, setCurrentExample, examples } = useX();
 
   const [showSolution, setShowSolution] = React.useState(false);
   const [solution, setSolution] = React.useState([]);
-  const [currentExample, setCurrentExample] = React.useState(null);
 
-  const { lu } = router.query;
-  const methodName = lu ? 'LU Decomposition' : 'Gauss Elimination';
+  const methodName = 'Gauss Jordan';
 
   const validationData = ([eq1, eq2, eq3]) => {
     if (eq1[0] === 0 && eq1[1] === 0 && eq1[2] === 0)
@@ -128,9 +125,7 @@ const GaussElimination = () => {
     setCurrentExample(null);
     setShowSolution(false);
     setSolution(null);
-    router.query = {
-      lu,
-    };
+    router.query = {};
     router.push(router);
     e.target.reset();
   };
@@ -258,8 +253,7 @@ const GaussElimination = () => {
               Solution
             </div>
             <div className={Styles.flexColumnFullWidthStart}>
-              <GaussElimination_steps solution={solution} />
-              {lu && <LU_steps solution={solution} />}
+              <GaussJordan_steps solution={solution} />
             </div>
           </>
         )}
@@ -269,4 +263,4 @@ const GaussElimination = () => {
   );
 };
 
-export default GaussElimination;
+export default GaussJordan;

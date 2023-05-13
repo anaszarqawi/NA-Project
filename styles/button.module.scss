@@ -12,6 +12,7 @@
     // flex: 1 0 0;
     background-color: transparent;
     cursor: pointer;
+    white-space: nowrap;
 
     &:hover {
         border: 1px solid var(--color-3);

@@ -222,57 +222,56 @@ export const gaussElimination = (matrix) => {
   let x2 = (matrix_3[1][3] - matrix_3[1][2] * x3) / matrix_3[1][1];
   let x1 = (matrix_3[0][3] - matrix_3[0][2] * x3 - matrix_3[0][1] * x2) / matrix_3[0][0];
 
-  x1 = toFractionSingle(x1);
-  x2 = toFractionSingle(x2);
-  x3 = toFractionSingle(x3);
 
   console.log({ x1, x2, x3 });
 
   const steps = {
-    matrix_1: matrix,
-    matrix_2: matrix_2,
-    matrix_3: matrix_3,
+    matrix_1: fracMat(matrix),
+    matrix_2: fracMat(matrix_2),
+    matrix_3: fracMat(matrix_3),
     m21: {
-      equation: `${x1_2} / ${x1_1} = ${m21}`,
-      value: m21,
+      equation: `${frac(x1_2)} / ${frac(x1_1)} = ${frac(m21)}`,
+      value: frac(m21),
     },
     m31: {
-      equation: `${x1_3} / ${x1_1} = ${m31}`,
-      value: m31,
+      equation: `${frac(x1_3)} / ${frac(x1_1)} = ${frac(m31)}`,
+      value: frac(m31),
     },
     m32: {
-      equation: `${matrix_2[2][1]} / ${matrix_2[1][1]} = ${m32}`,
-      value: m32,
+      equation: `${frac(matrix_2[2][1])} / ${frac(matrix_2[1][1])} = ${frac(m32)}`,
+      value: frac(m32),
     },
 
     R2: {
       steps: [
-        `${x1_2} - (${m21} * ${x1_1}) = ${matrix_2[1][0]}`,
-        `${x2_2} - (${m21} * ${x2_1}) = ${matrix_2[1][1]}`,
-        `${x3_2} - (${m21} * ${x3_1}) = ${matrix_2[1][2]}`,
-        `${sol_2} - (${m21} * ${sol_1}) = ${matrix_2[1][3]}`,
+        `${frac(x1_2)} - (${frac(m21)} * ${frac(x1_1)}) = ${frac(matrix_2[1][0])}`,
+        `${frac(x2_2)} - (${frac(m21)} * ${frac(x2_1)}) = ${frac(matrix_2[1][1])}`,
+        `${frac(x3_2)} - (${frac(m21)} * ${frac(x3_1)}) = ${frac(matrix_2[1][2])}`,
+        `${frac(sol_2)} - (${frac(m21)} * ${frac(sol_1)}) = ${frac(matrix_2[1][3])}`,
       ],
     },
     R3_1: {
       steps: [
-        `${x1_3} - (${m31} * ${x1_1}) = ${matrix_2[2][0]}`,
-        `${x2_3} - (${m31} * ${x2_1}) = ${matrix_2[2][1]}`,
-        `${x3_3} - (${m31} * ${x3_1}) = ${matrix_2[2][2]}`,
-        `${sol_3} - (${m31} * ${sol_1}) = ${matrix_2[2][3]}`,
+        `${frac(x1_3)} - (${frac(m31)} * ${frac(x1_1)}) = ${frac(matrix_2[2][0])}`,
+        `${frac(x2_3)} - (${frac(m31)} * ${frac(x2_1)}) = ${frac(matrix_2[2][1])}`,
+        `${frac(x3_3)} - (${frac(m31)} * ${frac(x3_1)}) = ${frac(matrix_2[2][2])}`,
+        `${frac(sol_3)} - (${frac(m31)} * ${frac(sol_1)}) = ${frac(matrix_2[2][3])}`,
+
       ],
     },
     R3_2: {
       steps: [
-        `${matrix_2[2][0]} - (${m32} * ${matrix_2[1][0]}) = ${matrix_3[2][0]}`,
-        `${matrix_2[2][1]} - (${m32} * ${matrix_2[1][1]}) = ${matrix_3[2][1]}`,
-        `${matrix_2[2][2]} - (${m32} * ${matrix_2[1][2]}) = ${matrix_3[2][2]}`,
-        `${matrix_2[2][3]} - (${m32} * ${matrix_2[1][3]}) = ${matrix_3[2][3]}`,
+        `${frac(matrix_2[2][0])} - (${frac(m32)} * ${frac(matrix_2[1][0])}) = ${frac(matrix_3[2][0])}`,
+        `${frac(matrix_2[2][1])} - (${frac(m32)} * ${frac(matrix_2[1][1])}) = ${frac(matrix_3[2][1])}`,
+        `${frac(matrix_2[2][2])} - (${frac(m32)} * ${frac(matrix_2[1][2])}) = ${frac(matrix_3[2][2])}`,
+        `${frac(matrix_2[2][3])} - (${frac(m32)} * ${frac(matrix_2[1][3])}) = ${frac(matrix_3[2][3])}`,
+        
       ],
     },
     xsValues: [
-      { name: 'x', sub: 1, value: x1 },
-      { name: 'x', sub: 2, value: x2 },
-      { name: 'x', sub: 3, value: x3 },
+      { name: 'x', sub: 1, value: frac(x1) },
+      { name: 'x', sub: 2, value: frac(x2) },
+      { name: 'x', sub: 3, value: frac(x3) },
     ],
   };
 
@@ -359,7 +358,21 @@ export const luDecomposition = (matrix) => {
   return steps;
 };
 
-// export const gaussJordan = (matrix) => { };
+export const gaussJordan = (matrix) => {
+  const [x1_1, x2_1, x3_1, sol_1] = matrix[0];
+  const [x1_2, x2_2, x3_2, sol_2] = matrix[1];
+  const [x1_3, x2_3, x3_3, sol_3] = matrix[2];
+
+  const steps = gaussElimination(matrix);
+
+  // steps.xsValues = [
+  //   { name: 'x', sub: 1, value: x1 },
+  //   { name: 'x', sub: 2, value: x2 },
+  //   { name: 'x', sub: 3, value: x3 },
+  // ];
+
+  return steps;
+};
 
 export const cramer = (matrix) => {
   const [x1_1, x2_1, x3_1, sol_1] = matrix[0];
@@ -421,15 +434,20 @@ const roundMatrix = (matrix, decPlaces) => {
 };
 
 // function to change decimal values to fractions using the mathjs library
-const toFractionMatrix = (matrix) => {
+const fracMat = (matrix) => {
   return matrix.map((row) => {
     return row.map((value) => {
-      return toFractionSingle(value);
+      return frac(value);
     });
   });
 };
 
 // function to change decimal value to fraction
-const toFractionSingle = (value) => {
-  return new Fraction(value).toFraction(true);
+const frac = (value) => {
+  const num = math.number(value);
+  const f = math.fraction(num);
+  console.log(`${f.n}/${f.d}`);
+  if(f.d === 1) return f.n;
+  return `${f.n}/${f.d}`;
+  // return new Fraction(value).toFraction(true);
 };

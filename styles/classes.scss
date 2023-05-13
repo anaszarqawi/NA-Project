@@ -111,10 +111,30 @@
 .highlight-label {
     background-image: linear-gradient(#1e87ff, #0059be);
     border: none;
+}
+
+.back-to-top-btn-container {
+    position: fixed;
+    bottom: 67px;
+    right: var(--space-4);
+    background-color: var(--color-2);
+    border: 1px solid var(--color-3-20);
+    border-radius: var(--border-radius-12);
+    padding: var(--space-25) var(--space-50);
+    z-index: 1000;
+    cursor: pointer;
+    padding-top: var(--space-50);
+    transition: var(--transition-1);
+    // margin: var(--space-4);
 
     &:hover {
-        background-image: linear-gradient(#1e87ff, #00326c);
-        border: none;
+        border: 1px solid var(--color-3);
+    }
+
+    svg {
+        width: 30px;
+        height: 30px;
+        fill: var(--color-3);
     }
 }
 
@@ -147,4 +167,13 @@
         }
     }
 
+    .back-to-top-btn-container {
+        opacity: 0.5;
+        bottom: calc(67px + var(--space-2)) !important;
+        right: var(--space-2) !important;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
 }

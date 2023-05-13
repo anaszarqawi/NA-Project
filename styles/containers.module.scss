@@ -79,7 +79,6 @@
     width: 100%;
 }
 
-
 .flexSpaceBetween {
     display: flex;
     flex-direction: row;
@@ -93,8 +92,6 @@
     align-items: flex-start;
     gap: var(--space-75);
 
-
-
     .matrices_container {
         display: flex;
         flex-direction: column;
@@ -102,7 +99,6 @@
         gap: var(--space-2);
         width: 100%;
     }
-
 
     .inline_steps_container {
         display: flex;
@@ -115,7 +111,6 @@
         // padding: var(--space-1);
         // border: 1px solid var(--color-3-20);
         gap: var(--space-50);
-
     }
 }
 
@@ -143,7 +138,6 @@
     flex-direction: column;
     justify-content: flex-start;
     gap: var(--space-1);
-
 }
 
 .step {
@@ -151,7 +145,14 @@
 }
 
 @media only screen and (max-width: 600px) {
-    .flexRow {
-        flex-direction: column;
+
+}
+
+@media only screen and (max-width: 360px) {
+    .inputs_Container {
+        gap: var(--space-75);
+    }
+    .flex_Row {
+        gap: var(--space-75) !important;
     }
 }

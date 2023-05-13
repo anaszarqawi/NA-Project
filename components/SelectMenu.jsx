@@ -87,7 +87,7 @@ const SelectMenu = (props) => {
                     props.setter({ operation: 'setExample', example });
                   }
                 }}>
-                {example ? (
+                {example.length > 0 ? (
                   example.map((equation, eqIndex) => {
                     return (
                       <>
