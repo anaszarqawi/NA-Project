@@ -43,19 +43,30 @@ const Home = () => {
           name: 'LU Decomposition',
           path: '/methods/gauss-elimination?lu=true',
         },
+        {
+          name: 'Gauss Jordan',
+          path: '/methods/gauss-jordan',
+        },
+        {
+          name: 'Cramer',
+          path: '/methods/cramer',
+        },
       ],
     },
   ];
 
-  // methods: ['Gauss Elimination', 'LU Decomposition'],
-
   return (
-    <div className="page">
-      <div className="center-title">Numerical Analysis Methods</div>
-      <div className="chapters">
-        <SelectMenu chapters={Chapters} type="methods" />
+    <>
+      <Head>
+        <title>Numerical Analysis Methods</title>
+      </Head>
+      <div className="page">
+        <div className="center-title">Numerical Analysis Methods</div>
+        <div className="chapters">
+          <SelectMenu chapters={Chapters} type="methods" />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

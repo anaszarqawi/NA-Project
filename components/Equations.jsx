@@ -23,15 +23,17 @@ const Equations = (props) => {
     <div className="equations-container">
       {props.matrix.map((row) => {
         return (
-          <div className="inline-step">
+          <div className="step">
             {row.map((col, i) => {
               if (i === 0)
                 return (
                   col !== 0 && (
                     <span>
                       {handleSign(col, true)}
-                      {props.var}
-                      <sub>{i + 1}</sub>
+                      <span className="equation-var">
+                        {props.var}
+                        <sub>{i + 1}</sub>
+                      </span>
                     </span>
                   )
                 );
@@ -39,9 +41,11 @@ const Equations = (props) => {
                 return (
                   col !== 0 && (
                     <span>
-                      {handleSign(col)}
-                      {props.var}
-                      <sub>{i + 1}</sub>
+                      {handleSign(col, row[0] === 0)}
+                      <span className="equation-var">
+                        {props.var}
+                        <sub>{i + 1}</sub>
+                      </span>
                     </span>
                   )
                 );
@@ -51,8 +55,10 @@ const Equations = (props) => {
                   col !== 0 && (
                     <span>
                       {handleSign(col)}
-                      {props.var}
-                      <sub>{i + 1}</sub>
+                      <span className="equation-var">
+                        {props.var}
+                        <sub>{i + 1}</sub>
+                      </span>
                     </span>
                   )
                 );

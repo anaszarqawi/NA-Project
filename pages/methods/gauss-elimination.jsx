@@ -1,325 +1,271 @@
 import React from 'react';
 
-// import CustomInput from '../../../src/pages/Methods/components/CustomInput/CustomInput';
-// import CustomButton from '../../../src/pages/Methods/components/CustomButton/CustomButton';
-// import SelectMenu from '../../components/SelectMenu';
-// import Matrix from '../../../src/pages/Methods/components/Matrix/Matrix';
-// import XsValues from '../../../src/pages/Methods/components/XsValues/XsValues';
-// import Equations from '../../../src/pages/Methods/components/Equations/Equations';
-// import ExamplesAndSaved from '../../../src/pages/Methods/components/ExamplesAndSaved/ExamplesAndSaved';
-// import MethodButtons from '../../../src/pages/Methods/components/MethodButtons/MethodButtons';
-
 import { useX } from '../../context/xContext';
 
 import Input from '../../components/Input';
-import Button from '../../components/Button';
-import SelectMenu from '../../components/SelectMenu';
+import MethodButtons from '../../components/MethodButtons';
+import Styles from '../../styles/containers.module.scss';
+import ExamplesAndSaved from '../../components/ExamplesAndSaved';
 
-// const GaussElimination = () => {
-//   const myRef = React.useRef(null);
-//   const executeScroll = () => myRef.current.scrollIntoView();
+import { useRouter } from 'next/router';
+import Head from 'next/head';
+import GaussElimination_steps from '../../components/gaussElimination_steps';
+import LU_steps from '../../components/lu_steps';
 
-//   const { calculate } = useX();
+const GaussElimination = () => {
+  const formRef = React.useRef(null);
+  const router = useRouter();
 
-//   const [x1_1, setX1_1] = React.useState(0);
-//   const [x2_1, setX2_1] = React.useState(0);
-//   const [x3_1, setX3_1] = React.useState(0);
-//   const [sol_1, setSol_1] = React.useState(0);
+  const { calculate, currentExample, setCurrentExample, examples } = useX();
 
-//   const [x1_2, setX1_2] = React.useState(0);
-//   const [x2_2, setX2_2] = React.useState(0);
-//   const [x3_2, setX3_2] = React.useState(0);
-//   const [sol_2, setSol_2] = React.useState(0);
+  const [showSolution, setShowSolution] = React.useState(false);
+  const [solution, setSolution] = React.useState([]);
 
-//   const [x1_3, setX1_3] = React.useState(0);
-//   const [x2_3, setX2_3] = React.useState(0);
-//   const [x3_3, setX3_3] = React.useState(0);
-//   const [sol_3, setSol_3] = React.useState(0);
+  const { lu } = router.query;
+  const methodName = lu ? 'LU Decomposition' : 'Gauss Elimination';
 
-//   const [errorMsg, setErrorMsg] = React.useState('');
-//   const [showSolution, setShowSolution] = React.useState(false);
-//   const [steps, setSteps] = React.useState([]);
-//   const [values, setValues] = React.useState([]);
+  const validationData = ([eq1, eq2, eq3]) => {
+    if (eq1[0] === 0 && eq1[1] === 0 && eq1[2] === 0)
+      return { status: false, error: 'Please enter the first Equation' };
+    if (eq2[0] === 0 && eq2[1] === 0 && eq2[2] === 0)
+      return { status: false, error: 'Please enter the second Equation' };
+    if (eq3[0] === 0 && eq3[1] === 0 && eq3[2] === 0)
+      return { status: false, error: 'Please enter the third Equation' };
+    if (eq1[3] === 0) return { status: false, error: 'Please enter the solution of the first Equation' };
+    if (eq2[3] === 0) return { status: false, error: 'Please enter the solution of the second Equation' };
+    if (eq3[3] === 0) return { status: false, error: 'Please enter the solution of the third Equation' };
 
-//   const [withLUDecomposition, setWithLUDecomposition] = React.useState(
-//     window.location.pathname === '/lu-decomposition-method'
-//   );
+    return { status: true };
+  };
 
-//   const [title, setTitle] = React.useState(withLUDecomposition ? 'LU Decomposition' : 'Gauss Elimination');
+  const handleCalculate = ({ e, operation, example }) => {
+    e && e.preventDefault();
 
-//   React.useEffect(() => {
-//     document.title = title + ' Method';
-//   }, []);
+    const values = e
+      ? [
+          [e.target.x1_1.value, e.target.x2_1.value, e.target.x3_1.value, e.target.sol_1.value],
+          [e.target.x1_2.value, e.target.x2_2.value, e.target.x3_2.value, e.target.sol_2.value],
+          [e.target.x1_3.value, e.target.x2_3.value, e.target.x3_3.value, e.target.sol_3.value],
+        ]
+      : !example
+      ? [
+          [
+            formRef.current.x1_1.value,
+            formRef.current.x2_1.value,
+            formRef.current.x3_1.value,
+            formRef.current.sol_1.value,
+          ],
+          [
+            formRef.current.x1_2.value,
+            formRef.current.x2_2.value,
+            formRef.current.x3_2.value,
+            formRef.current.sol_2.value,
+          ],
+          [
+            formRef.current.x1_3.value,
+            formRef.current.x2_3.value,
+            formRef.current.x3_3.value,
+            formRef.current.sol_3.value,
+          ],
+        ]
+      : example;
 
-//   const examples = [
-//     {
-//       matrix: [
-//         {
-//           x1: 2,
-//           x2: 1,
-//           x3: 1,
-//           sol: 8,
-//         },
-//         {
-//           x1: 4,
-//           x2: 1,
-//           x3: 0,
-//           sol: 11,
-//         },
-//         {
-//           x1: -2,
-//           x2: 2,
-//           x3: 1,
-//           sol: 3,
-//         },
-//       ],
-//     },
-//     {
-//       matrix: [
-//         {
-//           x1: 2,
-//           x2: 1,
-//           x3: -1,
-//           sol: 1,
-//         },
-//         {
-//           x1: 5,
-//           x2: 2,
-//           x3: 2,
-//           sol: -4,
-//         },
-//         {
-//           x1: 3,
-//           x2: 1,
-//           x3: 1,
-//           sol: 5,
-//         },
-//       ],
-//     },
-//   ];
+    console.log(operation);
+    if (operation !== 'save' && operation !== 'calculateFromQuery' && validationData(values).status) {
+      router.query = {
+        ...router.query,
+        operation: 'calculateQuery',
+        x1_1: values[0][0],
+        x2_1: values[0][1],
+        x3_1: values[0][2],
+        sol_1: values[0][3],
+        x1_2: values[1][0],
+        x2_2: values[1][1],
+        x3_2: values[1][2],
+        sol_2: values[1][3],
+        x1_3: values[2][0],
+        x2_3: values[2][1],
+        x3_3: values[2][2],
+        sol_3: values[2][3],
+      };
+      router.push(router);
+    }
 
-//   React.useEffect(() => {
-//     setValues([
-//       [x1_1, x2_1, x3_1, sol_1],
-//       [x1_2, x2_2, x3_2, sol_2],
-//       [x1_3, x2_3, x3_3, sol_3],
-//     ]);
-//   }, [x1_1, x2_1, x3_1, sol_1, x1_2, x2_2, x3_2, sol_2, x1_3, x2_3, x3_3, sol_3]);
+    calculate({
+      name: methodName,
+      values,
+      validationData,
+      setShowSolution,
+      operation,
+      setData: setSolution,
+    });
+  };
 
-//   const validationData = () => {
-//     if (x1_1 === 0 && x2_1 === 0 && x3_1 === 0) return { status: false, error: 'Please enter the first Equation' };
-//     if (x1_2 === 0 && x2_2 === 0 && x3_2 === 0) return { status: false, error: 'Please enter the second Equation' };
-//     if (x1_3 === 0 && x2_3 === 0 && x3_3 === 0) return { status: false, error: 'Please enter the third Equation' };
-//     if (sol_1 === 0) return { status: false, error: 'Please enter the solution of the first Equation' };
-//     if (sol_2 === 0) return { status: false, error: 'Please enter the solution of the second Equation' };
-//     if (sol_3 === 0) return { status: false, error: 'Please enter the solution of the third Equation' };
+  React.useEffect(() => {
+    if (router.query.operation === 'calculateQuery' && formRef.current.sol_1.value === '') {
+      const values = [
+        [+router.query.x1_1, +router.query.x2_1, +router.query.x3_1, +router.query.sol_1],
+        [+router.query.x1_2, +router.query.x2_2, +router.query.x3_2, +router.query.sol_2],
+        [+router.query.x1_3, +router.query.x2_3, +router.query.x3_3, +router.query.sol_3],
+      ];
+      console.log(values);
 
-//     return { status: true };
-//   };
-//   const handleCalculate = (operation, example) => {
-//     if (example && operation === 'setExample') {
-//       setX1_1(example.matrix[0].x1);
-//       setX2_1(example.matrix[0].x2);
-//       setX3_1(example.matrix[0].x3);
-//       setSol_1(example.matrix[0].sol);
-//       setX1_2(example.matrix[1].x1);
-//       setX2_2(example.matrix[1].x2);
-//       setX3_2(example.matrix[1].x3);
-//       setSol_2(example.matrix[1].sol);
-//       setX1_3(example.matrix[2].x1);
-//       setX2_3(example.matrix[2].x2);
-//       setX3_3(example.matrix[2].x3);
-//       setSol_3(example.matrix[2].sol);
+      setCurrentExample(values);
 
-//       example = [
-//         [example.matrix[0].x1, example.matrix[0].x2, example.matrix[0].x3, example.matrix[0].sol],
-//         [example.matrix[1].x1, example.matrix[1].x2, example.matrix[1].x3, example.matrix[1].sol],
-//         [example.matrix[2].x1, example.matrix[2].x2, example.matrix[2].x3, example.matrix[2].sol],
-//       ];
-//     }
+      calculate({
+        name: methodName,
+        values,
+        validationData,
+        setShowSolution,
+        operation: 'calculateFromQuery',
+        setData: setSolution,
+      });
+    }
+  }, [router.query]);
 
-//     if (operation === 'addToSaved') {
-//       example = {
-//         matrix: [
-//           {
-//             x1: x1_1,
-//             x2: x2_1,
-//             x3: x3_1,
-//             sol: sol_1,
-//           },
-//           {
-//             x1: x1_2,
-//             x2: x2_2,
-//             x3: x3_2,
-//             sol: sol_2,
-//           },
-//           {
-//             x1: x1_3,
-//             x2: x2_3,
-//             x3: x3_3,
-//             sol: sol_3,
-//           },
-//         ],
-//       };
-//       console.log(example);
-//     }
+  const handleReset = (e) => {
+    setCurrentExample(null);
+    setShowSolution(false);
+    setSolution(null);
+    router.query = {
+      lu,
+    };
+    router.push(router);
+    e.target.reset();
+  };
 
-//     calculate({
-//       name: operation === 'addToSaved' ? 'LUDecomposition+GaussElimination' : title,
-//       values: operation === 'setExample' || operation === 'addToSaved' ? example : values,
-//       validationData,
-//       setShowSolution,
-//       setErrorMsg,
-//       operation,
-//       setData: setSteps,
-//       executeScroll,
-//     });
-//   };
-
-//   const clear = () => {
-//     setX1_1(0);
-//     setX2_1(0);
-//     setX3_1(0);
-//     setSol_1(0);
-//     setX1_2(0);
-//     setX2_2(0);
-//     setX3_2(0);
-//     setSol_2(0);
-//     setX1_3(0);
-//     setX2_3(0);
-//     setX3_3(0);
-//     setSol_3(0);
-
-//     setShowSolution(false);
-//   };
-
-//   return (
-//     <div className="page">
-//       <div className="center-title">{title} Method</div>
-//       <div className="variables">
-//         <div className="variables-title">Variables</div>
-//         <div className="variables-inline">
-//           <CustomInput type="text" label="X" sub="1" labelPosition="right" value={x1_1} onChange={setX1_1} />
-//           <CustomInput type="text" label="X" sub="2" labelPosition="right" value={x2_1} onChange={setX2_1} />
-//           <CustomInput type="text" label="X" sub="3" labelPosition="right" value={x3_1} onChange={setX3_1} />
-//           <CustomInput type="text" label="=" value={sol_1} onChange={setSol_1} />
-//         </div>
-//         <div className="variables-inline">
-//           <CustomInput type="text" label="X" sub="1" labelPosition="right" value={x1_2} onChange={setX1_2} />
-//           <CustomInput type="text" label="X" sub="2" labelPosition="right" value={x2_2} onChange={setX2_2} />
-//           <CustomInput type="text" label="X" sub="3" labelPosition="right" value={x3_2} onChange={setX3_2} />
-//           <CustomInput type="text" label="=" value={sol_2} onChange={setSol_2} />
-//         </div>
-//         <div className="variables-inline">
-//           <CustomInput type="text" label="X" sub="1" labelPosition="right" value={x1_3} onChange={setX1_3} />
-//           <CustomInput type="text" label="X" sub="2" labelPosition="right" value={x2_3} onChange={setX2_3} />
-//           <CustomInput type="text" label="X" sub="3" labelPosition="right" value={x3_3} onChange={setX3_3} />
-//           <CustomInput type="text" label="=" value={sol_3} onChange={setSol_3} />
-//         </div>
-//       </div>
-//       {errorMsg !== '' && <div className="error-msg">{errorMsg}</div>}
-//       <MethodButtons method={title} calculate={handleCalculate} clear={clear} />
-
-//       {showSolution && steps && (
-//         <>
-//           <hr className="line-divider"></hr>
-//           <div ref={myRef} className="center-title" name="solution">
-//             Solution
-//           </div>
-//           <div className="solution-container">
-//             <Matrix matrix={steps.matrix_1} withSolution={true} label="[A/B] = " />
-//             <div className="steps-container">
-//               <div className="inline-step rule">
-//                 m<sub>rc</sub> = x<sub>rc</sub> / Pivot Element of R<sub>n</sub>
-//               </div>
-//               <div className="inline-step">
-//                 m<sub>21</sub> = {steps.m21.equation}
-//               </div>
-//               <div className="inline-step">
-//                 m<sub>31</sub> = {steps.m31.equation}
-//               </div>
-//             </div>
-//             <div className="steps-container">
-//               <div className="inline-step rule">
-//                 R<sub>2</sub> = R<sub>2</sub> - (m<sub>21</sub> * R<sub>1</sub>)
-//               </div>
-//               {steps.R2.steps.map((step, i) => {
-//                 return (
-//                   <div className="inline-step" key={i}>
-//                     R<sub>2{i}</sub> = {step}
-//                   </div>
-//                 );
-//               })}
-//             </div>
-//             <div className="steps-container">
-//               <div className="inline-step rule">
-//                 R<sub>3</sub> = R<sub>3</sub> - (m<sub>31</sub> * R<sub>1</sub>)
-//               </div>
-//               {steps.R3_1.steps.map((step, i) => {
-//                 return (
-//                   <div className="inline-step" key={i}>
-//                     R<sub>3{i}</sub> = {step}
-//                   </div>
-//                 );
-//               })}
-//             </div>
-//             <Matrix matrix={steps.matrix_2} withSolution={true} label="[A/B] = " />
-//             <div className="steps-container">
-//               <div className="inline-step">
-//                 m<sub>32</sub> = {steps.m32.equation}
-//               </div>
-//             </div>
-//             <div className="steps-container">
-//               <div className="inline-step rule">
-//                 R<sub>3</sub> = R<sub>3</sub> - (m<sub>32</sub> * R<sub>2</sub>)
-//               </div>
-//               {steps.R3_2.steps.map((step, i) => {
-//                 return (
-//                   <div className="inline-step" key={i}>
-//                     R<sub>3{i}</sub> = {step}
-//                   </div>
-//                 );
-//               })}
-//             </div>
-//             <Matrix matrix={steps.matrix_3} withSolution={true} label="[A/B] = " />
-//             <Equations matrix={steps.matrix_3} var="X" withAnswer={true} />
-//             <XsValues values={steps.xsValues} />
-//             {withLUDecomposition && (
-//               <>
-//                 <div className="subtitle">Solve by LU Decomposition</div>
-//                 <div className="steps-container">
-//                   <Matrix matrix={steps.A} label="A = " />
-//                   <Matrix matrix={steps.B} label="B = " />
-//                   <Matrix matrix={steps.U} label="U = " />
-//                   <Matrix matrix={steps.L} label="L = " />
-//                   <div className="inline-step rule">L . C = B</div>
-//                   <div className="inline-statement">
-//                     <Matrix matrix={steps.L} />
-//                     <Matrix matrix={[['C1'], ['C2'], ['C3']]} /> =
-//                     <Matrix matrix={steps.B} />
-//                   </div>
-//                   <Equations matrix={steps.C} var="C" withAnswer={true} />
-//                   <div className="inline-statement">
-//                     <Matrix matrix={[['C1'], ['C2'], ['C3']]} /> =
-//                     <Matrix matrix={steps.C_Values} />
-//                   </div>
-//                   <div className="inline-step rule">U . X = C</div>
-//                   <div className="inline-statement">
-//                     <Matrix matrix={steps.U} />
-//                     <Matrix matrix={[['X1'], ['X2'], ['X3']]} /> =
-//                     <Matrix matrix={steps.C_Values} />
-//                   </div>
-//                   <Equations matrix={steps.X} var="X" withAnswer={true} />
-//                   <XsValues values={steps.X_Values} />
-//                 </div>
-//               </>
-//             )}
-//           </div>
-//         </>
-//       )}
-//       <ExamplesAndSaved method="LUDecomposition+GaussElimination" examples={examples} setter={handleCalculate} />
-//     </div>
-//   );
-// };
+  return (
+    <>
+      <Head>
+        <title>{methodName}</title>
+      </Head>
+      <div className="page">
+        <div className="center-title">{methodName} Method</div>
+        <form
+          ref={formRef}
+          className={Styles.flexColumnFullWidth}
+          onSubmit={(e) => handleCalculate({ e, operation: 'calculate' })}
+          onReset={handleReset}>
+          <div className={Styles.inputs_Container}>
+            <div className="inputs-title">Variables</div>
+            <div className={Styles.flex_Row}>
+              <Input
+                type="text"
+                name="x1_1"
+                label="X"
+                sub="1"
+                labelPosition="inside-right"
+                defaultValue={currentExample ? currentExample[0][0] : null}
+              />
+              <Input
+                type="text"
+                name="x2_1"
+                label="X"
+                sub="2"
+                labelPosition="inside-right"
+                defaultValue={currentExample ? currentExample[0][1] : null}
+              />
+              <Input
+                type="text"
+                name="x3_1"
+                label="X"
+                sub="3"
+                labelPosition="inside-right"
+                defaultValue={currentExample ? currentExample[0][2] : null}
+              />
+              <Input
+                type="text"
+                name="sol_1"
+                label="="
+                placeholder="Eq1 solution"
+                defaultValue={currentExample ? currentExample[0][3] : null}
+              />
+            </div>
+            <div className={Styles.flex_Row}>
+              <Input
+                type="text"
+                name="x1_2"
+                label="X"
+                sub="1"
+                labelPosition="inside-right"
+                defaultValue={currentExample ? currentExample[1][0] : null}
+              />
+              <Input
+                type="text"
+                name="x2_2"
+                label="X"
+                sub="2"
+                labelPosition="inside-right"
+                defaultValue={currentExample ? currentExample[1][1] : null}
+              />
+              <Input
+                type="text"
+                name="x3_2"
+                label="X"
+                sub="3"
+                labelPosition="inside-right"
+                defaultValue={currentExample ? currentExample[1][2] : null}
+              />
+              <Input
+                type="text"
+                name="sol_2"
+                label="="
+                placeholder="Eq2 solution"
+                defaultValue={currentExample ? currentExample[1][3] : null}
+              />
+            </div>
+            <div className={Styles.flex_Row}>
+              <Input
+                type="text"
+                name="x1_3"
+                label="X"
+                sub="1"
+                labelPosition="inside-right"
+                defaultValue={currentExample ? currentExample[2][0] : null}
+              />
+              <Input
+                type="text"
+                name="x2_3"
+                label="X"
+                sub="2"
+                labelPosition="inside-right"
+                defaultValue={currentExample ? currentExample[2][1] : null}
+              />
+              <Input
+                type="text"
+                name="x3_3"
+                label="X"
+                sub="3"
+                labelPosition="inside-right"
+                defaultValue={currentExample ? currentExample[2][2] : null}
+              />
+              <Input
+                type="text"
+                name="sol_3"
+                label="="
+                placeholder="Eq3 solution"
+                defaultValue={currentExample ? currentExample[2][3] : null}
+              />
+            </div>
+          </div>
+          <MethodButtons method={methodName} calculate={handleCalculate} />
+        </form>
+        {showSolution && solution && (
+          <>
+            <hr className="line-divider"></hr>
+            <div className="center-title" name="solution">
+              Solution
+            </div>
+            <div className={Styles.flexColumnFullWidthStart}>
+              <GaussElimination_steps solution={solution} />
+              {lu && <LU_steps solution={solution} />}
+            </div>
+          </>
+        )}
+        <ExamplesAndSaved method="gaussE&lu" examples={examples.gaussElimination} setter={handleCalculate} />
+      </div>
+    </>
+  );
+};
 
 export default GaussElimination;

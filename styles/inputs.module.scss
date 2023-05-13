@@ -31,13 +31,13 @@
     position: absolute;
     font-size: var(--font-size-1);
     font-weight: var(--font-weight-3);
-    color: var(--color-3);
+    color: var(--color-3-60);
     cursor: pointer;
     right: var(--space-25);
     padding: var(--space-50) var(--space-1);
     background-color: var(--color-2);
     border-radius: var(--border-radius-12);
-    z-index: 999;
+    z-index: 2;
 }
 
 // .radio-with-input-container{ }

@@ -25,6 +25,15 @@
     width: fit-content;
 }
 
+.flexColumnFullWidthStart {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    gap: var(--space-3);
+}
+
 .flexColumnFullWidth {
     display: flex;
     flex-direction: column;
@@ -37,9 +46,9 @@
 .flexColumnFitContent {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    gap: var(--space-2);
+    gap: var(--space-3);
     width: fit-content;
 }
 
@@ -71,7 +80,6 @@
 }
 
 
-
 .flexSpaceBetween {
     display: flex;
     flex-direction: row;
@@ -79,21 +87,67 @@
     width: 100%;
 }
 
-.promoContainer {
+.part_container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    align-items: flex-start;
+    gap: var(--space-75);
 
-    background-color: var(--color-black-15);
-    border: 1px solid var(--color-black-13);
-    color: var(--color-black-3);
-    width: 100%;
-    // height: 300px;
-    padding: var(--space-5) var(--space-9);
-    border-radius: var(--border-radius);
-    font-size: var(--font-size-3);
+
+
+    .matrices_container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+        width: 100%;
+    }
+
+
+    .inline_steps_container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        // gap: var(--space-1);
+        // margin: var(--space-2) 0;
+        // background-color: var(--color-2);
+        // border-radius: var(--border-radius-12);
+        // padding: var(--space-1);
+        // border: 1px solid var(--color-3-20);
+        gap: var(--space-50);
+
+    }
+}
+
+.rule {
+    font-weight: var(--font-weight-4);
+    padding: var(--space-1);
+    border-radius: 0 var(--border-radius-12) var(--border-radius-12) 0;
+    border: 1px solid var(--color-3-20);
+    border-left: none;
+    padding-left: 0;
+    // margin-top: var(--space-1);
+    width: fit-content;
+}
+
+.inline_step {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-1);
+    align-items: center;
+    overflow-x: auto;
+}
+
+.steps_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--space-1);
+
+}
+
+.step {
+    white-space: nowrap;
 }
 
 @media only screen and (max-width: 600px) {

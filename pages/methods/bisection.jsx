@@ -50,7 +50,6 @@ const Bisection = () => {
 
   const handleCalculate = ({ e, operation, example }) => {
     e && e.preventDefault();
-    !e && console.log(formRef.current);
 
     const values = e
       ? {

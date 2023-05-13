@@ -33,6 +33,12 @@
     flex-direction: column;
     gap: var(--space-1);
     margin: var(--space-1) 0;
+    align-items: flex-start;
+    width: fit-content;
+    background-color: var(--color-2);
+    border-radius: var(--border-radius-12);
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--color-3-20);
 }
 
 .inline-statement {
@@ -44,14 +50,20 @@
     overflow-x: auto;
 }
 
-.inline-step {
+.step {
     font-size: var(--font-size-1);
+}
+
+.equation-var {
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-4);
+    color: var(--color-3-60);
 }
 
 .rule {
     font-weight: var(--font-weight-4);
     padding: var(--space-1);
-    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    border-radius: 0 var(--border-radius-12) var(--border-radius-12) 0;
     border: 1px solid var(--color-3-20);
     border-left: none;
     padding-left: 0;

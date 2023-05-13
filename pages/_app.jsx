@@ -13,6 +13,8 @@ import '../styles/globals.scss';
 import '../styles/header_footer.scss';
 import '../styles/selectMenu.scss';
 import '../styles/classes.scss';
+import '../styles/matrix.scss';
+import '../styles/xsValues.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import 'animate.css';
 

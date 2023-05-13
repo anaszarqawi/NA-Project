@@ -7,6 +7,7 @@ import {
   secant,
   gaussElimination,
   luDecomposition,
+  cramer,
 } from '../utils/Methods.js';
 import { app } from '../utils/firebase-config.js';
 import { getAnalytics, logEvent } from 'firebase/analytics';
@@ -251,6 +252,25 @@ export default function XProvider({ children }) {
         },
       },
     ],
+    gaussElimination: [
+      [
+        [2, 1, 1, 8],
+        [4, 1, 0, 11],
+        [-2, 2, 1, 3],
+      ],
+      [
+        [2, 1, -1, 1],
+        [5, 2, 2, -4],
+        [3, 1, 1, 5],
+      ],
+    ],
+    cramer: [
+      [
+        [6, 1, 1, 6],
+        [5, 1, 2, 4],
+        [4, 1, -1, -2],
+      ],
+    ],
   };
 
   React.useEffect(() => {
@@ -303,6 +323,7 @@ export default function XProvider({ children }) {
     else if (name === 'Secant') return secant(values);
     else if (name === 'Gauss Elimination') return gaussElimination(values);
     else if (name === 'LU Decomposition') return luDecomposition(values);
+    else if (name === 'Cramer') return cramer(values);
   };
 
   const ToastTransition = cssTransition({
@@ -371,7 +392,11 @@ export default function XProvider({ children }) {
   const calculate = ({ name, operation, values, validationData, setShowSolution, setData, executeScroll }) => {
     if (operation !== 'setExample') {
       console.log({ name, operation, values, validationData, setShowSolution, setData, executeScroll });
-      const isValidData = validationData({ ...values });
+
+      const isValidData = validationData(
+        name === 'Gauss Elimination' || name === 'LU Decomposition' || name === 'Cramer' ? values : { ...values }
+      );
+
       if (!isValidData.status) {
         setShowSolution(false);
         showMsg('error', isValidData.error);

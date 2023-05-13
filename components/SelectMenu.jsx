@@ -72,7 +72,7 @@ const SelectMenu = (props) => {
           {props.examples.map((example, index) => {
             return (
               <div
-                className={`select-menu-item ${example.matrix ? 'equations' : ''} ${
+                className={`select-menu-item ${example.length === 3 ? 'equations' : ''} ${
                   props.type === 'examples' && 'examples'
                 } ${props.type === 'saved' && 'saved'}`.replace(/false |undefined /g, '')}
                 onClick={(e) => {
@@ -82,32 +82,32 @@ const SelectMenu = (props) => {
                     e.target.tagName !== 'path' &&
                     e.target.tagName !== 'svg'
                   ) {
-                    props.setter({ operation: 'setExample', example });
                     setCurrentExample(example);
                     console.log(example);
+                    props.setter({ operation: 'setExample', example });
                   }
                 }}>
-                {example.matrix ? (
-                  example.matrix.map((equation, eqIndex) => {
+                {example ? (
+                  example.map((equation, eqIndex) => {
                     return (
                       <>
                         <div className="select-menu-item-equation">
-                          {equation.x1 !== 0 && (
+                          {equation[0] !== 0 && (
                             <>
-                              {equation.x1 > 0 ? equation.x1 : equation.x1}X<sub>1</sub>
+                              {equation[0] > 0 ? equation[0] : equation[0]}X<sub>1</sub>
                             </>
                           )}
-                          {equation.x2 !== 0 && (
+                          {equation[1] !== 0 && (
                             <>
-                              {isOne(equation.x2)}X<sub>2</sub>
+                              {isOne(equation[1])}X<sub>2</sub>
                             </>
                           )}
-                          {equation.x3 !== 0 && (
+                          {equation[2] !== 0 && (
                             <>
-                              {isOne(equation.x3)}X<sub>3</sub>
+                              {isOne(equation[2])}X<sub>3</sub>
                             </>
                           )}
-                          {` = ${equation.sol}`}
+                          {` = ${equation[3]}`}
                         </div>
                         {props.type === 'saved' && eqIndex === 2 && (
                           <div className="select-menu-item-button" onClick={() => handleRemoveItem(index)}>
