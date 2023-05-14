@@ -30,7 +30,7 @@ const LU_steps = (props) => {
           <Matrix matrix={props.solution.C_Values} />
         </div>
         <Equations matrix={props.solution.X} var="X" withAnswer={true} />
-        <XsValues values={props.solution.X_Values} />
+        <XsValues values={props.solution.xsValuesLu} />
       </div>
     </>
   );

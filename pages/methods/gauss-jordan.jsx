@@ -128,6 +128,7 @@ const GaussJordan = () => {
     router.query = {};
     router.push(router);
     e.target.reset();
+    console.clear();
   };
 
   return (
