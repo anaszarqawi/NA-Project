@@ -82,7 +82,7 @@ const SelectMenu = (props) => {
                     e.target.tagName !== 'path' &&
                     e.target.tagName !== 'svg'
                   ) {
-                    setCurrentExample(example);
+                    // setCurrentExample(example);
                     console.log(example);
                     props.setter({ operation: 'setExample', example });
                   }

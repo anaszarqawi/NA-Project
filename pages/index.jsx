@@ -53,6 +53,15 @@ const Home = () => {
         },
       ],
     },
+    // {
+    //   name: 'Chapter 3',
+    //   methods: [
+    //     {
+    //       name: 'Golden Section',
+    //       path: '/methods/golden-section',
+    //     },
+    //   ],
+    // },
   ];
 
   return (

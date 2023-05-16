@@ -148,6 +148,17 @@
     width: fit-content !important;
 }
 
+@media only screen and (max-width: 1200px) {
+        .back-to-top-btn-container {
+        opacity: 0.6;
+        bottom: calc(67px + var(--space-2)) !important;
+        right: var(--space-2) !important;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
 @media only screen and (max-width: 600px) {
     .Toastify__toast-container {
         width: 100% !important;
@@ -164,16 +175,6 @@
             &:last-child {
                 border-bottom: none !important;
             }
-        }
-    }
-
-    .back-to-top-btn-container {
-        opacity: 0.5;
-        bottom: calc(67px + var(--space-2)) !important;
-        right: var(--space-2) !important;
-
-        &:hover {
-            opacity: 1;
         }
     }
 }

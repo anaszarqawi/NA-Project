@@ -14,32 +14,20 @@ import { useX } from '../../context/xContext';
 // Styles
 import Styles from '../../styles/containers.module.scss';
 
-const FalsePosition = () => {
+const GoldenSection = () => {
   const router = useRouter();
   const { calculate, currentExample, setCurrentExample, examples } = useX();
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
-  const methodName = 'False Position';
+  const methodName = 'Golden Section';
   const formRef = React.useRef(null);
 
   const validationData = ({ fx, xl, xu, condition }) => {
-    if (fx === '')
-      return {
-        status: false,
-        error: 'Please enter a function',
-      };
+    if (fx === '') return { status: false, error: 'Please enter a function' };
 
-    if (xl === '')
-      return {
-        status: false,
-        error: 'Please enter a value for Xl',
-      };
+    if (xl === '') return { status: false, error: 'Please enter a value for Xl' };
 
-    if (xu === '')
-      return {
-        status: false,
-        error: 'Please enter a value for Xu',
-      };
+    if (xu === '') return { status: false, error: 'Please enter a value for Xu' };
 
     if ((condition?.type === 'es' && condition?.value === '') || !condition)
       return {
@@ -47,17 +35,13 @@ const FalsePosition = () => {
         error: 'Please enter a value for Es',
       };
 
-    if ((condition?.type === 'it' && condition?.value === '') || !condition)
+    if ((condition?.type === 'it' && condition?.value === 0) || !condition)
       return {
         status: false,
         error: 'Please enter a value for Maximum Iterations',
       };
 
-    if (xl >= xu)
-      return {
-        status: false,
-        error: 'Xl must be less than Xu',
-      };
+    if (+xl >= +xu) return { status: false, error: 'Xl must be less than Xu' };
 
     return {
       status: true,
@@ -66,7 +50,6 @@ const FalsePosition = () => {
 
   const handleCalculate = ({ e, operation, example }) => {
     e && e.preventDefault();
-    !e && console.log(formRef.current);
 
     const values = e
       ? {
@@ -109,12 +92,11 @@ const FalsePosition = () => {
   };
 
   React.useEffect(() => {
-    console.log(router.query);
     if (router.query.operation === 'calculateQuery' && formRef.current.fx.value === '') {
       const values = {
-        fx: router.query.fx && router.query.fx,
-        xl: router.query.xl && +router.query.xl,
-        xu: router.query.xu && +router.query.xu,
+        fx: router.query.fx,
+        xl: +router.query.xl,
+        xu: +router.query.xu,
         condition: router.query?.condition && JSON.parse(router.query.condition),
       };
 
@@ -143,10 +125,10 @@ const FalsePosition = () => {
   return (
     <>
       <Head>
-        <title>False Position Method</title>
+        <title>Bisection Method</title>
       </Head>
       <div className="page">
-        <div className="center-title">False Position Method</div>
+        <div className="center-title">Bisection Method</div>
         <form
           ref={formRef}
           className={Styles.flexColumnFullWidth}
@@ -235,4 +217,4 @@ const FalsePosition = () => {
   );
 };
 
-export default FalsePosition;
+export default GoldenSection;

@@ -324,7 +324,7 @@ export default function XProvider({ children }) {
     else if (name === 'Secant') return secant(values);
     else if (name === 'Gauss Elimination') return gaussElimination(values);
     else if (name === 'LU Decomposition') return luDecomposition(values);
-    else if (name === 'Gauss Jordan') return gaussJordan(values);
+    else if (name === 'Gauss Jordan') return gaussJordan({ ...values });
     else if (name === 'Cramer') return cramer(values);
   };
 
@@ -396,8 +396,10 @@ export default function XProvider({ children }) {
       console.log({ name, operation, values, validationData, setShowSolution, setData, executeScroll });
 
       const isValidData = validationData(
-        name === 'Gauss Elimination' || name === 'LU Decomposition' || name === 'Cramer' || name === 'Gauss Jordan'
+        name === 'Gauss Elimination' || name === 'LU Decomposition' || name === 'Cramer'
           ? values
+          : name === 'Gauss Jordan'
+          ? values.matrix
           : { ...values }
       );
 

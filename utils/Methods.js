@@ -1,4 +1,4 @@
-import { create, all, fix } from 'mathjs';
+import { create, all, fix, i, re } from 'mathjs';
 import nerdamer from 'nerdamer/nerdamer.core.js';
 import 'nerdamer/Algebra.js';
 import 'nerdamer/Calculus.js';
@@ -355,17 +355,96 @@ export const luDecomposition = (matrix) => {
   return steps;
 };
 
-export const gaussJordan = (matrix) => {
+const swap2Rows = (matrix, targetCol) => {
+  const temp = matrix[targetCol];
+
+  // get the index of the row with the max value in the target column
+  const index2 = maxInCol(matrix, targetCol);
+
+  if (index2 === targetCol) return 'no swap';
+  matrix[targetCol] = matrix[index2];
+  matrix[index2] = temp;
+
+  return { matrix, indexMax: index2 };
+};
+
+const maxInCol = (matrix, col) => {
+  let max = matrix[col][col];
+  let maxIndex = col;
+
+  for (let i = col + 1; i < matrix.length; i++) {
+    if (Math.abs(matrix[i][col]) > Math.abs(max)) {
+      max = matrix[i][col];
+      maxIndex = i;
+    }
+  }
+
+  return maxIndex;
+};
+
+const sub = (n) => {
+  let temp = n.toString();
+
+  temp = temp.replaceAll('0', '⁰');
+  temp = temp.replaceAll('1', '¹');
+  temp = temp.replaceAll('2', '²');
+  temp = temp.replaceAll('3', '³');
+  temp = temp.replaceAll('4', '⁴');
+  temp = temp.replaceAll('5', '⁵');
+  temp = temp.replaceAll('6', '⁶');
+  temp = temp.replaceAll('7', '⁷');
+  temp = temp.replaceAll('8', '⁸');
+  temp = temp.replaceAll('9', '⁹');
+    
+  console.log(temp);
+  return temp;
+};
+
+export const gaussJordan = ({matrix, withPP}) => {
   let [x1_1, x2_1, x3_1, sol_1] = matrix[0];
   let [x1_2, x2_2, x3_2, sol_2] = matrix[1];
   let [x1_3, x2_3, x3_3, sol_3] = matrix[2];
 
-  const steps = {};
+  let matrixLabel = '';
 
-  steps.matrix_1 = matrix;
+
+  // with partial pivoting
+
+  const steps = {};
+  const swapData = {}
+
+  steps.mainMatrix = matrix;
+
+  let tempMat = matrix;
+
+  const handelPP = (targetCol) => {
+    if (withPP) {
+      const data = swap2Rows(tempMat, targetCol - 1);
+      console.log(targetCol, data);
+      if (data !== 'no swap') {
+        tempMat = data.matrix;
+        const indexMax = data.indexMax;
+
+        [x1_1, x2_1, x3_1, sol_1] = tempMat[0];
+        [x1_2, x2_2, x3_2, sol_2] = tempMat[1];
+        [x1_3, x2_3, x3_3, sol_3] = tempMat[2];
+
+        matrixLabel += `P${targetCol}${indexMax + 1} `;
+        swapData[`step${targetCol}`] = {
+          matrixLabel,
+          finalMatrix: fracMat(tempMat),
+          comment: `Swap R${targetCol} and R${indexMax + 1} Because |${frac(
+            tempMat[targetCol - 1][targetCol - 1]
+          )}| > |${frac(tempMat[indexMax][targetCol - 1])}|`,
+        };
+      }
+    }
+  };
+
+  handelPP(1);
 
   const mi_a11 = 1 / x1_1;
-  let tempMat = [
+  tempMat = [
     [mi_a11 * x1_1, mi_a11 * x2_1, mi_a11 * x3_1, mi_a11 * sol_1],
     [x1_2, x2_2, x3_2, sol_2],
     [x1_3, x2_3, x3_3, sol_3],
@@ -379,6 +458,8 @@ export const gaussJordan = (matrix) => {
   const x1_3Rule = x1_3;
   steps.step1 = [
     {
+      swap: swapData.step1,
+      matrixLabel,
       finalMatrix: fracMat(tempMat),
       steps: [
         `a11 = (${frac(mi_a11)})(${frac(x1_1)}) = ${frac(x1_1)}`,
@@ -386,34 +467,39 @@ export const gaussJordan = (matrix) => {
         `a13 = (${frac(mi_a11)})(${frac(x3_1)}) = ${frac(x3_1)}`,
         `a14 = (${frac(mi_a11)})(${frac(sol_1)}) = ${frac(sol_1)}`,
       ],
+      comment: `Normalizing the first row by multiply it by ${frac(mi_a11)} to yield`,
     },
     {
-      rule: `${frac(x1_2Rule)}R₁ - R₂ → R₂`,
+      matrixLabel,
+      rule: `R2 - (${frac(x1_2Rule)} * R1) → R2`,
       finalMatrix: fracMat([
         [x1_1, x2_1, x3_1, sol_1],
-        [x1_2Rule * x1_1 - x1_2, x1_2Rule * x2_1 - x2_2, x1_2Rule * x3_1 - x3_2, x1_2Rule * sol_1 - sol_2],
+        [x1_2 - x1_2Rule * x1_1, x2_2 - x1_2Rule * x2_1, x3_2 - x1_2Rule * x3_1, sol_2 - x1_2Rule * sol_1],
         [x1_3, x2_3, x3_3, sol_3],
       ]),
       steps: [
-        `a21 = (${frac(x1_2Rule)})(${frac(x1_1)}) - (${frac(x1_2)}) = ${frac(x1_2Rule * x1_1 - x1_2)}`,
-        `a22 = (${frac(x1_2Rule)})(${frac(x2_1)}) - (${frac(x2_2)}) = ${frac(x1_2Rule * x2_1 - x2_2)}`,
-        `a23 = (${frac(x1_2Rule)})(${frac(x3_1)}) - (${frac(x3_2)}) = ${frac(x1_2Rule * x3_1 - x3_2)}`,
-        `a24 = (${frac(x1_2Rule)})(${frac(sol_1)}) - (${frac(sol_2)}) = ${frac(x1_2Rule * sol_1 - sol_2)}`,
+        `a21 = ${frac(x1_2)} - (${frac(x1_2Rule)} * ${frac(x1_1)}) = ${frac(x1_2 - x1_2Rule * x1_1)}`,
+        `a22 = ${frac(x2_2)} - (${frac(x1_2Rule)} * ${frac(x2_1)}) = ${frac(x2_2 - x1_2Rule * x2_1)}`,
+        `a23 = ${frac(x3_2)} - (${frac(x1_2Rule)} * ${frac(x3_1)}) = ${frac(x3_2 - x1_2Rule * x3_1)}`,
+        `a24 = ${frac(sol_2)} - (${frac(x1_2Rule)} * ${frac(sol_1)}) = ${frac(sol_2 - x1_2Rule * sol_1)}`,
       ],
+      comment: 'Eliminate x1 term can from the second row by:',
     },
     {
-      rule: `${frac(x1_3Rule)}R₁ - R₃ → R₃`,
+      matrixLabel,
+      rule: `R3 - (${frac(x1_3Rule)} * R1) → R3`,
       finalMatrix: fracMat([
         [x1_1, x2_1, x3_1, sol_1],
-        [x1_2Rule * x1_1 - x1_2, x1_2Rule * x2_1 - x2_2, x1_2Rule * x3_1 - x3_2, x1_2Rule * sol_1 - sol_2],
-        [x1_3Rule * x1_1 - x1_3, x1_3Rule * x2_1 - x2_3, x1_3Rule * x3_1 - x3_3, x1_3Rule * sol_1 - sol_3],
+        [x1_2 - x1_2Rule * x1_1, x2_2 - x1_2Rule * x2_1, x3_2 - x1_2Rule * x3_1, sol_2 - x1_2Rule * sol_1],
+        [x1_3 - x1_3Rule * x1_1, x2_3 - x1_3Rule * x2_1, x3_3 - x1_3Rule * x3_1, sol_3 - x1_3Rule * sol_1],
       ]),
       steps: [
-        `a31 = (${frac(x1_3Rule)})(${frac(x1_1)}) - (${frac(x1_3)}) = ${frac(x1_3Rule * x1_1 - x1_3)}`,
-        `a32 = (${frac(x1_3Rule)})(${frac(x2_1)}) - (${frac(x2_3)}) = ${frac(x1_3Rule * x2_1 - x2_3)}`,
-        `a33 = (${frac(x1_3Rule)})(${frac(x3_1)}) - (${frac(x3_3)}) = ${frac(x1_3Rule * x3_1 - x3_3)}`,
-        `a34 = (${frac(x1_3Rule)})(${frac(sol_1)}) - (${frac(sol_3)}) = ${frac(x1_3Rule * sol_1 - sol_3)}`,
+        `a31 = (${frac(x1_3)}) - (${frac(x1_3Rule)})(${frac(x1_1)}) = ${frac(x1_3 - x1_3Rule * x1_1)}`,
+        `a32 = (${frac(x2_3)}) - (${frac(x1_3Rule)})(${frac(x2_1)}) = ${frac(x2_3 - x1_3Rule * x2_1)}`,
+        `a33 = (${frac(x3_3)}) - (${frac(x1_3Rule)})(${frac(x3_1)}) = ${frac(x3_3 - x1_3Rule * x3_1)}`,
+        `a34 = (${frac(sol_3)}) - (${frac(x1_3Rule)})(${frac(sol_1)}) = ${frac(sol_3 - x1_3Rule * sol_1)}`,
       ],
+      comment: 'Eliminate x1 term can from the third row by:',
     },
   ];
 
@@ -422,6 +508,8 @@ export const gaussJordan = (matrix) => {
   [x1_1, x2_1, x3_1, sol_1] = tempMat[0];
   [x1_2, x2_2, x3_2, sol_2] = tempMat[1];
   [x1_3, x2_3, x3_3, sol_3] = tempMat[2];
+
+  handelPP(2);
 
   const mi_a22 = 1 / x2_2;
 
@@ -435,10 +523,12 @@ export const gaussJordan = (matrix) => {
   [x1_2, x2_2, x3_2, sol_2] = tempMat[1];
   [x1_3, x2_3, x3_3, sol_3] = tempMat[2];
 
-  const x2_1Rule = x2_1 > 0 ? -x2_1 : x2_1;
-  const x2_3Rule = x2_3 > 0 ? -x2_3 : x2_3;
+  const x2_1Rule = x2_1;
+  const x2_3Rule = x2_3;
   steps.step2 = [
     {
+      matrixLabel,
+      swap: swapData.step2,
       finalMatrix: fracMat(tempMat),
       steps: [
         `a21 = (${frac(mi_a22)})(${frac(x1_2)}) = ${frac(x1_2)}`,
@@ -446,35 +536,39 @@ export const gaussJordan = (matrix) => {
         `a23 = (${frac(mi_a22)})(${frac(x3_2)}) = ${frac(x3_2)}`,
         `a24 = (${frac(mi_a22)})(${frac(sol_2)}) = ${frac(sol_2)}`,
       ],
+      comment: `Normalizing the second row by multiply it by ${frac(mi_a22)} to yield`,
     },
     {
-      // R2 - XR1 -> R2
-      rule: `${frac(x2_1Rule)}R₂ + R₁ → R₁`,
+      matrixLabel,
+      rule: `R1 - (${frac(x2_1Rule)} * R2) → R1`,
       finalMatrix: fracMat([
-        [x2_1Rule * x1_2 + x1_1, x2_1Rule * x2_2 + x2_1, x2_1Rule * x3_2 + x3_1, x2_1Rule * sol_2 + sol_1],
+        [x1_1 - x2_1Rule * x1_2, x2_1 - x2_1Rule * x2_2, x3_1 - x2_1Rule * x3_2, sol_1 - x2_1Rule * sol_2],
         [x1_2, x2_2, x3_2, sol_2],
         [x1_3, x2_3, x3_3, sol_3],
       ]),
       steps: [
-        `a11 = (${frac(x2_1Rule)})(${frac(x1_2)}) + (${frac(x1_1)}) = ${frac(x2_1Rule * x1_2 + x1_1)}`,
-        `a12 = (${frac(x2_1Rule)})(${frac(x2_2)}) + (${frac(x2_1)}) = ${frac(x2_1Rule * x2_2 + x2_1)}`,
-        `a13 = (${frac(x2_1Rule)})(${frac(x3_2)}) + (${frac(x3_1)}) = ${frac(x2_1Rule * x3_2 + x3_1)}`,
-        `a14 = (${frac(x2_1Rule)})(${frac(sol_2)}) + (${frac(sol_1)}) = ${frac(x2_1Rule * sol_2 + sol_1)}`,
+        `a11 = (${frac(x1_1)}) - (${frac(x2_1Rule)})(${frac(x1_2)}) = ${frac(x1_1 - x2_1Rule * x1_2)}`,
+        `a12 = (${frac(x2_1)}) - (${frac(x2_1Rule)})(${frac(x2_2)}) = ${frac(x2_1 - x2_1Rule * x2_2)}`,
+        `a13 = (${frac(x3_1)}) - (${frac(x2_1Rule)})(${frac(x3_2)}) = ${frac(x3_1 - x2_1Rule * x3_2)}`,
+        `a14 = (${frac(sol_1)}) - (${frac(x2_1Rule)})(${frac(sol_2)}) = ${frac(sol_1 - x2_1Rule * sol_2)}`,
       ],
+      comment: 'Eliminate x2 term can from the first row by:',
     },
     {
-      rule: `${frac(x2_3Rule)}R₂ + R₃ → R₃`,
+      matrixLabel,
+      rule: `R3 - (${frac(x2_3Rule)} R2) → R3`,
       finalMatrix: fracMat([
-        [x2_1Rule * x1_1 + x1_2, x2_1Rule * x2_1 + x2_2, x2_1Rule * x3_1 + x3_2, x2_1Rule * sol_1 + sol_2],
+        [x1_1 - x2_1Rule * x1_2, x2_1 - x2_1Rule * x2_2, x3_1 - x2_1Rule * x3_2, sol_1 - x2_1Rule * sol_2],
         [x1_2, x2_2, x3_2, sol_2],
-        [x2_3Rule * x1_2 + x1_3, x2_3Rule * x2_2 + x2_3, x2_3Rule * x3_2 + x3_3, x2_3Rule * sol_2 + sol_3],
+        [x1_3 - x2_3Rule * x1_2, x2_3 - x2_3Rule * x2_2, x3_3 - x2_3Rule * x3_2, sol_3 - x2_3Rule * sol_2],
       ]),
       steps: [
-        `a31 = (${frac(x2_3Rule)})(${frac(x1_2)}) + (${frac(x1_3)}) = ${frac(x2_3Rule * x1_2 + x1_3)}`,
-        `a32 = (${frac(x2_3Rule)})(${frac(x2_2)}) + (${frac(x2_3)}) = ${frac(x2_3Rule * x2_2 + x2_3)}`,
-        `a33 = (${frac(x2_3Rule)})(${frac(x3_2)}) + (${frac(x3_3)}) = ${frac(x2_3Rule * x3_2 + x3_3)}`,
-        `a34 = (${frac(x2_3Rule)})(${frac(sol_2)}) + (${frac(sol_3)}) = ${frac(x2_3Rule * sol_2 + sol_3)}`,
+        `a31 = (${frac(x1_3)}) - (${frac(x2_3Rule)})(${frac(x1_2)}) = ${frac(x1_3 - x2_3Rule * x1_2)}`,
+        `a32 = (${frac(x2_3)}) - (${frac(x2_3Rule)})(${frac(x2_2)}) = ${frac(x2_3 - x2_3Rule * x2_2)}`,
+        `a33 = (${frac(x3_3)}) - (${frac(x2_3Rule)})(${frac(x3_2)}) = ${frac(x3_3 - x2_3Rule * x3_2)}`,
+        `a34 = (${frac(sol_3)}) - (${frac(x2_3Rule)})(${frac(sol_2)}) = ${frac(sol_3 - x2_3Rule * sol_2)}`,
       ],
+      comment: 'Eliminate x2 term can from the third row by:',
     },
   ];
 
@@ -483,6 +577,8 @@ export const gaussJordan = (matrix) => {
   [x1_1, x2_1, x3_1, sol_1] = tempMat[0];
   [x1_2, x2_2, x3_2, sol_2] = tempMat[1];
   [x1_3, x2_3, x3_3, sol_3] = tempMat[2];
+
+  handelPP(3);
 
   const mi_a33 = 1 / x3_3;
 
@@ -496,10 +592,11 @@ export const gaussJordan = (matrix) => {
   [x1_2, x2_2, x3_2, sol_2] = tempMat[1];
   [x1_3, x2_3, x3_3, sol_3] = tempMat[2];
 
-  const x3_2Rule = x3_2 > 0 ? -x3_2 : x3_2;
-  const x3_1Rule = x3_1 > 0 ? -x3_1 : x3_1;
+  const x3_2Rule = x3_2;
+  const x3_1Rule = x3_1;
   steps.step3 = [
     {
+      matrixLabel,
       finalMatrix: fracMat(tempMat),
       steps: [
         `a31 = (${frac(mi_a33)})(${frac(x1_3)}) = ${frac(x1_3)}`,
@@ -507,34 +604,41 @@ export const gaussJordan = (matrix) => {
         `a33 = (${frac(mi_a33)})(${frac(x3_3)}) = ${frac(x3_3)}`,
         `a34 = (${frac(mi_a33)})(${frac(sol_3)}) = ${frac(sol_3)}`,
       ],
+      comment: `Normalizing the third row by multiply it by ${frac(mi_a33)} to yield`,
     },
     {
-      rule: `${frac(x3_2Rule)}R₃ + R₂ → R₂`,
+      matrixLabel,
+
+      rule: `R2 - (${frac(x3_2Rule)})R3 → R2`,
       finalMatrix: fracMat([
         [x1_1, x2_1, x3_1, sol_1],
-        [x3_2Rule * x1_3 + x1_2, x3_2Rule * x2_3 + x2_2, x3_2Rule * x3_3 + x3_2, x3_2Rule * sol_3 + sol_2],
+        [x1_2 - x3_2Rule * x1_3, x2_2 - x3_2Rule * x2_3, x3_2 - x3_2Rule * x3_3, sol_2 - x3_2Rule * sol_3],
         [x1_3, x2_3, x3_3, sol_3],
       ]),
       steps: [
-        `a21 = (${frac(x3_2Rule)})(${frac(x1_3)}) + (${frac(x1_2)}) = ${frac(x3_2Rule * x1_3 + x1_2)}`,
-        `a22 = (${frac(x3_2Rule)})(${frac(x2_3)}) + (${frac(x2_2)}) = ${frac(x3_2Rule * x2_3 + x2_2)}`,
-        `a23 = (${frac(x3_2Rule)})(${frac(x3_3)}) + (${frac(x3_2)}) = ${frac(x3_2Rule * x3_3 + x3_2)}`,
-        `a24 = (${frac(x3_2Rule)})(${frac(sol_3)}) + (${frac(sol_2)}) = ${frac(x3_2Rule * sol_3 + sol_2)}`,
+        `a21 = (${frac(x1_2)}) - (${frac(x3_2Rule)})(${frac(x1_3)}) = ${frac(x1_2 - x3_2Rule * x1_3)}`,
+        `a22 = (${frac(x2_2)}) - (${frac(x3_2Rule)})(${frac(x2_3)}) = ${frac(x2_2 - x3_2Rule * x2_3)}`,
+        `a23 = (${frac(x3_2)}) - (${frac(x3_2Rule)})(${frac(x3_3)}) = ${frac(x3_2 - x3_2Rule * x3_3)}`,
+        `a24 = (${frac(sol_2)}) - (${frac(x3_2Rule)})(${frac(sol_3)}) = ${frac(sol_2 - x3_2Rule * sol_3)}`,
       ],
+      comment: 'Eliminate x3 term can from the second row by:',
     },
     {
-      rule: `${frac(x3_1Rule)}R₃ + R₁ → R₁`,
+      matrixLabel,
+
+      rule: `R1 - (${frac(x3_1Rule)})R3 → R1`,
       finalMatrix: fracMat([
-        [x3_1Rule * x1_3 + x1_1, x3_1Rule * x2_3 + x2_1, x3_1Rule * x3_3 + x3_1, x3_1Rule * sol_3 + sol_1],
-        [x3_2Rule * x1_3 + x1_2, x3_2Rule * x2_3 + x2_2, x3_2Rule * x3_3 + x3_2, x3_2Rule * sol_3 + sol_2],
+        [x1_1 - x3_1Rule * x1_3, x2_1 - x3_1Rule * x2_3, x3_1 - x3_1Rule * x3_3, sol_1 - x3_1Rule * sol_3],
+        [x1_2 - x3_2Rule * x1_3, x2_2 - x3_2Rule * x2_3, x3_2 - x3_2Rule * x3_3, sol_2 - x3_2Rule * sol_3],
         [x1_3, x2_3, x3_3, sol_3],
       ]),
       steps: [
-        `a21 = (${frac(x3_1Rule)})(${frac(x1_3)}) + (${frac(x1_1)}) = ${frac(x3_1Rule * x1_3 + x1_1)}`,
-        `a22 = (${frac(x3_1Rule)})(${frac(x2_3)}) + (${frac(x2_1)}) = ${frac(x3_1Rule * x2_3 + x2_1)}`,
-        `a23 = (${frac(x3_1Rule)})(${frac(x3_3)}) + (${frac(x3_1)}) = ${frac(x3_1Rule * x3_3 + x3_1)}`,
-        `a24 = (${frac(x3_1Rule)})(${frac(sol_3)}) + (${frac(sol_1)}) = ${frac(x3_1Rule * sol_3 + sol_1)}`,
+        `a21 = (${frac(x1_1)}) - (${frac(x3_1Rule)} * ${frac(x1_3)}) = ${frac(x1_1 - x3_1Rule * x1_3)}`,
+        `a22 = (${frac(x2_1)}) - (${frac(x3_1Rule)} * ${frac(x2_3)}) = ${frac(x2_1 - x3_1Rule * x2_3)}`,
+        `a23 = (${frac(x3_1)}) - (${frac(x3_1Rule)} * ${frac(x3_3)}) = ${frac(x3_1 - x3_1Rule * x3_3)}`,
+        `a24 = (${frac(sol_1)}) - (${frac(x3_1Rule)} * ${frac(sol_3)}) = ${frac(sol_1 - x3_1Rule * sol_3)}`,
       ],
+      comment: 'Eliminate x3 term can from the first row by:',
     },
   ];
 
@@ -545,9 +649,9 @@ export const gaussJordan = (matrix) => {
   [x1_3, x2_3, x3_3, sol_3] = tempMat[2];
 
   steps.xsValues = [
-    { name: 'x', sub: 1, value: sol_1 },
-    { name: 'x', sub: 2, value: sol_2 },
-    { name: 'x', sub: 3, value: sol_3 },
+    { name: 'x', sub: 1, value: `${frac(sol_1)}${`${sol_1}`.includes('.')? ` = ${round(sol_1)}` : ''}` },
+    { name: 'x', sub: 2, value: `${frac(sol_2)}${`${sol_1}`.includes('.')? ` = ${round(sol_2)}` : ''}` },
+    { name: 'x', sub: 3, value: `${frac(sol_3)}${`${sol_1}`.includes('.')? ` = ${round(sol_3)}` : ''}` },
   ];
 
   console.log(steps);
@@ -627,9 +731,9 @@ const frac = (value) => {
   const num = math.number(value);
   const f = math.fraction(num);
   if (f.s === -1 && f.d === 1) return `-${f.n}`;
-  if (f.s === -1) return `-${f.n}/${f.d}`;
-  if (f.s === 1 && f.d === 1) return f.n;
-  return `${f.n}/${f.d}`;
+  else if (f.s === -1 && f.d !== 1) return `-${f.n}/${f.d}`;
+  else if (f.s === 1 && f.d === 1) return f.n;
+  else return `${f.n}/${f.d}`;
 };
 
 // function to change fraction string to number

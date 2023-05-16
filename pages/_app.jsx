@@ -1,5 +1,6 @@
 import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import Head from 'next/head';
 
 // Context
 import XProvider from '../context/xContext';
@@ -21,15 +22,21 @@ import 'animate.css';
 
 const App = ({ Component, pageProps }) => {
   return (
-    <XProvider>
-      <main id="app">
-        <Header />
-        <Component {...pageProps} />
-        <Footer />
-        <BackToTopBtn />
-      </main>
-      <ToastContainer bodyClassName="toast-body" toastClassName="toast" limit={3} />
-    </XProvider>
+    <>
+      <Head>
+        <title>Numerical Analysis Methods</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      </Head>
+      <XProvider>
+        <main id="app">
+          <Header />
+          <Component {...pageProps} />
+          <Footer />
+          <BackToTopBtn />
+        </main>
+        <ToastContainer bodyClassName="toast-body" toastClassName="toast" limit={3} />
+      </XProvider>
+    </>
   );
 };
 

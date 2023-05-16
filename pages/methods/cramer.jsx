@@ -68,6 +68,8 @@ const Cramer = () => {
         ]
       : example;
 
+    example && setCurrentExample(values);
+
     console.log(operation);
     if (operation !== 'save' && operation !== 'calculateFromQuery' && validationData(values).status) {
       router.query = {
