@@ -158,8 +158,13 @@ const GaussJordan = () => {
           <div className={Styles.inputs_Container}>
             <div className="inputs-title">Variables</div>
             <MatrixInputs />
+            <Input
+              type="checkbox"
+              name="withPP"
+              label="With Partial Pivoting"
+              defaultChecked={currentExample?.withPP}
+            />
           </div>
-          <Input type="checkbox" name="withPP" label="With Partial Pivoting" defaultChecked={currentExample?.withPP} />
           <MethodButtons method={methodName} calculate={handleCalculate} />
         </form>
         {showSolution && solution && (

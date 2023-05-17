@@ -7,7 +7,7 @@ import XsValues from './XsValues';
 const GaussElimination_steps = (props) => {
   return (
     <>
-      <Matrix matrix={props.solution.matrix_1} withSolution={true} label="[A/B] = " />
+      {/* <Matrix matrix={props.solution.matrix_1} withSolution={true} label="[A/B] = " />
       <div className={Styles.part_container}>
         <div className={Styles.rule}>
           m<sub>rc</sub> = x<sub>rc</sub> / Pivot Element of R<sub>n</sub>
@@ -71,7 +71,9 @@ const GaussElimination_steps = (props) => {
       </div>
       <Matrix matrix={props.solution.matrix_3} withSolution={true} label="[A/B] = " />
       <Equations matrix={props.solution.matrix_3} var="x" withAnswer={true} />
-      <XsValues values={props.solution.xsValues} />
+      <XsValues values={props.solution.xsValues} /> */}
+
+      <Matrix matrix={props.solution.mainMatrix} withSolution={true} />
     </>
   );
 };

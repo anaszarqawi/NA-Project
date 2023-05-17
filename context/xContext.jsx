@@ -396,9 +396,9 @@ export default function XProvider({ children }) {
       console.log({ name, operation, values, validationData, setShowSolution, setData, executeScroll });
 
       const isValidData = validationData(
-        name === 'Gauss Elimination' || name === 'LU Decomposition' || name === 'Cramer'
+        name === 'LU Decomposition' || name === 'Cramer'
           ? values
-          : name === 'Gauss Jordan'
+          : name === 'Gauss Jordan' || name === 'Gauss Elimination'
           ? values.matrix
           : { ...values }
       );
