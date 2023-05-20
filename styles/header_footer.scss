@@ -14,7 +14,6 @@
     backdrop-filter: blur(15px);
     z-index: 1000;
 
-
     .header-container,
     .footer-container {
         width: var(--page-width);
@@ -26,9 +25,8 @@
         // box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 30px;
 
         .logo {
-            width: 100px;
             display: flex;
-
+            padding: 0 var(--space-50);
 
             svg {
                 display: flex;
@@ -71,13 +69,14 @@
                 color: var(--color-3-60);
                 transition: var(--transition-1);
                 padding: var(--space-50);
+                border-radius: var(--border-radius-12);
                 cursor: pointer;
 
                 &:hover {
                     color: var(--color-3);
                 }
 
-                &:hover>svg {
+                &:hover > svg {
                     fill: var(--color-3) !important;
                 }
 
@@ -157,7 +156,7 @@
             align-items: center;
             padding: var(--space-25);
 
-            &:hover>.social-icon {
+            &:hover > .social-icon {
                 fill: var(--color-3) !important;
             }
 

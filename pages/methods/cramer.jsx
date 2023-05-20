@@ -10,6 +10,8 @@ import ExamplesAndSaved from '../../components/ExamplesAndSaved';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Cramer_steps from '../../components/cramer_steps';
+import FadeChildren from '../../components/FadeChildren';
+import MatrixInputs from '../../components/MatrixInputs';
 
 const Cramer = () => {
   const formRef = React.useRef(null);
@@ -40,53 +42,57 @@ const Cramer = () => {
     e && e.preventDefault();
 
     const values = e
-      ? [
-          [e.target.x1_1.value, e.target.x2_1.value, e.target.x3_1.value, e.target.sol_1.value],
-          [e.target.x1_2.value, e.target.x2_2.value, e.target.x3_2.value, e.target.sol_2.value],
-          [e.target.x1_3.value, e.target.x2_3.value, e.target.x3_3.value, e.target.sol_3.value],
-        ]
+      ? {
+          matrix: [
+            [e.target.x1_1.value, e.target.x2_1.value, e.target.x3_1.value, e.target.sol_1.value],
+            [e.target.x1_2.value, e.target.x2_2.value, e.target.x3_2.value, e.target.sol_2.value],
+            [e.target.x1_3.value, e.target.x2_3.value, e.target.x3_3.value, e.target.sol_3.value],
+          ],
+        }
       : !example
-      ? [
-          [
-            formRef.current.x1_1.value,
-            formRef.current.x2_1.value,
-            formRef.current.x3_1.value,
-            formRef.current.sol_1.value,
+      ? {
+          matrix: [
+            [
+              formRef.current.x1_1.value,
+              formRef.current.x2_1.value,
+              formRef.current.x3_1.value,
+              formRef.current.sol_1.value,
+            ],
+            [
+              formRef.current.x1_2.value,
+              formRef.current.x2_2.value,
+              formRef.current.x3_2.value,
+              formRef.current.sol_2.value,
+            ],
+            [
+              formRef.current.x1_3.value,
+              formRef.current.x2_3.value,
+              formRef.current.x3_3.value,
+              formRef.current.sol_3.value,
+            ],
           ],
-          [
-            formRef.current.x1_2.value,
-            formRef.current.x2_2.value,
-            formRef.current.x3_2.value,
-            formRef.current.sol_2.value,
-          ],
-          [
-            formRef.current.x1_3.value,
-            formRef.current.x2_3.value,
-            formRef.current.x3_3.value,
-            formRef.current.sol_3.value,
-          ],
-        ]
-      : example;
+        }
+      : { matrix: example };
 
     example && setCurrentExample(values);
 
     console.log(operation);
-    if (operation !== 'save' && operation !== 'calculateFromQuery' && validationData(values).status) {
+    if (operation !== 'save' && operation !== 'calculateFromQuery' && validationData(values.matrix).status) {
       router.query = {
         ...router.query,
         operation: 'calculateQuery',
-        x1_1: values[0][0],
-        x2_1: values[0][1],
-        x3_1: values[0][2],
-        sol_1: values[0][3],
-        x1_2: values[1][0],
-        x2_2: values[1][1],
-        x3_2: values[1][2],
-        sol_2: values[1][3],
-        x1_3: values[2][0],
-        x2_3: values[2][1],
-        x3_3: values[2][2],
-        sol_3: values[2][3],
+        x1_1: values.matrix[0][0],
+        x2_1: values.matrix[0][1],
+        x3_1: values.matrix[0][2],
+        sol_1: values.matrix[0][3],
+        x1_2: values.matrix[1][0],
+        x2_2: values.matrix[1][1],
+        x3_2: values.matrix[1][2],
+        sol_2: values.matrix[1][3],
+        x1_3: values.matrix[2][0],
+        x2_3: values.matrix[2][1],
+        x3_3: values.matrix[2][2],
+        sol_3: values.matrix[2][3],
       };
       router.push(router);
     }
@@ -144,112 +150,15 @@ const Cramer = () => {
           className={Styles.flexColumnFullWidth}
           onSubmit={(e) => handleCalculate({ e, operation: 'calculate' })}
           onReset={handleReset}>
-          <div className={Styles.inputs_Container}>
-            <div className="inputs-title">Variables</div>
-            <div className={Styles.flex_Row}>
-              <Input
-                type="text"
-                name="x1_1"
-                label="X"
-                sub="1"
-                labelPosition="inside-right"
-                defaultValue={currentExample ? currentExample[0][0] : null}
-              />
-              <Input
-                type="text"
-                name="x2_1"
-                label="X"
-                sub="2"
-                labelPosition="inside-right"
-                defaultValue={currentExample ? currentExample[0][1] : null}
-              />
-              <Input
-                type="text"
-                name="x3_1"
-                label="X"
-                sub="3"
-                labelPosition="inside-right"
-                defaultValue={currentExample ? currentExample[0][2] : null}
-              />
-              <Input
-                type="text"
-                name="sol_1"
-                label="="
-                placeholder="Eq1 solution"
-                defaultValue={currentExample ? currentExample[0][3] : null}
-              />
+          <FadeChildren>
+            <div className={Styles.inputs_Container}>
+              <MatrixInputs withPP={false} />
             </div>
-            <div className={Styles.flex_Row}>
-              <Input
-                type="text"
-                name="x1_2"
-                label="X"
-                sub="1"
-                labelPosition="inside-right"
-                defaultValue={currentExample ? currentExample[1][0] : null}
-              />
-              <Input
-                type="text"
-                name="x2_2"
-                label="X"
-                sub="2"
-                labelPosition="inside-right"
-                defaultValue={currentExample ? currentExample[1][1] : null}
-              />
-              <Input
-                type="text"
-                name="x3_2"
-                label="X"
-                sub="3"
-                labelPosition="inside-right"
-                defaultValue={currentExample ? currentExample[1][2] : null}
-              />
-              <Input
-                type="text"
-                name="sol_2"
-                label="="
-                placeholder="Eq2 solution"
-                defaultValue={currentExample ? currentExample[1][3] : null}
-              />
-            </div>
-            <div className={Styles.flex_Row}>
-              <Input
-                type="text"
-                name="x1_3"
-                label="X"
-                sub="1"
-                labelPosition="inside-right"
-                defaultValue={currentExample ? currentExample[2][0] : null}
-              />
-              <Input
-                type="text"
-                name="x2_3"
-                label="X"
-                sub="2"
-                labelPosition="inside-right"
-                defaultValue={currentExample ? currentExample[2][1] : null}
-              />
-              <Input
-                type="text"
-                name="x3_3"
-                label="X"
-                sub="3"
-                labelPosition="inside-right"
-                defaultValue={currentExample ? currentExample[2][2] : null}
-              />
-              <Input
-                type="text"
-                name="sol_3"
-                label="="
-                placeholder="Eq3 solution"
-                defaultValue={currentExample ? currentExample[2][3] : null}
-              />
-            </div>
-          </div>
-          <MethodButtons method={methodName} calculate={handleCalculate} />
+            <MethodButtons method={methodName} calculate={handleCalculate} />
+          </FadeChildren>
         </form>
         {showSolution && solution && (
-          <>
+          <FadeChildren>
             <hr className="line-divider"></hr>
             <div className="center-title" name="solution">
               Solution
@@ -257,7 +166,7 @@ const Cramer = () => {
             <div className={Styles.flexColumnFullWidthStart}>
               <Cramer_steps solution={solution} />
             </div>
-          </>
+          </FadeChildren>
         )}
         <ExamplesAndSaved method={methodName} examples={examples.cramer} setter={handleCalculate} />
       </div>

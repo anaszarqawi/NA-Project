@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useX } from '../context/xContext';
 import RemoveIcon from '../assets/svg/delete-icon';
+import FadeChildren from './FadeChildren';
 
 const SelectMenu = (props) => {
   const { saved, setSaved, setLastMethod, setCurrentExample } = useX();
@@ -47,22 +48,26 @@ const SelectMenu = (props) => {
   };
 
   if (props.type === 'methods') {
-    return props.chapters.map((chapter) => {
-      return (
-        <div className="select-menu">
-          <div className="select-menu-title">{chapter.name}</div>
-          <div className="select-menu-list">
-            {chapter.methods.map((method) => {
-              return (
-                <Link className="select-menu-item" onClick={() => setLastMethod(method.path)} href={method.path}>
-                  {method.name + ' Method'}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      );
-    });
+    return (
+      <FadeChildren>
+        {props.chapters.map((chapter, i) => {
+          return (
+            <div className="select-menu">
+              <div className="select-menu-title">{chapter.name}</div>
+              <div className="select-menu-list">
+                {chapter.methods.map((method) => {
+                  return (
+                    <Link className="select-menu-item" onClick={() => setLastMethod(method.path)} href={method.path}>
+                      {method.name + ' Method'}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </FadeChildren>
+    );
   }
 
   if (props.type === 'examples' || props.type === 'saved') {
@@ -88,47 +93,48 @@ const SelectMenu = (props) => {
                   }
                 }}>
                 {example.length > 0 ? (
-                  example.map((equation, eqIndex) => {
-                    return (
-                      <>
-                        <div className="select-menu-item-equation">
-                          {equation[0] !== 0 && (
-                            <>
-                              {equation[0] > 0 ? equation[0] : equation[0]}X<sub>1</sub>
-                            </>
-                          )}
-                          {equation[1] !== 0 && (
-                            <>
-                              {isOne(equation[1])}X<sub>2</sub>
-                            </>
-                          )}
-                          {equation[2] !== 0 && (
-                            <>
-                              {isOne(equation[2])}X<sub>3</sub>
-                            </>
-                          )}
-                          {` = ${equation[3]}`}
-                        </div>
-                        {props.type === 'saved' && eqIndex === 2 && (
-                          <div className="select-menu-item-button" onClick={() => handleRemoveItem(index)}>
-                            <RemoveIcon />
+                  <div className="select-menu-item-equations-container">
+                    {example.map((equation, eqIndex) => {
+                      return (
+                        <>
+                          <div className="select-menu-item-equation">
+                            {equation[0] !== 0 && (
+                              <>
+                                {equation[0] > 0 ? equation[0] : equation[0]}X<sub>1</sub>
+                              </>
+                            )}
+                            {equation[1] !== 0 && (
+                              <>
+                                {isOne(equation[1])}X<sub>2</sub>
+                              </>
+                            )}
+                            {equation[2] !== 0 && (
+                              <>
+                                {isOne(equation[2])}X<sub>3</sub>
+                              </>
+                            )}
+                            {` = ${equation[3]}`}
                           </div>
-                        )}
-                      </>
-                    );
-                  })
+                        </>
+                      );
+                    })}
+                  </div>
                 ) : (
                   <>
-                    <div className="select-menu-item-title">{example.fx}</div>
-                    <div className="select-menu-item-details">
-                      <div className="select-menu-item-detail">{generateDetails(example)}</div>
-                      {props.type === 'saved' && (
-                        <div className="select-menu-item-button" onClick={() => handleRemoveItem(index)}>
-                          <RemoveIcon />
-                        </div>
-                      )}
+                    <div className="select-menu-item-function">
+                      <div className="select-menu-item-title">{example.fx}</div>
+                      <div className="select-menu-item-details">
+                        <div className="select-menu-item-detail">{generateDetails(example)}</div>
+                      </div>
                     </div>
                   </>
+                )}
+                {props.type === 'saved' && (
+                  <div className="select-menu-item-buttons">
+                    <div className="select-menu-item-button" onClick={() => handleRemoveItem(index)}>
+                      <RemoveIcon />
+                    </div>
+                  </div>
                 )}
               </div>
             );

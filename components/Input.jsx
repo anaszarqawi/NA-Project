@@ -1,5 +1,6 @@
 import React from 'react';
 import Styles from '../styles/inputs.module.scss';
+import FadeChildren from './FadeChildren';
 
 const Input = (props) => {
   if (props.type === 'radio&input') {
@@ -9,7 +10,12 @@ const Input = (props) => {
         {props.options.map((option, i) => {
           const inputId = React.useId();
           return (
-            <div className={Styles.standard_input_container + ' ' + Styles.radio_with_input_container}>
+            <div
+              className={Styles.standard_input_container + ' ' + Styles.radio_with_input_container}
+              data-aos="fade-up"
+              data-aos-duration="400"
+              data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : '0'}
+              data-aos-once="true">
               <label className={Styles.input_radio}>
                 <input
                   type="radio"
@@ -40,7 +46,12 @@ const Input = (props) => {
   } else if (props.type === 'checkbox') {
     const [checked, setChecked] = React.useState(null);
     return (
-      <div className={Styles.standard_input_container + ' ' + Styles.checkbox_container}>
+      <div
+        className={Styles.standard_input_container + ' ' + Styles.checkbox_container}
+        data-aos="fade-up"
+        data-aos-duration="400"
+        data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : '0'}
+        data-aos-once="true">
         <label className={Styles.input_checkbox}>
           <input
             type="checkbox"
@@ -56,15 +67,19 @@ const Input = (props) => {
   } else {
     const inputId = React.useId();
     return (
-      <div className={Styles.standard_input_container}>
-        {!props.labelPosition && (
+      <div
+        className={Styles.standard_input_container}
+        data-aos="fade-up"
+        data-aos-duration="400"
+        data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : '0'}
+        data-aos-once="true">
+        {!props.labelPosition && props.label && (
           <label className={Styles.input_label} htmlFor={inputId}>
             {props.label}
             {props.sub ? <sub>{props.sub}</sub> : null}
           </label>
         )}
-
-        {props.labelPosition === 'inside-right' && (
+        {props.labelPosition === 'inside-right' && props.label && (
           <label className={Styles.input_label + ' ' + Styles.input_label_inside_right} htmlFor={inputId}>
             {props.label}
             {props.sub ? <sub>{props.sub}</sub> : null}
@@ -83,7 +98,7 @@ const Input = (props) => {
           disabled={props.disabled ? props.disabled : null}
           onChange={props.onChange ? (e) => props.onChange(e.target.value) : null}
         />
-        {props.labelPosition === 'right' && (
+        {props.labelPosition === 'right' && props.label && (
           <label className={Styles.input_label} htmlFor={inputId}>
             {props.label}
             {props.sub ? <sub>{props.sub}</sub> : null}

@@ -1,8 +1,27 @@
 import React from 'react';
 import Styles from '../styles/button.module.scss';
 import MiniLabel from './MiniLabel';
+import Link from 'next/link';
+import FadeChildren from './FadeChildren';
 
 const Button = (props) => {
+  if (props.path) {
+    return (
+      <Link
+        className={
+          Styles.button + ' ' + (props.isPrimary ? Styles.primary : '') + ' ' + (props.className ? props.className : '')
+        }
+        href={props.path}
+        data-aos="fade-up"
+        data-aos-duration="400"
+        data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : '0'}
+        data-aos-once="true">
+        {props.label}
+        {props.isNew && <MiniLabel label="New" highlight={true} />}
+      </Link>
+    );
+  }
+
   return (
     <button
       type={props.type ? props.type : 'button'}

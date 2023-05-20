@@ -24,7 +24,7 @@
     flex-direction: row;
     align-items: flex-end;
     gap: 2px;
-
+    user-select: none;
 }
 
 .input_label_inside_right {
@@ -38,6 +38,7 @@
     background-color: var(--color-2);
     border-radius: var(--border-radius-12);
     z-index: 2;
+    user-select: none;
 }
 
 // .radio-with-input-container{ }
@@ -49,7 +50,13 @@
     flex-direction: row;
     align-items: center;
     gap: var(--space-1);
+    transition: var(--transition-1);
     cursor: pointer;
+    color: var(--color-3-60);
+
+    &:hover {
+        color: var(--color-3);
+    }
 
     input {
         display: grid;
@@ -57,7 +64,7 @@
         width: 20px;
         height: 20px;
         border-radius: var(--border-radius-8);
-        border: 1px solid var(--color-3-20);
+        border: 1px solid var(--color-3);
         background-color: var(--color-1);
         transition: var(--transition-1);
         cursor: pointer;
@@ -73,7 +80,7 @@
             height: 20px;
             border-radius: var(--border-radius-8);
             transform: scale(0);
-            transition: 120ms transform ease-in-out;
+            transition: var(--transition-1);
             background-color: var(--color-3);
         }
 
@@ -102,8 +109,13 @@
     }
 }
 
-@media only screen and (max-width: 360px) {
-.input_label_inside_right{
-    padding: var(--space-50) var(--space-50) !important;
+.input_inside_container {
+    text-align: center;
+    border-radius: var(--border-radius-6);
 }
+
+@media only screen and (max-width: 360px) {
+    .input_label_inside_right {
+        padding: var(--space-50) var(--space-50) !important;
+    }
 }

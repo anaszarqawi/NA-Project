@@ -7,6 +7,7 @@ import CustomTable from '../../components/CustomTable';
 import ExamplesAndSaved from '../../components/ExamplesAndSaved';
 import MethodButtons from '../../components/MethodButtons';
 import Input from '../../components/Input';
+import FadeChildren from '../../components/FadeChildren';
 
 // Context
 import { useX } from '../../context/xContext';
@@ -137,52 +138,54 @@ const SimpleFixedPoint = () => {
           className={Styles.flexColumnFullWidth}
           onSubmit={(e) => handleCalculate({ e, operation: 'calculate' })}
           onReset={handleReset}>
-          <div className={Styles.inputs_Container}>
-            <div className="inputs-title">Variables</div>
-            <Input
-              name="fx"
-              label="g(x)"
-              type="text"
-              placeholder="Simple Fixed Point"
-              defaultValue={currentExample?.fx}
-            />
-            <Input
-              name="x0"
-              label="X"
-              sub="0"
-              type="number"
-              placeholder="eXtreme node"
-              defaultValue={currentExample?.x0}
-            />
-          </div>
-          <div className={Styles.inputs_Container}>
-            <div className="inputs-title">Condition</div>
-            <Input
-              name="conditionType"
-              type="radio&input"
-              inputType="number"
-              options={[
-                {
-                  label: 'ES',
-                  value: 'es',
-                  checked: currentExample?.condition?.type === 'es',
-                  placeholder: 'Error Sum %',
-                  defaultValue: currentExample?.condition?.type === 'es' ? currentExample?.condition?.value : '',
-                },
-                {
-                  label: 'MAXi',
-                  value: 'it',
-                  checked: currentExample?.condition?.type === 'it',
-                  placeholder: 'Max Iteration',
-                  defaultValue: currentExample?.condition?.type === 'it' ? currentExample?.condition?.value : '',
-                },
-              ]}
-            />
-          </div>
-          <MethodButtons method={methodName} calculate={handleCalculate} />
+          <FadeChildren>
+            <div className={Styles.inputs_Container}>
+              <div className="inputs-title">Variables</div>
+              <Input
+                name="fx"
+                label="g(x)"
+                type="text"
+                placeholder="Simple Fixed Point"
+                defaultValue={currentExample?.fx}
+              />
+              <Input
+                name="x0"
+                label="X"
+                sub="0"
+                type="number"
+                placeholder="eXtreme node"
+                defaultValue={currentExample?.x0}
+              />
+            </div>
+            <div className={Styles.inputs_Container}>
+              <div className="inputs-title">Condition</div>
+              <Input
+                name="conditionType"
+                type="radio&input"
+                inputType="number"
+                options={[
+                  {
+                    label: 'ES',
+                    value: 'es',
+                    checked: currentExample?.condition?.type === 'es',
+                    placeholder: 'Error Sum %',
+                    defaultValue: currentExample?.condition?.type === 'es' ? currentExample?.condition?.value : '',
+                  },
+                  {
+                    label: 'MAXi',
+                    value: 'it',
+                    checked: currentExample?.condition?.type === 'it',
+                    placeholder: 'Max Iteration',
+                    defaultValue: currentExample?.condition?.type === 'it' ? currentExample?.condition?.value : '',
+                  },
+                ]}
+              />
+            </div>
+            <MethodButtons method={methodName} calculate={handleCalculate} />
+          </FadeChildren>
         </form>
         {showSolution && (
-          <>
+          <FadeChildren>
             <hr className="line-divider"></hr>
             <div className="center-title" name="solution">
               Solution
@@ -195,7 +198,7 @@ const SimpleFixedPoint = () => {
                 highlight="xi"
               />
             </div>
-          </>
+          </FadeChildren>
         )}
         <ExamplesAndSaved method={methodName} examples={examples.simpleFixedPoint} setter={handleCalculate} />
       </div>

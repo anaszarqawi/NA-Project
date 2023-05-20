@@ -12,6 +12,8 @@ import {
 } from '../utils/Methods.js';
 import { app } from '../utils/firebase-config.js';
 import { getAnalytics, logEvent } from 'firebase/analytics';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 import { ToastContainer, cssTransition, toast } from 'react-toastify';
 
@@ -275,6 +277,11 @@ export default function XProvider({ children }) {
   };
 
   React.useEffect(() => {
+    AOS.init();
+    AOS.refresh();
+  }, []);
+
+  React.useEffect(() => {
     const tempSaved = JSON.parse(localStorage.getItem('saved'));
     if (tempSaved) {
       setSaved(tempSaved);
@@ -324,7 +331,7 @@ export default function XProvider({ children }) {
     else if (name === 'Secant') return secant(values);
     else if (name === 'Gauss Elimination') return gaussElimination(values);
     else if (name === 'LU Decomposition') return luDecomposition(values);
-    else if (name === 'Gauss Jordan') return gaussJordan({ ...values });
+    else if (name === 'Gauss Jordan') return gaussJordan(values);
     else if (name === 'Cramer') return cramer(values);
   };
 
@@ -396,9 +403,7 @@ export default function XProvider({ children }) {
       console.log({ name, operation, values, validationData, setShowSolution, setData, executeScroll });
 
       const isValidData = validationData(
-        name === 'LU Decomposition' || name === 'Cramer'
-          ? values
-          : name === 'Gauss Jordan' || name === 'Gauss Elimination'
+        name === 'Gauss Jordan' || name === 'Gauss Elimination' || name === 'LU Decomposition' || name === 'Cramer'
           ? values.matrix
           : { ...values }
       );
@@ -414,7 +419,8 @@ export default function XProvider({ children }) {
 
     if (operation === 'save') {
       // logEvent(analytics, 'save');
-      addToSaved(name.replace(/ /g, ''), values);
+      if (values.matrix) addToSaved(name.replace(/ /g, ''), values.matrix);
+      else addToSaved(name.replace(/ /g, ''), values);
       return;
     }
 

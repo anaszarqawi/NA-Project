@@ -6,6 +6,7 @@ import Input from '../../components/Input';
 import MethodButtons from '../../components/MethodButtons';
 import Styles from '../../styles/containers.module.scss';
 import ExamplesAndSaved from '../../components/ExamplesAndSaved';
+import FadeChildren from '../../components/FadeChildren';
 
 import { useRouter } from 'next/router';
 import Head from 'next/head';
@@ -152,35 +153,33 @@ const GaussElimination = () => {
         <title>{methodName}</title>
       </Head>
       <div className="page">
-        <div className="center-title">{methodName} Method</div>
+        <FadeChildren>
+          <div className="center-title">{methodName} Method</div>
+        </FadeChildren>
         <form
           ref={formRef}
           className={Styles.flexColumnFullWidth}
           onSubmit={(e) => handleCalculate({ e, operation: 'calculate' })}
           onReset={handleReset}>
-          <div className={Styles.inputs_Container}>
-            <div className="inputs-title">Variables</div>
-            <MatrixInputs />
-            <Input
-              type="checkbox"
-              name="withPP"
-              label="With Partial Pivoting"
-              defaultChecked={currentExample?.withPP}
-            />
-          </div>
-          <MethodButtons method={methodName} calculate={handleCalculate} />
+          <FadeChildren>
+            <div className={Styles.inputs_Container}>
+              <div className="inputs-title">Variables</div>
+              <MatrixInputs withPP={true} />
+            </div>
+            <MethodButtons method={methodName} calculate={handleCalculate} />
+          </FadeChildren>
         </form>
         {showSolution && solution && (
-          <>
+          <FadeChildren>
             <hr className="line-divider"></hr>
             <div className="center-title" name="solution">
               Solution
             </div>
             <div className={Styles.flexColumnFullWidthStart}>
-              <GaussElimination_steps solution={solution} />
-              {lu && <LU_steps solution={solution} />}
+              {!lu && <GaussElimination_steps solution={solution} />}
+              {/* {lu && <LU_steps solution={solution} />} */}
             </div>
-          </>
+          </FadeChildren>
         )}
         <ExamplesAndSaved method={methodName} examples={examples.gaussElimination} setter={handleCalculate} />
       </div>

@@ -1,81 +1,28 @@
 import React from 'react';
-import Head from 'next/head';
-import Styles from '../styles/classes.module.scss';
-
-// Components
-import SelectMenu from '../components/SelectMenu';
+import Button from '../components/Button';
+import Styles from '../styles/containers.module.scss';
+import Image from 'next/image';
+import logo from '../public/logo.png';
+import FadeChildren from '../components/FadeChildren';
 
 const Home = () => {
-  const Chapters = [
-    {
-      name: 'Chapter 1',
-      methods: [
-        {
-          name: 'Bisection',
-          path: '/methods/bisection',
-        },
-        {
-          name: 'False Position',
-          path: '/methods/false-position',
-        },
-        {
-          name: 'Simple Fixed Point',
-          path: '/methods/simple-fixed-point',
-        },
-        {
-          name: 'Newton',
-          path: '/methods/newton',
-        },
-        {
-          name: 'Secant',
-          path: '/methods/secant',
-        },
-      ],
-    },
-    {
-      name: 'Chapter 2',
-      methods: [
-        {
-          name: 'Gauss Elimination',
-          path: '/methods/gauss-elimination',
-        },
-        {
-          name: 'LU Decomposition',
-          path: '/methods/gauss-elimination?lu=true',
-        },
-        {
-          name: 'Gauss Jordan',
-          path: '/methods/gauss-jordan',
-        },
-        {
-          name: 'Cramer',
-          path: '/methods/cramer',
-        },
-      ],
-    },
-    // {
-    //   name: 'Chapter 3',
-    //   methods: [
-    //     {
-    //       name: 'Golden Section',
-    //       path: '/methods/golden-section',
-    //     },
-    //   ],
-    // },
-  ];
-
   return (
-    <>
-      <Head>
-        <title>Numerical Analysis Methods</title>
-      </Head>
-      <div className="page">
-        <div className="center-title">Numerical Analysis Methods</div>
-        <div className="chapters">
-          <SelectMenu chapters={Chapters} type="methods" />
-        </div>
+    <div className="center-content-page">
+      <div className={Styles.flexColumnFullWidth}>
+        <FadeChildren>
+          <Image src={logo} alt="logo" width={150} height={150} className="logo-icon" />
+          <div
+            className="center-title landpage-title"
+            style={{
+              marginBottom: '5px',
+            }}>
+            Numerical Analysis <br /> Mini Project
+          </div>
+          <Button label="Jump to methods →" path="/methods" isPrimary={true} />
+          <div className="version mobile">v2.0</div>
+        </FadeChildren>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -3,78 +3,62 @@ import Styles from '../styles/containers.module.scss';
 import Matrix from './Matrix';
 import Equations from './Equations';
 import XsValues from './XsValues';
+import FadeChildren from './FadeChildren';
 
-const GaussElimination_steps = (props) => {
+const PrintStep = ({ stepX, name, mij_rule }) => {
   return (
-    <>
-      {/* <Matrix matrix={props.solution.matrix_1} withSolution={true} label="[A/B] = " />
-      <div className={Styles.part_container}>
-        <div className={Styles.rule}>
-          m<sub>rc</sub> = x<sub>rc</sub> / Pivot Element of R<sub>n</sub>
-        </div>
-        <div className={Styles.steps_container}>
-          <div className={Styles.step}>
-            m<sub>21</sub> = {props.solution.m21.equation}
+    <div
+      className={Styles.parts_container}
+      data-aos="fade-up"
+      data-aos-duration="400"
+      data-aos-delay={['data-aos-delay'] ? ['data-aos-delay'] : '0'}
+      data-aos-once="true">
+      <div className={Styles.title}>{name}</div>
+      {stepX.map((step, i) => {
+        return (
+          <div className={Styles.part_container} key={i}>
+            {step.swap &&
+              step.swap.map((swap) => {
+                return (
+                  <div className={Styles.part_container}>
+                    <div className={Styles.comment}>{swap.comment}</div>
+                    <Matrix matrix={swap.finalMatrix} withSolution={true} label={step.matrixLabel} />
+                  </div>
+                );
+              })}
+            {i === 0 && mij_rule && <div className={Styles.rule}>{mij_rule}</div>}
+            <div className={Styles.one_step}>{step.mij}</div>
+            <div className={Styles.comment}>{step.comment}</div>
+            <div className={Styles.rule}>{step.rule}</div>
+            <div className={Styles.steps_container}>
+              {step.steps.map((step, i) => {
+                return (
+                  <div className={Styles.step} key={i}>
+                    {step}
+                  </div>
+                );
+              })}
+            </div>
+            <Matrix matrix={step.finalMatrix} withSolution={true} label={step?.matrixLabel} />
           </div>
-          <div className={Styles.step}>
-            m<sub>31</sub> = {props.solution.m31.equation}
-          </div>
-        </div>
-      </div>
-      <div className={Styles.part_container}>
-        <div className={Styles.rule}>
-          R<sub>2</sub> = R<sub>2</sub> - (m<sub>21</sub> * R<sub>1</sub>)
-        </div>
-        <div className={Styles.steps_container}>
-          {props.solution.R2.steps.map((step, i) => {
-            return (
-              <div className={Styles.step} key={i}>
-                R<sub>2{i}</sub> = {step}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <div className={Styles.part_container}>
-        <div className={Styles.rule}>
-          R<sub>3</sub> = R<sub>3</sub> - (m<sub>31</sub> * R<sub>1</sub>)
-        </div>
-        <div className={Styles.steps_container}>
-          {props.solution.R3_1.steps.map((step, i) => {
-            return (
-              <div className={Styles.step} key={i}>
-                R<sub>3{i}</sub> = {step}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <Matrix matrix={props.solution.matrix_2} withSolution={true} label="[A/B] = " />
-      <div className={Styles.steps_container}>
-        <div className={Styles.step}>
-          m<sub>32</sub> = {props.solution.m32.equation}
-        </div>
-      </div>
-      <div className={Styles.part_container}>
-        <div className={Styles.rule}>
-          R<sub>3</sub> = R<sub>3</sub> - (m<sub>32</sub> * R<sub>2</sub>)
-        </div>
-        <div className={Styles.steps_container}>
-          {props.solution.R3_2.steps.map((step, i) => {
-            return (
-              <div className={Styles.step} key={i}>
-                R<sub>3{i}</sub> = {step}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <Matrix matrix={props.solution.matrix_3} withSolution={true} label="[A/B] = " />
-      <Equations matrix={props.solution.matrix_3} var="x" withAnswer={true} />
-      <XsValues values={props.solution.xsValues} /> */}
+        );
+      })}
+    </div>
+  );
+};
 
-      <Matrix matrix={props.solution.mainMatrix} withSolution={true} />
-    </>
+const GaussElimination_steps = ({ solution }) => {
+  return (
+    <FadeChildren>
+      <Matrix matrix={solution.mainMatrix} withSolution={true} />
+      <div className={Styles.steps_container}>
+        <FadeChildren>
+          <PrintStep stepX={solution.step1} mij_rule={solution.mij_rule} name="1st Step" />
+          <PrintStep stepX={solution.step2} name="2nd Step" />
+          <XsValues values={solution.xsValues} />
+        </FadeChildren>
+      </div>
+    </FadeChildren>
   );
 };
 

@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^14.4.3",
     "algebra.js": "^0.2.6",
     "animate.css": "^4.1.1",
+    "aos": "^2.3.4",
     "firebase": "^9.18.0",
     "fraction.js": "^4.2.0",
     "jquery": "^3.6.3",

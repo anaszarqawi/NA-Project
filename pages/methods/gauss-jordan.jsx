@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import GaussJordan_steps from '../../components/gaussJordan_steps';
 import MatrixInputs from '../../components/MatrixInputs';
+import FadeChildren from '../../components/FadeChildren';
 
 const GaussJordan = () => {
   const formRef = React.useRef(null);
@@ -149,26 +150,24 @@ const GaussJordan = () => {
         <title>{methodName}</title>
       </Head>
       <div className="page">
-        <div className="center-title">{methodName} Method</div>
+        <FadeChildren>
+          <div className="center-title">{methodName} Method</div>
+        </FadeChildren>
         <form
           ref={formRef}
           className={Styles.flexColumnFullWidth}
           onSubmit={(e) => handleCalculate({ e, operation: 'calculate' })}
           onReset={handleReset}>
-          <div className={Styles.inputs_Container}>
-            <div className="inputs-title">Variables</div>
-            <MatrixInputs />
-            <Input
-              type="checkbox"
-              name="withPP"
-              label="With Partial Pivoting"
-              defaultChecked={currentExample?.withPP}
-            />
-          </div>
-          <MethodButtons method={methodName} calculate={handleCalculate} />
+          <FadeChildren>
+            <div className={Styles.inputs_Container}>
+              <div className="inputs-title">Variables</div>
+              <MatrixInputs withPP={true} />
+            </div>
+            <MethodButtons method={methodName} calculate={handleCalculate} />
+          </FadeChildren>
         </form>
         {showSolution && solution && (
-          <>
+          <FadeChildren>
             <hr className="line-divider"></hr>
             <div className="center-title" name="solution">
               Solution
@@ -176,7 +175,7 @@ const GaussJordan = () => {
             <div className={Styles.flexColumnFullWidthStart}>
               <GaussJordan_steps solution={solution} />
             </div>
-          </>
+          </FadeChildren>
         )}
         <ExamplesAndSaved method={methodName} examples={examples.gaussElimination} setter={handleCalculate} />
       </div>

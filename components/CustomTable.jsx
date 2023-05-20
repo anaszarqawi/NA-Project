@@ -2,6 +2,7 @@ import React from 'react';
 import { useX } from '../context/xContext';
 import Styles from '../styles/table.module.scss';
 import MiniLabel from './MiniLabel';
+import FadeChildren from './FadeChildren';
 
 const CustomTable = (props) => {
   const { round } = useX();
@@ -30,37 +31,39 @@ const CustomTable = (props) => {
   };
 
   return (
-    <div className={Styles.solution_table_container}>
-      <table className={Styles.solution_table}>
-        <tr className={Styles.tr}>
-          {props.headers.map((header, index) => {
-            if (header.name === 'i') return <th className={Styles.th + ' ' + Styles.i_col}>{header.name}</th>;
-            else {
-              if ('sub' in header) {
-                return (
-                  <th className={Styles.th}>
-                    {header.name}
-                    <sub>{header.sub}</sub>
-                  </th>
-                );
-              } else {
-                return <th className={Styles.th}>{header.name}</th>;
+    <FadeChildren>
+      <div className={Styles.solution_table_container}>
+        <table className={Styles.solution_table}>
+          <tr className={Styles.tr}>
+            {props.headers.map((header, index) => {
+              if (header.name === 'i') return <th className={Styles.th + ' ' + Styles.i_col}>{header.name}</th>;
+              else {
+                if ('sub' in header) {
+                  return (
+                    <th className={Styles.th}>
+                      {header.name}
+                      <sub>{header.sub}</sub>
+                    </th>
+                  );
+                } else {
+                  return <th className={Styles.th}>{header.name}</th>;
+                }
               }
-            }
-          })}
-        </tr>
+            })}
+          </tr>
 
-        {props.data.map((item, i) => {
-          return (
-            <tr key={i} className={Styles.tr}>
-              {props.priority.map((priority, j) => {
-                return customizeValue(priority, item[priority], i);
-              })}
-            </tr>
-          );
-        })}
-      </table>
-    </div>
+          {props.data.map((item, i) => {
+            return (
+              <tr key={i} className={Styles.tr}>
+                {props.priority.map((priority, j) => {
+                  return customizeValue(priority, item[priority], i);
+                })}
+              </tr>
+            );
+          })}
+        </table>
+      </div>
+    </FadeChildren>
   );
 };
 

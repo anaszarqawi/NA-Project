@@ -1,6 +1,7 @@
 import React from 'react';
 import { useX } from '../context/xContext';
 import SelectMenu from './SelectMenu';
+import FadeChildren from './FadeChildren';
 
 const ExamplesAndSaved = (props) => {
   const { saved } = useX();
@@ -14,19 +15,21 @@ const ExamplesAndSaved = (props) => {
   return (
     <div>
       {isInSaved() && (
-        <>
+        <FadeChildren once={true}>
           <hr className="line-divider"></hr>
           <div className="center-title">Saved</div>
           <div className="examples-container">
             <SelectMenu method={methodName} examples={saved[methodName]} type="saved" setter={props.setter} />
           </div>
-        </>
+        </FadeChildren>
       )}
-      <hr className="line-divider"></hr>
-      <div className="center-title">Examples</div>
-      <div className="examples-container">
-        <SelectMenu examples={props.examples} type="examples" setter={props.setter} />
-      </div>
+      <FadeChildren once={true}>
+        <hr className="line-divider"></hr>
+        <div className="center-title">Examples</div>
+        <div className="examples-container">
+          <SelectMenu examples={props.examples} type="examples" setter={props.setter} />
+        </div>
+      </FadeChildren>
     </div>
   );
 };

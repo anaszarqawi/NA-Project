@@ -21,18 +21,18 @@ const Header = () => {
     },
     {
       name: 'Methods',
-      path: '/',
+      path: '/methods',
     },
   ];
 
   return (
     <div className="header">
       <div className="header-container">
-        <a href="https://github.com/Anaszarqawi">
+        <Link href="/">
           <div className="logo">
             <Logo />
           </div>
-        </a>
+        </Link>
         <div className="header-buttons">
           {lastMethod !== null && router.pathname === '/settings' && (
             <Link className="header-button" href={`/${lastMethod}`}>
