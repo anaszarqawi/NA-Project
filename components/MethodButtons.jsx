@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useX } from '../context/xContext';
 import Styles from '../styles/button.module.scss';
 import Styles2 from '../styles/containers.module.scss';
+import FadeChildren from './FadeChildren';
 
 const MethodButtons = (props) => {
   const { setSaved, saved, showMsg } = useX();
@@ -55,7 +56,7 @@ const MethodButtons = (props) => {
       data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : '0'}
       data-aos-once="true">
       {router.query.operation === 'calculateQuery' && (
-        <Button label="Share Solution" type="button" onClick={copyLink} isNew={true} className={Styles.desktop} />
+        <Button label="Share Solution" type="button" onClick={copyLink} className={Styles.desktop} />
       )}
       {/* <div className={Styles2.flexRowCenter}> */}
       <Button label="Save" type="button" onClick={() => props.calculate({ operation: 'save' })} />
@@ -63,7 +64,7 @@ const MethodButtons = (props) => {
       <Button label="Calculate" type="submit" value="calculate" isPrimary={true} />
       {/* </div> */}
       {router.query.operation === 'calculateQuery' && (
-        <Button label="Share Solution" type="button" onClick={copyLink} isNew={true} className={Styles.mobile} />
+        <Button label="Share Solution" type="button" onClick={copyLink} className={Styles.mobile} />
       )}
     </div>
   );

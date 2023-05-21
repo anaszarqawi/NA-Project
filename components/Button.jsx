@@ -12,10 +12,10 @@ const Button = (props) => {
           Styles.button + ' ' + (props.isPrimary ? Styles.primary : '') + ' ' + (props.className ? props.className : '')
         }
         href={props.path}
-        data-aos="fade-up"
-        data-aos-duration="400"
-        data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : '0'}
-        data-aos-once="true">
+        data-aos={props['data-aos'] ? props['data-aos'] : null}
+        data-aos-duration={props['data-aos-duration'] ? props['data-aos-duration'] : null}
+        data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : null}
+        data-aos-once={props['data-aos-once'] ? props['data-aos-once'] : null}>
         {props.label}
         {props.isNew && <MiniLabel label="New" highlight={true} />}
       </Link>
@@ -31,7 +31,11 @@ const Button = (props) => {
         Styles.button + ' ' + (props.isPrimary ? Styles.primary : '') + ' ' + (props.className ? props.className : '')
       }
       disabled={props.disabled}
-      onClick={props.onClick}>
+      onClick={props.onClick}
+      data-aos={props['data-aos'] ? props['data-aos'] : null}
+      data-aos-duration={props['data-aos-duration'] ? props['data-aos-duration'] : null}
+      data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : null}
+      data-aos-once={props['data-aos-once'] ? props['data-aos-once'] : null}>
       {props.label}
       {props.isNew && <MiniLabel label="New" highlight={true} />}
     </button>

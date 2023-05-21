@@ -12,10 +12,10 @@ const Input = (props) => {
           return (
             <div
               className={Styles.standard_input_container + ' ' + Styles.radio_with_input_container}
-              data-aos="fade-up"
-              data-aos-duration="400"
-              data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : '0'}
-              data-aos-once="true">
+              data-aos={props['data-aos'] ? props['data-aos'] : null}
+              data-aos-duration={props['data-aos-duration'] ? props['data-aos-duration'] : null}
+              data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : null}
+              data-aos-once={props['data-aos-once'] ? props['data-aos-once'] : null}>
               <label className={Styles.input_radio}>
                 <input
                   type="radio"
@@ -48,10 +48,10 @@ const Input = (props) => {
     return (
       <div
         className={Styles.standard_input_container + ' ' + Styles.checkbox_container}
-        data-aos="fade-up"
-        data-aos-duration="400"
-        data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : '0'}
-        data-aos-once="true">
+        data-aos={props['data-aos'] ? props['data-aos'] : null}
+        data-aos-duration={props['data-aos-duration'] ? props['data-aos-duration'] : null}
+        data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : null}
+        data-aos-once={props['data-aos-once'] ? props['data-aos-once'] : null}>
         <label className={Styles.input_checkbox}>
           <input
             type="checkbox"
@@ -69,10 +69,10 @@ const Input = (props) => {
     return (
       <div
         className={Styles.standard_input_container}
-        data-aos="fade-up"
-        data-aos-duration="400"
-        data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : '0'}
-        data-aos-once="true">
+        data-aos={props['data-aos'] ? props['data-aos'] : null}
+        data-aos-duration={props['data-aos-duration'] ? props['data-aos-duration'] : null}
+        data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : null}
+        data-aos-once={props['data-aos-once'] ? props['data-aos-once'] : null}>
         {!props.labelPosition && props.label && (
           <label className={Styles.input_label} htmlFor={inputId}>
             {props.label}

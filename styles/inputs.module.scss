@@ -46,6 +46,8 @@
 // .radio-with-input
 .input_radio,
 .input_checkbox {
+    font-weight: var(--font-weight-3);
+    font-size: var(--font-size-1);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -64,7 +66,7 @@
         width: 20px;
         height: 20px;
         border-radius: var(--border-radius-8);
-        border: 1px solid var(--color-3);
+        border: 1px solid var(--color-3-20);
         background-color: var(--color-1);
         transition: var(--transition-1);
         cursor: pointer;
@@ -81,7 +83,7 @@
             border-radius: var(--border-radius-8);
             transform: scale(0);
             transition: var(--transition-1);
-            background-color: var(--color-3);
+            background-color: var(--color-3-20);
         }
 
         &[type="radio"]:checked::before,

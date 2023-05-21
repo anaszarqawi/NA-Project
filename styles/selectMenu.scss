@@ -51,6 +51,7 @@
       font-weight: var(--font-weight-3);
       cursor: pointer;
       padding: var(--space-1);
+      overflow: hidden;
 
       &:last-child {
         border-bottom: none;

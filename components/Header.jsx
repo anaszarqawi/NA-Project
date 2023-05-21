@@ -3,6 +3,8 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useTheme } from 'next-themes';
+import Button from '../components/Button';
 
 // Context
 import { useX } from '../context/xContext';
@@ -13,6 +15,8 @@ import Logo from '../assets/svg/logo.svg';
 const Header = () => {
   const router = useRouter();
   const { lastMethod } = useX();
+  const { theme, setTheme } = useTheme();
+  const [themeLabel, setThemeLabel] = React.useState('Dark');
 
   const menuItems = [
     {
@@ -45,6 +49,19 @@ const Header = () => {
               {item.name}
             </Link>
           ))}
+          <Button
+            className="header-button theme-button"
+            onClick={() => {
+              if (theme === 'dark') {
+                setTheme('light');
+                setThemeLabel('Dark');
+              } else {
+                setTheme('dark');
+                setThemeLabel('Light');
+              }
+            }}
+            label={themeLabel}
+          />
         </div>
       </div>
     </div>

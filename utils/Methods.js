@@ -80,6 +80,15 @@ const solveMatrix = (matrix, b) => {
   return x;
 };
 
+const getSwaps = () => {
+  const swaps = matrixLabel.match(/\d+/g);
+  return [
+    ...swaps.map((swap) => {
+      return { index1: +swap[0], index2: +swap[1] };
+    }),
+  ];
+};
+
 export const bisection = ({ fx, xl, xu, condition }) => {
   let [xr, xrOld, ea, i, data] = [0, 0, 0, 0, []];
 
@@ -143,7 +152,7 @@ export const falsePosition = ({ fx, xl, xu, condition }) => {
 };
 
 export const simpleFixedPoint = ({ fx, x0, condition }) => {
-  let [xr, xrOld, ea, i, data] = [0, 0, 0, 0, []];
+  let [xr, xrOld, ea, i, data] = [x0, 0, 0, 0, []];
 
   // const getSfp = (fx) => {
   //   const xs = fx.match(/x\^\d|x/g);
@@ -204,7 +213,6 @@ export const newton = ({ fx, x0, condition }) => {
     x0 = round(x0Old - round(f(fx, x0Old)) / round(f(dfx, x0Old)));
   } while (condition.type === 'es' ? ea > condition.value : i < +condition.value);
 
-  console.table(data);
   return data;
 };
 
@@ -516,21 +524,10 @@ export const luDecomposition = ({ matrix, withPP }) => {
   };
 
   if (withPP) {
-    const swaps = () => {
-      const swaps = matrixLabel.match(/\d+/g);
-      return [
-        ...swaps.map((swap) => {
-          return { index1: +swap[0], index2: +swap[1] };
-        }),
-      ];
-    };
-
-    const swapsData = swaps();
+    const swapsData = getSwaps();
     for (const swap of swapsData) {
       b = swap2Rows(b, swap.index1 - 1, swap.index2 - 1);
     }
-
-    console.log({ afterB: b });
   }
 
   steps.L = {

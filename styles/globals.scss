@@ -3,22 +3,6 @@
 :root {
   --page-width: 1000px;
   --header-height: 72px;
-  // Dark theme
-  --color-1: #1a1e22;
-  --color-2: #272d33;
-  --color-3: #d8d2cc;
-  --color-3-60: rgba(216, 210, 204, 0.6);
-  --color-3-50: rgba(216, 210, 204, 0.5);
-  --color-3-20: rgba(216, 210, 204, 0.2);
-  --color-3-10: rgba(216, 210, 204, 0.1);
-  // light theme
-  // --color-1: #fafafc;
-  // --color-2: #eaeaed;
-  // --color-3: rgb(59, 60, 69);
-  // --color-3-60: rgba(59, 60, 69, 0.6);
-  // --color-3-50: rgba(59, 60, 69, 0.5);
-  // --color-3-20: rgba(59, 60, 69, 0.2);
-  // --color-3-10: rgba(59, 60, 69, 0.1);
   --error-color: #fa3838;
   --font-family: "Roboto Mono", monospace;
   font-size: 16px;
@@ -64,12 +48,39 @@
   --transition-1: all 0.1s ease-in-out;
 }
 
+:root {
+  --color-1: #1a1e22;
+  --color-2: #272d33;
+  --color-3: #d8d2cc;
+  --color-3-60: rgba(216, 210, 204, 0.6);
+  --color-3-50: rgba(216, 210, 204, 0.5);
+  --color-3-20: rgba(216, 210, 204, 0.2);
+  --color-3-10: rgba(216, 210, 204, 0.1);
+}
+
+html[class="light"] {
+  // light theme
+  --color-1: #fafafc;
+  --color-2: #eaeaed;
+  --color-3: #373740;
+  --color-3-60: #37374099;
+  --color-3-50: #37374080;
+  --color-3-20: #37374033;
+  --color-3-10: #3737401a;
+
+  --font-weight-0: 100;
+  --font-weight-1: 200;
+  --font-weight-2: 300;
+  --font-weight-3: 400;
+  --font-weight-4: 500;
+  --font-weight-5: 600;
+}
+
 body,
 html {
   background-color: var(--color-1);
   padding: 0;
   margin: 0;
-  color: #d8d2cc;
   scroll-padding-top: var(--header-height);
   font-size: var(--font-size-0);
 }
