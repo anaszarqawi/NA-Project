@@ -1,0 +1,211 @@
+.inputs-title {
+    font-size: var(--font-size-3);
+    font-weight: var(--font-weight-4);
+    color: var(--color-3-60);
+    margin-top: var(--space-50);
+    display: block !important;
+    user-select: none;
+}
+
+.center-title {
+    color: var(--color-3);
+    font-size: var(--font-size-6);
+    font-weight: var(--font-weight-4);
+    text-align: center;
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-2);
+    user-select: none;
+}
+
+.solution-container {
+    padding-top: var(--space-3);
+}
+
+.steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin: var(--space-2) 0;
+}
+
+.equations-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin: var(--space-1) 0;
+    align-items: flex-start;
+    width: fit-content;
+    background-color: var(--color-2);
+    border-radius: var(--border-radius-12);
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--color-3-20);
+}
+
+.inline-statement {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-1);
+    align-items: center;
+    margin-bottom: var(--space-1);
+    overflow-x: auto;
+}
+
+.step {
+    font-size: var(--font-size-1);
+}
+
+.equation-var {
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-4);
+    color: var(--color-3-60);
+}
+
+.rule {
+    font-weight: var(--font-weight-4);
+    padding: var(--space-1);
+    border-radius: 0 var(--border-radius-12) var(--border-radius-12) 0;
+    border: 1px solid var(--color-3-20);
+    border-left: none;
+    padding-left: 0;
+    margin-top: var(--space-1);
+    width: fit-content;
+}
+
+.line-divider {
+    background-color: var(--color-2);
+    border-width: 0;
+    color: var(--color-2);
+    height: 1px;
+    margin: 0;
+    margin-top: var(--space-2);
+    width: 100%;
+}
+
+.subtitle {
+    font-size: var(--font-size-2);
+    font-weight: var(--font-weight-4);
+    margin: var(--space-2) 0;
+    margin-top: var(--space-3);
+    color: var(--color-3-60);
+}
+
+.active-page {
+    color: var(--color-3) !important;
+    //underline
+    // border-bottom: 1px solid var(--color-3-20);
+}
+
+.mini-label {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 1px 5px;
+    background-color: var(--color-3);
+    border: 1px solid var(--color-1);
+    border-radius: 6px;
+    color: var(--color-1);
+    margin: 0 var(--space-50);
+    cursor: pointer;
+    transition: var(--transition-1);
+}
+
+.highlight-label {
+    background-image: linear-gradient(#1e87ff, #0059be);
+    color: #fafafc;
+    border: none;
+}
+
+.back-to-top-btn-container {
+    position: fixed;
+    bottom: 67px;
+    right: var(--space-4);
+    background-color: var(--color-1);
+    border: 1px solid var(--color-3-20);
+    border-radius: var(--border-radius-12);
+    padding: var(--space-25) var(--space-50);
+    z-index: 1000;
+    cursor: pointer;
+    padding-top: var(--space-50);
+    transition: var(--transition-1);
+    // margin: var(--space-4);
+
+    &:hover {
+        border: 1px solid var(--color-3);
+    }
+
+    svg {
+        width: 30px;
+        height: 30px;
+        fill: var(--color-3);
+    }
+}
+
+.toast {
+    padding: var(--space-1) !important;
+    border-radius: var(--border-radius-12) !important;
+    box-shadow: none !important;
+}
+
+.Toastify__toast-container {
+    width: fit-content !important;
+}
+
+.logo-icon {
+    width: 110px;
+    height: 110px;
+
+    html[class*="light"] & {
+        filter: invert(1);
+    }
+}
+
+.landpage-title {
+    // font-size: var(--font-size-4) !important;
+    padding: 0;
+}
+
+.version {
+    font-size: var(--font-size-1);
+    font-weight: var(--font-weight-4);
+    color: var(--color-3-60);
+    user-select: none;
+}
+
+@media only screen and (max-width: 1200px) {
+    .back-to-top-btn-container {
+        opacity: 0.8;
+        bottom: calc(67px + var(--space-2)) !important;
+        right: var(--space-2) !important;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+@media only screen and (max-width: 600px) {
+    .Toastify__toast-container {
+        width: 100% !important;
+
+        .toast {
+            transition: var(--transition-1);
+            border-radius: 0 !important;
+            border-bottom: 1px solid var(--color-3) !important;
+
+            &:first-child {
+                border-radius: var(--border-radius-12) var(--border-radius-12) 0 0 !important;
+            }
+
+            &:last-child {
+                border-bottom: none !important;
+            }
+        }
+    }
+
+    .center-title {
+        font-size: var(--font-size-4);
+    }
+
+    .logo-icon {
+        width: 100px;
+        height: 100px;
+    }
+}
