@@ -19,7 +19,7 @@
 .flexRowFitContent {
     display: flex;
     flex-direction: row;
-    align-items: start;
+    align-items: center;
     justify-content: center;
     gap: var(--space-1);
     width: fit-content;

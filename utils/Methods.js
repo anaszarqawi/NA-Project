@@ -80,7 +80,7 @@ const solveMatrix = (matrix, b) => {
   return x;
 };
 
-const getSwaps = () => {
+const getSwaps = (matrixLabel) => {
   const swaps = matrixLabel.match(/\d+/g);
   return [
     ...swaps.map((swap) => {
@@ -399,8 +399,11 @@ export const luDecomposition = ({ matrix, withPP }) => {
     [x1_3, x2_3, x3_3],
   ];
 
+  steps.A = A;
+
   let b = [[sol_1], [sol_2], [sol_3]];
-  console.log({ sol_1, sol_2, sol_3 });
+
+  steps.b = b;
 
   steps.mij_rule = `mij = aij/ajj`;
 
@@ -524,7 +527,7 @@ export const luDecomposition = ({ matrix, withPP }) => {
   };
 
   if (withPP) {
-    const swapsData = getSwaps();
+    const swapsData = getSwaps(matrixLabel);
     for (const swap of swapsData) {
       b = swap2Rows(b, swap.index1 - 1, swap.index2 - 1);
     }
@@ -553,7 +556,7 @@ export const luDecomposition = ({ matrix, withPP }) => {
         matrix: fracMat(A),
       },
       {
-        matrixLabel: 'b =' + withPP && matrixLabel,
+        matrixLabel: `b = ${withPP ? matrixLabel : ''}`,
         matrix: fracMat(b),
       },
       {
@@ -567,18 +570,15 @@ export const luDecomposition = ({ matrix, withPP }) => {
     ],
   };
 
+  console.log({ undefined: b });
   steps.LcEqB = {
     comment: 'Firstly, we solve the system',
-    matrices: {
-      L: steps.L.matrix,
-      c: [['c1'], ['c2'], ['c3']],
-      b: fracMat(b),
-    },
+    matricesInline: [steps.L.matrix, [['c1'], ['c2'], ['c3']], fracMat(b)],
     commentMatrix: 'now solve these equations by forward substitution to find c',
     finalMatrix: fracMat([
-      [1, 0, 0, b[0]],
-      [m21, 1, 0, b[1]],
-      [m31, m32, 1, b[2]],
+      [1, 0, 0, fracToNum(+b[0])],
+      [m21, 1, 0, fracToNum(+b[1])],
+      [m31, m32, 1, fracToNum(+b[2])],
     ]),
   };
 
@@ -592,13 +592,11 @@ export const luDecomposition = ({ matrix, withPP }) => {
 
   console.log({ tempMat });
 
+  const LcEqBValues = steps.LcEqB.xsValues;
+
   steps.UxEqC = {
     comment: 'Now, we solve the system',
-    matrices: {
-      U: steps.U.matrix,
-      x: [['x1'], ['x2'], ['x3']],
-      c: steps.LcEqB.xsValues,
-    },
+    matricesInline: [steps.U.matrix, [['x1'], ['x2'], ['x3']], [...LcEqBValues.map((eq) => [eq.value])]],
     commentMatrix: 'We can now solve these equations by back substitution to find x',
     finalMatrix: fracMat([
       [x1_1, x2_1, x3_1, fracToNum(xsValuesLcEqB[0][0])],

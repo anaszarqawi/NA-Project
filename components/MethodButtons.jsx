@@ -56,7 +56,7 @@ const MethodButtons = (props) => {
       data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : '0'}
       data-aos-once="true">
       {router.query.operation === 'calculateQuery' && (
-        <Button label="Share Solution" type="button" onClick={copyLink} className={Styles.desktop} />
+        <Button label="Share Solution" type="button" onClick={copyLink} className={Styles.desktop} isNew={true} />
       )}
       {/* <div className={Styles2.flexRowCenter}> */}
       <Button label="Save" type="button" onClick={() => props.calculate({ operation: 'save' })} />
@@ -64,7 +64,7 @@ const MethodButtons = (props) => {
       <Button label="Calculate" type="submit" value="calculate" isPrimary={true} />
       {/* </div> */}
       {router.query.operation === 'calculateQuery' && (
-        <Button label="Share Solution" type="button" onClick={copyLink} className={Styles.mobile} />
+        <Button label="Share Solution" type="button" onClick={copyLink} className={Styles.mobile} isNew={true} />
       )}
     </div>
   );

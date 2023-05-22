@@ -17,7 +17,7 @@ const Button = (props) => {
         data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : null}
         data-aos-once={props['data-aos-once'] ? props['data-aos-once'] : null}>
         {props.label}
-        {props.isNew && <MiniLabel label="New" highlight={true} />}
+        {props.isNew && <MiniLabel label="New" />}
       </Link>
     );
   }
@@ -37,7 +37,7 @@ const Button = (props) => {
       data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : null}
       data-aos-once={props['data-aos-once'] ? props['data-aos-once'] : null}>
       {props.label}
-      {props.isNew && <MiniLabel label="New" highlight={true} />}
+      {props.isNew && <MiniLabel label="New" />}
     </button>
   );
 };

@@ -119,10 +119,11 @@ const GaussElimination = () => {
           [+router.query.x1_2, +router.query.x2_2, +router.query.x3_2, +router.query.sol_2],
           [+router.query.x1_3, +router.query.x2_3, +router.query.x3_3, +router.query.sol_3],
         ],
-        withPP: !router.query.withPP ? false : router.query.withPP ? true : false,
+        withPP: !router.query.withPP ? false : router.query.withPP === 'true' ? true : false,
       };
 
       setCurrentExample(values);
+      console.log(values);
 
       calculate({
         name: methodName,
@@ -164,7 +165,7 @@ const GaussElimination = () => {
           <FadeChildren>
             <div className={Styles.inputs_Container}>
               <div className="inputs-title">Variables</div>
-              <MatrixInputs withPP={true} />
+              <MatrixInputs withPP={!lu} />
             </div>
             <MethodButtons method={methodName} calculate={handleCalculate} />
           </FadeChildren>
@@ -177,7 +178,7 @@ const GaussElimination = () => {
             </div>
             <div className={Styles.flexColumnFullWidthStart}>
               {!lu && <GaussElimination_steps solution={solution} />}
-              {/* {lu && <LU_steps solution={solution} />} */}
+              {lu && <LU_steps solution={solution} />}
             </div>
           </FadeChildren>
         )}

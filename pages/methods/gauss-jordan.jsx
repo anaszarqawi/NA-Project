@@ -117,7 +117,7 @@ const GaussJordan = () => {
           [+router.query.x1_2, +router.query.x2_2, +router.query.x3_2, +router.query.sol_2],
           [+router.query.x1_3, +router.query.x2_3, +router.query.x3_3, +router.query.sol_3],
         ],
-        withPP: !router.query.withPP ? false : router.query.withPP ? true : false,
+        withPP: !router.query.withPP ? false : router.query.withPP === 'true' ? true : false,
       };
       console.log(values);
 
