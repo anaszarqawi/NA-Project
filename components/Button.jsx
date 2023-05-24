@@ -36,8 +36,11 @@ const Button = (props) => {
       data-aos-duration={props['data-aos-duration'] ? props['data-aos-duration'] : null}
       data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : null}
       data-aos-once={props['data-aos-once'] ? props['data-aos-once'] : null}>
-      {props.label}
-      {props.isNew && <MiniLabel label="New" />}
+      {props.icon && <div className={Styles.btnIcon}>{props.icon}</div>}
+      <div className={Styles.btnLabel}>
+        {props.label ? props.label : null}
+        {props.isNew && <MiniLabel label="New" />}
+      </div>
     </button>
   );
 };

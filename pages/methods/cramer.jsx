@@ -114,13 +114,12 @@ const Cramer = () => {
         [+router.query.x1_2, +router.query.x2_2, +router.query.x3_2, +router.query.sol_2],
         [+router.query.x1_3, +router.query.x2_3, +router.query.x3_3, +router.query.sol_3],
       ];
-      console.log(values);
 
       setCurrentExample(values);
 
       calculate({
         name: methodName,
-        values,
+        values: { matrix: values },
         validationData,
         setShowSolution,
         operation: 'calculateFromQuery',
@@ -168,7 +167,7 @@ const Cramer = () => {
             </div>
           </FadeChildren>
         )}
-        <ExamplesAndSaved method={methodName} examples={examples.cramer} setter={handleCalculate} />
+        <ExamplesAndSaved method={methodName} examples={examples.matrices} setter={handleCalculate} />
       </div>
     </>
   );

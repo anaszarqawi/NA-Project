@@ -17,7 +17,7 @@
 
 .input_label {
     font-size: var(--font-size-1);
-    font-weight: var(--font-weight-3);
+    font-weight: var(--font-weight-4);
     color: var(--color-3);
     cursor: pointer;
     display: flex;
@@ -46,7 +46,7 @@
 // .radio-with-input
 .input_radio,
 .input_checkbox {
-    font-weight: var(--font-weight-3);
+    font-weight: var(--font-weight-4);
     font-size: var(--font-size-1);
     display: flex;
     flex-direction: row;
@@ -54,7 +54,7 @@
     gap: var(--space-1);
     transition: var(--transition-1);
     cursor: pointer;
-    color: var(--color-3-60);
+    color: var(--color-3);
 
     &:hover {
         color: var(--color-3);
@@ -66,7 +66,7 @@
         width: 20px;
         height: 20px;
         border-radius: var(--border-radius-8);
-        border: 1px solid var(--color-3-20);
+        border: 1px solid var(--color-3-50);
         background-color: var(--color-1);
         transition: var(--transition-1);
         cursor: pointer;
@@ -102,7 +102,7 @@
     transition: var(--transition-1);
     color: var(--color-3);
     font-size: var(--font-size-1);
-    font-weight: var(--font-weight-3);
+    font-weight: var(--font-weight-4);
     background-color: var(--color-2);
     outline: none;
 

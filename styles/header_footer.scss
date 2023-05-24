@@ -61,50 +61,89 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            // gap: var(--space-1);
-            width: 100px;
+            gap: var(--space-25);
             transition: var(--transition-1);
+            fill: var(--color-3-60);
 
             .header-button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: row;
                 color: var(--color-3-60);
-                transition: var(--transition-1);
                 padding: var(--space-50);
+                transition: var(--transition-1);
                 border-radius: var(--border-radius-12);
+                user-select: none;
                 cursor: pointer;
 
-                &:hover {
-                    color: var(--color-3);
+                .header-button-text {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: var(--font-size-1);
+                    font-weight: var(--font-weight-4);
                 }
 
-                &:hover > svg {
+                .header-button-icon {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 28px;
+                    height: 100%;
+                    transition: var(--transition-1);
+                    fill: inherit;
+                }
+
+                &:hover {
+                    color: var(--color-3) !important;
+                    background-color: var(--color-2) !important;
+                }
+
+                &:hover > .header-button-icon > svg {
                     fill: var(--color-3) !important;
                 }
 
                 svg {
+                    width: 28px;
+                    height: 100%;
+                    fill: inherit;
+                    transition: inherit;
+                }
+
+                @media only screen and (max-width: 600px) {
+                    .header-button-text {
+                        display: none;
+                    }
+                    .header-button-icon {
+                        display: flex;
+                    }
+                }
+            }
+
+            .header-button-static {
+                .header-button-icon {
                     display: flex;
-                    cursor: pointer;
-                    width: 20px;
-                    transition: var(--transition-1);
-                    fill: var(--color-3-60) !important;
                 }
             }
 
-            .theme-button {
-                margin-left: var(--space-50);
-                background-color: var(--color-3);
-                color: var(--color-1);
-                transition: var(--transition-1);
-                border: 1px solid var(--color-3-20);
-                border-radius: var(--border-radius-24);
-                padding: var(--space-50) var(--space-1);
-                transition: var(--transition-1);
-                text-transform: capitalize;
-                font-weight: var(--font-weight-4);
+            // .theme-button {
+            //     margin-left: var(--space-50);
+            //     background-color: var(--color-1);
+            //     color: var(--color-3);
+            //     transition: var(--transition-1);
+            //     border: 1px solid var(--color-3-20);
+            //     border-radius: var(--border-radius-12);
+            //     padding: var(--space-50) var(--space-1);
+            //     transition: var(--transition-1);
+            //     text-transform: capitalize;
+            //     font-weight: var(--font-weight-4);
 
-                &:hover {
-                    background-color: var(--color-1);
-                }
-            }
+            //     &:hover {
+            //         background-color: var(--color-3);
+            //         color: var(--color-1);
+            //     }
+            // }
         }
     }
 }
@@ -127,7 +166,7 @@
         gap: 5px;
         // font-size: 13px;
         font-size: var(--font-size-0);
-        font-weight: 300;
+        font-weight: var(--font-weight-3);
 
         .logo {
             width: auto;

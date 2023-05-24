@@ -4,41 +4,46 @@ import Matrix from './Matrix';
 import XsValues from './XsValues';
 import FadeChildren from './FadeChildren';
 
-const Cramer_steps = (props) => {
+const PrintAx = ({ Ax }) => {
+  return (
+    <div className={Styles.inline_step}>
+      <Matrix matrix={Ax.matrix} label={Ax.matrixLabel} /> {Ax.det}
+    </div>
+  );
+};
+
+const PrintXEqs = ({ xEq }) => {
+  return (
+    <>
+      {xEq.map((eq, i) => {
+        return (
+          <div className={Styles.sub_step} key={i}>
+            <div className={Styles.rule}>{eq.rule}</div>
+            <div className={Styles.sub_step}>{eq.sub_in_rule}</div>
+          </div>
+        );
+      })}
+    </>
+  );
+};
+
+const Cramer_steps = ({ solution }) => {
   return (
     <FadeChildren>
-      <div className={Styles.part_container}>
-        <div className={Styles.matrices_container}>
+      <div className={Styles.steps_container}>
+        <div className={Styles.step_container}>
           <FadeChildren>
-            <div className={Styles.inline_step}>
-              <Matrix matrix={props.solution.A} label="A = " /> det A = {props.solution.detA}
-            </div>
-            <div className={Styles.inline_step}>
-              <Matrix matrix={props.solution.A1} label="A₁ = " /> det A₁ = {props.solution.detA1}
-            </div>
-            <div className={Styles.inline_step}>
-              <Matrix matrix={props.solution.A2} label="A₂ = " /> det A₂ = {props.solution.detA2}
-            </div>
-            <div className={Styles.inline_step}>
-              <Matrix matrix={props.solution.A3} label="A₃ = " /> det A₃ = {props.solution.detA3}
-            </div>
+            <PrintAx Ax={solution.A} />
+            <PrintAx Ax={solution.A1} />
+            <PrintAx Ax={solution.A2} />
+            <PrintAx Ax={solution.A3} />
           </FadeChildren>
         </div>
-      </div>
-      <div className={Styles.part_container}>
-        <div className={Styles.steps_container}>
-          <div className={Styles.step}>
-            x₁ = A₁/A = {props.solution.detA1}/{props.solution.detA}
-          </div>
-          <div className={Styles.step}>
-            x₂ = A₂/A = {props.solution.detA2}/{props.solution.detA}
-          </div>
-          <div className={Styles.step}>
-            x₃ = A₃/A = {props.solution.detA3}/{props.solution.detA}
-          </div>
+        <div className={Styles.step_container}>
+          <PrintXEqs xEq={solution.xEq} />
         </div>
+        <XsValues values={solution.xValues} />
       </div>
-      <XsValues values={props.solution.xsValues} />
     </FadeChildren>
   );
 };

@@ -7,17 +7,29 @@ import Button from '../components/Button';
 import { useX } from '../context/xContext';
 
 import Styles from '../styles/containers.module.scss';
+import BtnStyles from '../styles/button.module.scss';
 import FadeChildren from '../components/FadeChildren';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const Settings = (props) => {
   const [settings, setSettings] = React.useState({});
-  const { showMsg } = useX();
+  const { showMsg, lastMethod } = useX();
+  const router = useRouter();
 
   React.useEffect(() => {
     const settings = JSON.parse(localStorage.getItem('settings'));
     if (settings) {
       setSettings(settings);
-      console.log(settings);
+    } else {
+      const settingsData = {
+        decimalPrecision: {
+          decimalPlaces: 4,
+          withRounding: false,
+        },
+      };
+      setSettings(settingsData);
+      localStorage.setItem('settings', JSON.stringify(settingsData));
     }
   }, []);
 
@@ -66,7 +78,9 @@ const Settings = (props) => {
                 />
               </FadeChildren>
             </div>
-            <Button label="Save" type="submit" isPrimary={true} />
+            <div className={lastMethod !== null && BtnStyles.buttons_container}>
+              <Button label="Save" type="submit" isPrimary={true} />
+            </div>
           </form>
         </FadeChildren>
       </div>

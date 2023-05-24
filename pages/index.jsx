@@ -4,6 +4,7 @@ import Styles from '../styles/containers.module.scss';
 import Image from 'next/image';
 import logo from '../public/logo.png';
 import FadeChildren from '../components/FadeChildren';
+import MiniLabel from '../components/MiniLabel';
 
 const Home = () => {
   return (
@@ -19,7 +20,10 @@ const Home = () => {
             Numerical Analysis <br /> Mini Project
           </div>
           <Button label="Jump to methods →" path="/methods" isPrimary={true} />
-          <div className="version mobile">v2.0</div>
+          <div className="version mobile">
+            v2.0
+            <MiniLabel label="New" />
+          </div>
         </FadeChildren>
       </div>
     </div>

@@ -20,7 +20,7 @@ const SimpleFixedPoint = () => {
   const { calculate, currentExample, setCurrentExample, examples } = useX();
   const [showSolution, setShowSolution] = React.useState(false);
   const [data, setData] = React.useState([]);
-  const methodName = 'Simple Fixed Point';
+  const methodName = 'Simple Fixed';
   const formRef = React.useRef(null);
 
   const validationData = ({ fx, x0, condition }) => {

@@ -23,8 +23,8 @@ const Home = () => {
           path: '/methods/false-position',
         },
         {
-          name: 'Simple Fixed Point',
-          path: '/methods/simple-fixed-point',
+          name: 'Simple Fixed',
+          path: '/methods/simple-fixed',
         },
         {
           name: 'Newton',
@@ -38,6 +38,7 @@ const Home = () => {
     },
     {
       name: 'Chapter 2',
+      isNew: true,
       methods: [
         {
           name: 'Gauss Elimination',
@@ -79,7 +80,7 @@ const Home = () => {
       </Head>
       <div className="page">
         <FadeChildren>
-          <div className="center-title">Numerical Analysis Methods</div>
+          <div className="center-title">Methods</div>
         </FadeChildren>
         <div className={Styles.flexColumnFullWidth}>
           <SelectMenu chapters={Chapters} type="methods" />

@@ -5,7 +5,7 @@ import FadeChildren from './FadeChildren';
 
 const ExamplesAndSaved = (props) => {
   const { saved } = useX();
-  const [methodName, setMethodName] = React.useState(props.method.replace(/ /g, ''));
+  const [methodName, setMethodName] = React.useState(props.method.replace(/ /g, '_'));
 
   const isInSaved = () => {
     if (Object.keys(saved).length !== 0) if (methodName in saved) if (saved[methodName].length !== 0) return true;
