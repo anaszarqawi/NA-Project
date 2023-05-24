@@ -2,6 +2,7 @@ import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { ThemeProvider } from 'next-themes';
 import Head from 'next/head';
+import { Html } from 'next/document';
 
 // Context
 import XProvider from '../context/xContext';
@@ -23,6 +24,7 @@ import 'animate.css';
 
 const App = ({ Component, pageProps }) => {
   return (
+    // add lang attribute to html tag
     <>
       <Head>
         <title>Numerical Analysis Methods</title>

@@ -26,6 +26,8 @@
   --font-weight-6: 600;
 
   --space-25: 0.25rem;
+  --space-30: 0.3rem;
+  --space-40: 0.4rem;
   --space-50: 0.5rem;
   --space-75: 0.75rem;
   --space-1: 1rem;
@@ -54,6 +56,8 @@
   --color-3: #d8d2cc;
   --color-3-60: rgba(216, 210, 204, 0.6);
   --color-3-50: rgba(216, 210, 204, 0.5);
+  --color-3-40: rgba(216, 210, 204, 0.4);
+  --color-3-30: rgba(216, 210, 204, 0.3);
   --color-3-20: rgba(216, 210, 204, 0.2);
   --color-3-10: rgba(216, 210, 204, 0.1);
 }
@@ -209,7 +213,7 @@ input[type="number"] {
 
 @media only screen and (max-width: 600px) {
   .mobile {
-    display: block !important;
+    display: flex !important;
   }
   :root {
     --page-width: 100%;

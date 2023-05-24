@@ -8,6 +8,7 @@ import Telegram from '../assets/svg/Telegram - Negative.svg';
 
 import { getAnalytics, logEvent } from 'firebase/analytics';
 import { app } from '../utils/firebase-config.js';
+import MiniLabel from './MiniLabel';
 
 const Footer = () => {
   // const analytics = getAnalytics(app);
@@ -45,7 +46,10 @@ const Footer = () => {
         <div className="copyright">
           <span className="text">© {new Date().getFullYear()} anaszarqawi.</span>
         </div>
-        <div className="version">v2.0</div>
+        <div className="version">
+          v2.0
+          <MiniLabel label="New" />
+        </div>
 
         <div className="social">
           {social.map((site) => {

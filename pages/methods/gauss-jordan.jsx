@@ -119,7 +119,6 @@ const GaussJordan = () => {
         ],
         withPP: !router.query.withPP ? false : router.query.withPP === 'true' ? true : false,
       };
-      console.log(values);
 
       setCurrentExample(values);
 
@@ -177,7 +176,7 @@ const GaussJordan = () => {
             </div>
           </FadeChildren>
         )}
-        <ExamplesAndSaved method={methodName} examples={examples.gaussElimination} setter={handleCalculate} />
+        <ExamplesAndSaved method={methodName} examples={examples.matrices} setter={handleCalculate} />
       </div>
     </>
   );

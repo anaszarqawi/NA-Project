@@ -54,7 +54,7 @@ const Equations = (props) => {
                 return (
                   col !== 0 && (
                     <span>
-                      {handleSign(col)}
+                      {handleSign(col, row[0] === 0 && row[1] === 0)}
                       <span className="equation-var">
                         {props.var}
                         <sub>{i + 1}</sub>

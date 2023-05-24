@@ -17,16 +17,10 @@
         background-color: var(--color-2);
     }
 
-    .tr:last-child {
-        .highlight {
-            // background-color: var(--color-2);
-
-            &:hover {
-                background-color: var(--color-3);
-                color: var(--color-1);
-            }
-        }
-    }
+    // .tr:last-child {
+    //     .highlight {
+    //     }
+    // }
 
     .tr {
         cursor: pointer;

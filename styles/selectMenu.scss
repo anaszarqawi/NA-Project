@@ -17,7 +17,12 @@
   }
 
   .select-menu-title {
-    font-size: var(--font-size-5);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-50);
+    font-size: var(--font-size-4);
     font-weight: var(--font-weight-4);
     color: var(--color-3-60);
     transition: var(--transition-1);
@@ -42,7 +47,7 @@
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      align-items: center;
+      align-items: stretch;
       width: 100%;
       // padding: var(--space-1);
       border-bottom: 1px solid var(--color-3-20);
@@ -52,6 +57,7 @@
       cursor: pointer;
       padding: var(--space-1);
       overflow: hidden;
+      user-select: none;
 
       &:last-child {
         border-bottom: none;
@@ -94,14 +100,13 @@
         align-items: center;
         justify-content: center;
         border-left: 1px solid var(--color-3-20);
-        height: 100%;
 
         .select-menu-item-button {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: var(--space-1) var(--space-1);
           height: 100%;
+          padding: var(--space-75) var(--space-1);
 
           &:hover {
             background-color: var(--color-3-10);
@@ -109,8 +114,8 @@
 
           svg {
             fill: var(--color-3-60);
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             transition: var(--transition-1);
           }
 
@@ -168,7 +173,6 @@
     .examples,
     .saved {
       padding: 0;
-      height: 52px;
 
       &:hover {
         background-color: var(--color-2) !important;
@@ -198,10 +202,10 @@
     @media only screen and (max-width: 600px) {
       .examples,
       .saved {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        height: auto;
+        // display: flex;
+        // flex-direction: column;
+        // justify-content: center;
+        // height: auto;
 
         // padding: var(--space-1) 0;
 
@@ -216,15 +220,12 @@
         }
       }
       .select-menu-item-buttons {
-        border-left: none !important;
-        width: 100%;
+        // border-left: none !important;
+        // width: 100%;
 
         .select-menu-item-button {
           padding: var(--space-1) var(--space-1);
-          width: 100%;
-          height: 100%;
           border-left: none !important;
-          border-top: 1px solid var(--color-3-20);
 
           &:hover {
             background-color: var(--color-3-10);

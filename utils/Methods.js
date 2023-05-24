@@ -89,6 +89,12 @@ const getSwaps = (matrixLabel) => {
   ];
 };
 
+const rmLastCol = (matrix) => {
+  return matrix.map((row) => {
+    return row.slice(0, row.length - 1);
+  });
+};
+
 export const bisection = ({ fx, xl, xu, condition }) => {
   let [xr, xrOld, ea, i, data] = [0, 0, 0, 0, []];
 
@@ -445,15 +451,14 @@ export const luDecomposition = ({ matrix, withPP }) => {
       mij: `m21 = a21/a11 = ${x1_2}/${x1_1} = ${frac(m21)}${`${m21}`.includes('.') ? ` = ${round(m21)}` : ''}`,
       rule: `R2 - (m21 * R1) → R2`,
       finalMatrix: fracMat([
-        [x1_1, x2_1, x3_1, sol_1],
-        [x1_2 - m21 * x1_1, x2_2 - m21 * x2_1, x3_2 - m21 * x3_1, sol_2],
-        [x1_3, x2_3, x3_3, sol_3],
+        [x1_1, x2_1, x3_1],
+        [x1_2 - m21 * x1_1, x2_2 - m21 * x2_1, x3_2 - m21 * x3_1],
+        [x1_3, x2_3, x3_3],
       ]),
       steps: [
         `a21 = (${frac(x1_2)}) - (${frac(m21)} * ${frac(x1_1)}) = ${frac(x1_2 - m21 * x1_1)}`,
         `a22 = (${frac(x2_2)}) - (${frac(m21)} * ${frac(x2_1)}) = ${frac(x2_2 - m21 * x2_1)}`,
         `a23 = (${frac(x3_2)}) - (${frac(m21)} * ${frac(x3_1)}) = ${frac(x3_2 - m21 * x3_1)}`,
-        `a24 = (${frac(sol_2)}) - (${frac(m21)} * ${frac(sol_1)}) = ${frac(sol_2 - m21 * sol_1)}`,
       ],
       comment: `Multiply R1 by m21 and subtract from R2`,
     },
@@ -462,15 +467,14 @@ export const luDecomposition = ({ matrix, withPP }) => {
       mij: `m31 = a31/a11 = ${x1_3}/${x1_1} = ${frac(m31)}${`${m31}`.includes('.') ? ` = ${round(m31)}` : ''}`,
       rule: `R3 - (m31 * R1) → R3`,
       finalMatrix: fracMat([
-        [x1_1, x2_1, x3_1, sol_1],
-        [x1_2 - m21 * x1_1, x2_2 - m21 * x2_1, x3_2 - m21 * x3_1, sol_2 - m21 * sol_1],
-        [x1_3 - m31 * x1_1, x2_3 - m31 * x2_1, x3_3 - m31 * x3_1, sol_3 - m31 * sol_1],
+        [x1_1, x2_1, x3_1],
+        [x1_2 - m21 * x1_1, x2_2 - m21 * x2_1, x3_2 - m21 * x3_1],
+        [x1_3 - m31 * x1_1, x2_3 - m31 * x2_1, x3_3 - m31 * x3_1],
       ]),
       steps: [
         `a31 = (${frac(x1_3)}) - (${frac(m31)} * ${frac(x1_1)}) = ${frac(x1_3 - m31 * x1_1)}`,
         `a32 = (${frac(x2_3)}) - (${frac(m31)} * ${frac(x2_1)}) = ${frac(x2_3 - m31 * x2_1)}`,
         `a33 = (${frac(x3_3)}) - (${frac(m31)} * ${frac(x3_1)}) = ${frac(x3_3 - m31 * x3_1)}`,
-        `a34 = (${frac(sol_3)}) - (${frac(m31)} * ${frac(sol_1)}) = ${frac(sol_3 - m31 * sol_1)}`,
       ],
       comment: `Multiply R1 by m31 and subtract from R3`,
     },
@@ -478,9 +482,9 @@ export const luDecomposition = ({ matrix, withPP }) => {
 
   tempMat = fracToNumMat(steps.step1[steps.step1.length - 1].finalMatrix);
 
-  [x1_1, x2_1, x3_1, sol_1] = tempMat[0];
-  [x1_2, x2_2, x3_2, sol_2] = tempMat[1];
-  [x1_3, x2_3, x3_3, sol_3] = tempMat[2];
+  [x1_1, x2_1, x3_1] = tempMat[0];
+  [x1_2, x2_2, x3_2] = tempMat[1];
+  [x1_3, x2_3, x3_3] = tempMat[2];
 
   handelPP(2, 2);
 
@@ -494,15 +498,14 @@ export const luDecomposition = ({ matrix, withPP }) => {
       }`,
       rule: `R3 - (m32 * R2) → R3`,
       finalMatrix: fracMat([
-        [x1_1, x2_1, x3_1, sol_1],
-        [x1_2, x2_2, x3_2, sol_2],
-        [x1_3 - m32 * x1_2, x2_3 - m32 * x2_2, x3_3 - m32 * x3_2, sol_3 - m32 * sol_2],
+        [x1_1, x2_1, x3_1],
+        [x1_2, x2_2, x3_2],
+        [x1_3 - m32 * x1_2, x2_3 - m32 * x2_2, x3_3 - m32 * x3_2],
       ]),
       steps: [
         `a31 = (${frac(x1_3)}) - (${frac(m32)} * ${frac(x1_2)}) = ${frac(x1_3 - m32 * x1_2)}`,
         `a32 = (${frac(x2_3)}) - (${frac(m32)} * ${frac(x2_2)}) = ${frac(x2_3 - m32 * x2_2)}`,
         `a33 = (${frac(x3_3)}) - (${frac(m32)} * ${frac(x3_2)}) = ${frac(x3_3 - m32 * x3_2)}`,
-        `a34 = (${frac(sol_3)}) - (${frac(m32)} * ${frac(sol_2)}) = ${frac(sol_3 - m32 * sol_2)}`,
       ],
       comment: `Multiply R2 by m32 and subtract from R3`,
     },
@@ -534,7 +537,7 @@ export const luDecomposition = ({ matrix, withPP }) => {
   }
 
   steps.L = {
-    rule: [
+    ruleMat: [
       [1, 0, 0],
       ['m21', 1, 0],
       ['m31', 'm32', 1],
@@ -572,22 +575,29 @@ export const luDecomposition = ({ matrix, withPP }) => {
 
   console.log({ undefined: b });
   steps.LcEqB = {
+    rule: 'Lc = b',
     comment: 'Firstly, we solve the system',
     matricesInline: [steps.L.matrix, [['c1'], ['c2'], ['c3']], fracMat(b)],
     commentMatrix: 'now solve these equations by forward substitution to find c',
     finalMatrix: fracMat([
-      [1, 0, 0, fracToNum(+b[0])],
-      [m21, 1, 0, fracToNum(+b[1])],
-      [m31, m32, 1, fracToNum(+b[2])],
+      [1, 0, 0],
+      [m21, 1, 0],
+      [m31, m32, 1],
     ]),
+    equations: fracMat([
+      [1, 0, 0, b[0][0]],
+      [m21, 1, 0, b[1][0]],
+      [m31, m32, 1, b[2][0]],
+    ]),
+    var: 'c',
   };
 
   // Get C values
-  const xsValuesLcEqB = fracMat(solveMatrix(fracToNumMat(steps.L.matrix), fracToNumMat(b))._data);
+  const xsValuesLcEqB = solveMatrix(fracToNumMat(steps.L.matrix), fracToNumMat(b))._data;
   steps.LcEqB.xsValues = [
-    { name: 'c', sub: 1, value: xsValuesLcEqB[0][0] },
-    { name: 'c', sub: 2, value: xsValuesLcEqB[1][0] },
-    { name: 'c', sub: 3, value: xsValuesLcEqB[2][0] },
+    { name: 'c', sub: 1, value: frac(xsValuesLcEqB[0][0]) },
+    { name: 'c', sub: 2, value: frac(xsValuesLcEqB[1][0]) },
+    { name: 'c', sub: 3, value: frac(xsValuesLcEqB[2][0]) },
   ];
 
   console.log({ tempMat });
@@ -595,14 +605,23 @@ export const luDecomposition = ({ matrix, withPP }) => {
   const LcEqBValues = steps.LcEqB.xsValues;
 
   steps.UxEqC = {
-    comment: 'Now, we solve the system',
+    rule: 'Ux = c',
+    comment: 'Secondly, we solve the system',
     matricesInline: [steps.U.matrix, [['x1'], ['x2'], ['x3']], [...LcEqBValues.map((eq) => [eq.value])]],
     commentMatrix: 'We can now solve these equations by back substitution to find x',
     finalMatrix: fracMat([
-      [x1_1, x2_1, x3_1, fracToNum(xsValuesLcEqB[0][0])],
-      [0, x2_2, x3_2, fracToNum(xsValuesLcEqB[1][0])],
-      [0, 0, x3_3, fracToNum(xsValuesLcEqB[2][0])],
+      [x1_1, x2_1, x3_1],
+      [0, x2_2, x3_2],
+      [0, 0, x3_3],
     ]),
+    equations: roundMatrix(
+      fracToNumMat([
+        [x1_1, x2_1, x3_1, xsValuesLcEqB[0][0]],
+        [0, x2_2, x3_2, xsValuesLcEqB[1][0]],
+        [0, 0, x3_3, xsValuesLcEqB[2][0]],
+      ])
+    ),
+    var: 'x',
   };
 
   const xsValuesUxEqC = fracMat(solveMatrix(fracToNumMat(steps.U.matrix), fracToNumMat(xsValuesLcEqB))._data);
@@ -614,81 +633,7 @@ export const luDecomposition = ({ matrix, withPP }) => {
 
   steps.swaps = swapData;
 
-  // const x3 = tempMat[2][3] / tempMat[2][2];
-  // const x2 = (tempMat[1][3] - tempMat[1][2] * x3) / tempMat[1][1];
-  // const x1 = (tempMat[0][3] - tempMat[0][2] * x3 - tempMat[0][1] * x2) / tempMat[0][0];
-
-  // steps.xsValues = [
-  //   { name: 'x', sub: 1, value: `${frac(x1)}${`${x1}`.includes('.') ? ` = ${round(x1)}` : ''}` },
-  //   { name: 'x', sub: 2, value: `${frac(x2)}${`${x2}`.includes('.') ? ` = ${round(x2)}` : ''}` },
-  //   { name: 'x', sub: 3, value: `${frac(x3)}${`${x3}`.includes('.') ? ` = ${round(x3)}` : ''}` },
-  // ];
-
   console.log(steps);
-
-  // const L = [
-  //   [1, 0, 0],
-  //   [steps.m21.value, 1, 0],
-  //   [steps.m31.value, steps.m32.value, 1],
-  // ];
-
-  // const B = [[sol_1], [sol_2], [sol_3]];
-
-  // const C = [
-  //   [...L[0], ...B[0]],
-  //   [...L[1], ...B[1]],
-  //   [...L[2], ...B[2]],
-  // ];
-
-  // const x1_C = C[0][3] / C[0][0];
-  // const x2_C = (C[1][3] - C[1][0] * x1_C) / C[1][1];
-  // const x3_C = (C[2][3] - C[2][0] * x1_C - C[2][1] * x2_C) / C[2][2];
-
-  // const C_Values = [[x1_C], [x2_C], [x3_C]];
-
-  // const U = [
-  //   [steps.matrix_3[0][0], steps.matrix_3[0][1], steps.matrix_3[0][2]],
-  //   [0, steps.matrix_3[1][1], steps.matrix_3[1][2]],
-  //   [0, 0, steps.matrix_3[2][2]],
-  // ];
-
-  // // Matrix of U with solutions
-  // const U_ = [
-  //   [...U[0], +C_Values[0]],
-  //   [...U[1], +C_Values[1]],
-  //   [...U[2], +C_Values[2]],
-  // ];
-
-  // const x3_U = U_[2][3] / U_[2][2];
-  // const x2_U = (U_[1][3] - U_[1][2] * x3_U) / U_[1][1];
-  // const x1_U = (U_[0][3] - U_[0][2] * x3_U - U_[0][1] * x2_U) / U_[0][0];
-
-  // steps.A = [
-  //   [x1_1, x2_1, x3_1],
-  //   [x1_2, x2_2, x3_2],
-  //   [x1_3, x2_3, x3_3],
-  // ];
-
-  // const X = [
-  //   [...U[0], x1_C],
-  //   [...U[1], x2_C],
-  //   [...U[2], x3_C],
-  // ];
-
-  // const xsValuesLu = [
-  //   { name: 'x', sub: 1, value: x1_U },
-  //   { name: 'x', sub: 2, value: x2_U },
-  //   { name: 'x', sub: 3, value: x3_U },
-  // ];
-
-  // steps.B = B;
-  // steps.U = U;
-  // steps.L = L;
-  // steps.C = C;
-  // steps.C_Values = C_Values;
-  // steps.X = X;
-  // steps.xsValuesLu = xsValuesLu;
-  // steps.U_WithSolutions = U_;
 
   return steps;
 };
@@ -955,48 +900,82 @@ export const cramer = ({ matrix }) => {
   const [x1_2, x2_2, x3_2, sol_2] = matrix[1];
   const [x1_3, x2_3, x3_3, sol_3] = matrix[2];
 
-  const steps = {
-    A: [
+  const steps = {};
+
+  // A
+  steps.A = {
+    matrixLabel: 'A = ',
+    matrix: fracMat([
       [x1_1, x2_1, x3_1],
       [x1_2, x2_2, x3_2],
       [x1_3, x2_3, x3_3],
-    ],
-    A1: [
+    ]),
+  };
+  const detA = frac(math.det(steps.A.matrix));
+  steps.A.det = `det(A) = ${detA}`;
+
+  // A1
+  steps.A1 = {
+    matrixLabel: 'A1 = ',
+    matrix: fracMat([
       [sol_1, x2_1, x3_1],
       [sol_2, x2_2, x3_2],
       [sol_3, x2_3, x3_3],
-    ],
-    A2: [
+    ]),
+  };
+  const detA1 = frac(math.det(steps.A1.matrix));
+  steps.A1.det = `det(A1) = ${detA1}`;
+
+  // A2
+  steps.A2 = {
+    matrixLabel: 'A2 = ',
+    matrix: fracMat([
       [x1_1, sol_1, x3_1],
       [x1_2, sol_2, x3_2],
       [x1_3, sol_3, x3_3],
-    ],
-    A3: [
+    ]),
+  };
+  const detA2 = frac(math.det(steps.A2.matrix));
+  steps.A2.det = `det(A2) = ${detA2}`;
+
+  // A3
+  steps.A3 = {
+    matrixLabel: 'A3 = ',
+    matrix: fracMat([
       [x1_1, x2_1, sol_1],
       [x1_2, x2_2, sol_2],
       [x1_3, x2_3, sol_3],
-    ],
+    ]),
   };
+  const detA3 = frac(math.det(steps.A3.matrix));
+  steps.A3.det = `det(A3) = ${detA3}`;
 
-  const detA = math.det(steps.A);
-  const detA1 = math.det(steps.A1);
-  const detA2 = math.det(steps.A2);
-  const detA3 = math.det(steps.A3);
+  const x1 = frac(detA1 / detA);
+  const x2 = frac(detA2 / detA);
+  const x3 = frac(detA3 / detA);
 
-  const x1 = detA1 / detA;
-  const x2 = detA2 / detA;
-  const x3 = detA3 / detA;
+  steps.xEq = [
+    {
+      rule: 'x1 = det(A1) / det(A)',
+      sub_in_rule: `x1 = (${detA1}) / (${detA})`,
+    },
+    {
+      rule: 'x2 = det(A2) / det(A)',
+      sub_in_rule: `x2 = (${detA2}) / (${detA})`,
+    },
+    {
+      rule: 'x3 = det(A3) / det(A)',
+      sub_in_rule: `x3 = (${detA3}) / (${detA})`,
+    },
+  ];
 
-  steps.detA = detA;
-  steps.detA1 = detA1;
-  steps.detA2 = detA2;
-  steps.detA3 = detA3;
-  steps.xsValues = [
+  steps.xValues = [
     { name: 'x', sub: 1, value: x1 },
     { name: 'x', sub: 2, value: x2 },
     { name: 'x', sub: 3, value: x3 },
   ];
 
+  console.log(steps);
   return steps;
 };
 

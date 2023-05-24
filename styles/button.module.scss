@@ -1,11 +1,16 @@
 .button {
-    padding: var(--space-50) var(--space-2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: var(--space-50);
+    padding: var(--space-50) var(--space-1);
     border-radius: var(--border-radius-12);
     border: 1px solid var(--color-3-20);
     transition: var(--transition-1);
     color: var(--color-3);
     font-size: var(--font-size-1);
-    font-weight: var(--font-weight-3);
+    font-weight: var(--font-weight-4);
     background-color: var(--color-2);
     outline: none;
     text-align: center;
@@ -13,6 +18,7 @@
     background-color: transparent;
     cursor: pointer;
     white-space: nowrap;
+    user-select: none;
 
     &:hover {
         border: 1px solid var(--color-3);
@@ -21,6 +27,25 @@
     &:active {
         transform: scale(0.99);
     }
+
+    .btnIcon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+            width: 20px !important;
+            height: 20px !important;
+            fill: var(--color-3);
+        }
+
+        &:hover > svg {
+            fill: var(--color-3);
+        }
+    }
+}
+.withIcon {
+    padding: 0 !important;
 }
 
 .primary {
@@ -29,7 +54,7 @@
 
 .buttons_container {
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
     justify-content: center;
     width: fit-content;
     gap: var(--space-1);
@@ -54,8 +79,11 @@
         flex-wrap: wrap;
 
         .button {
-            padding: var(--space-50) var(--space-2);
-            flex: 1 0 calc(100% / 3 - var(--space-1) * 2);
+            width: 100%;
+            flex: 1 0 100px;
+            //     padding: var(--space-50) var(--space-2);
+            //     // flex: 1 0 calc(100% / 3 - var(--space-1) * 2);
+            //     flex: 1 0 100px;
         }
     }
 }

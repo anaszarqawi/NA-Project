@@ -16,6 +16,8 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import { ToastContainer, cssTransition, toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+import { set } from 'nerdamer';
 
 const xContext = React.createContext({});
 
@@ -27,8 +29,10 @@ export default function XProvider({ children }) {
   const [variables, setVariables] = React.useState({});
   const [settings, setSettings] = React.useState({});
   const [saved, setSaved] = React.useState({});
+  const [history, setHistory] = React.useState({});
   const [decimalPoints, setDecimalPoints] = React.useState(3);
   const [withRounding, setWithRounding] = React.useState(false);
+  const router = useRouter();
 
   const examples = {
     bisection: [
@@ -255,7 +259,7 @@ export default function XProvider({ children }) {
         },
       },
     ],
-    gaussElimination: [
+    matrices: [
       [
         [2, 1, 1, 8],
         [4, 1, 0, 11],
@@ -266,12 +270,30 @@ export default function XProvider({ children }) {
         [5, 2, 2, -4],
         [3, 1, 1, 5],
       ],
-    ],
-    cramer: [
       [
-        [6, 1, 1, 6],
-        [5, 1, 2, 4],
         [4, 1, -1, -2],
+        [5, 1, 2, 4],
+        [6, 1, 1, 6],
+      ],
+      [
+        [2, -6, -1, -38],
+        [-3, -1, 7, -34],
+        [-8, 1, -2, -20],
+      ],
+      [
+        [3, -2, 1, -10],
+        [2, 6, -4, 44],
+        [-1, -2, 5, -26],
+      ],
+      [
+        [1, 1, -1, -3],
+        [6, 2, 2, 2],
+        [-3, 4, 1, 1],
+      ],
+      [
+        [1, 1, -1, 2],
+        [5, 2, 2, 9],
+        [-3, 5, -1, 1],
       ],
     ],
   };
@@ -283,9 +305,10 @@ export default function XProvider({ children }) {
 
   React.useEffect(() => {
     const tempSaved = JSON.parse(localStorage.getItem('saved'));
-    if (tempSaved) {
-      setSaved(tempSaved);
-    }
+    const tempHistory = JSON.parse(localStorage.getItem('history'));
+    if (tempSaved) setSaved(tempSaved);
+    if (tempHistory) setHistory(tempHistory);
+
     // const analytics = getAnalytics(app);
   }, []);
 
@@ -310,23 +333,21 @@ export default function XProvider({ children }) {
     console.log(currentExample);
   }, [currentExample]);
 
-  const addToSaved = (method, data) => {
-    let temp = saved;
-    if (temp[method]) temp[method].push(data);
-    else temp[method] = [data];
-    setSaved(temp);
+  // const addToSaved = (method, data) => {
+  //   let temp = saved;
+  //   if (temp[method]) temp[method].push(data);
+  //   else temp[method] = [data];
+  //   setSaved(temp);
 
-    localStorage.setItem('saved', JSON.stringify(saved));
+  //   localStorage.setItem('saved', JSON.stringify(saved));
 
-    // logEvent(analytics, 'save');
-
-    showMsg('success', 'Saved successfully!');
-  };
+  //   // logEvent(analytics, 'save');
+  // };
 
   const matchMethod = (name, values) => {
     if (name === 'Bisection') return bisection(values);
     else if (name === 'False Position') return falsePosition(values);
-    else if (name === 'Simple Fixed Point') return simpleFixedPoint(values);
+    else if (name === 'Simple Fixed') return simpleFixedPoint(values);
     else if (name === 'Newton') return newton(values);
     else if (name === 'Secant') return secant(values);
     else if (name === 'Gauss Elimination') return gaussElimination(values);
@@ -398,15 +419,15 @@ export default function XProvider({ children }) {
       });
   };
 
+  const handleCallValidation = ({ name, values }) => {
+    if (name === 'Gauss Jordan' || name === 'Gauss Elimination' || name === 'LU Decomposition' || name === 'Cramer')
+      return values.matrix;
+    return { ...values };
+  };
+
   const calculate = ({ name, operation, values, validationData, setShowSolution, setData, executeScroll }) => {
     if (operation !== 'setExample') {
-      console.log({ name, operation, values, validationData, setShowSolution, setData, executeScroll });
-
-      const isValidData = validationData(
-        name === 'Gauss Jordan' || name === 'Gauss Elimination' || name === 'LU Decomposition' || name === 'Cramer'
-          ? values.matrix
-          : { ...values }
-      );
+      const isValidData = validationData(handleCallValidation({ name, values }));
 
       if (!isValidData.status) {
         setShowSolution(false);
@@ -417,27 +438,32 @@ export default function XProvider({ children }) {
 
     let result = [];
 
-    if (operation === 'save') {
-      // logEvent(analytics, 'save');
-      if (values.matrix) addToSaved(name.replace(/ /g, ''), values.matrix);
-      else addToSaved(name.replace(/ /g, ''), values);
-      return;
-    }
+    switch (operation) {
+      case 'save':
+        // logEvent(analytics, 'save');
+        addToObj('saved', name.replace(/ /g, '_'), values);
+        break;
 
-    if (operation === 'setExample') {
-      // logEvent(analytics, 'example');
-      result = matchMethod(name, values);
-      console.log(result);
-    }
+      case 'setExample':
+        // logEvent(analytics, 'example');
+        result = matchMethod(name, values);
+        console.log(result);
+        break;
 
-    if (operation === 'calculate') {
-      // logEvent(analytics, 'calculate');
-      result = matchMethod(name, values);
-    }
+      case 'calculate':
+        // logEvent(analytics, 'calculate');
+        result = matchMethod(name, values);
+        break;
 
-    if (operation === 'calculateFromQuery') {
-      // logEvent(analytics, 'calculateFromQuery');
-      result = matchMethod(name, values);
+      case 'calculateFromQuery':
+        // logEvent(analytics, 'calculateFromQuery');
+        result = matchMethod(name, values);
+        break;
+
+      default:
+        // Default case if operation does not match any of the above cases
+        showMsg('error', 'Something went wrong!');
+        break;
     }
 
     if (result.error) {
@@ -446,8 +472,74 @@ export default function XProvider({ children }) {
       return;
     }
 
+    if (operation !== 'save') addToObj('history', name.replace(/ /g, '_'), values);
+
     setShowSolution(true);
     setData(result);
+    setLastMethod(
+      router.pathname +
+        '?' +
+        Object.keys(router.query)
+          .map((key) => key + '=' + router.query[key])
+          .join('&')
+    );
+  };
+
+  const addToObj = (to, name, values) => {
+    console.log({ to, name, values });
+    if (to === 'history') {
+      let temp = { ...history };
+      if (name in temp) temp[name].push(values);
+      else temp[name] = [values];
+      setHistory(temp);
+
+      localStorage.setItem('history', JSON.stringify(history));
+    } else if (to === 'saved') {
+      let temp = { ...saved };
+      if (name in temp) temp[name].push(values);
+      else temp[name] = [values];
+      setSaved(temp);
+      showMsg('success', 'Saved successfully!');
+
+      localStorage.setItem('saved', JSON.stringify(saved));
+    }
+  };
+
+  const removeFromObj = (from, name, index) => {
+    if (from === 'history') {
+      const temp = { ...history };
+      temp[name].splice(index, 1);
+      setHistory(temp);
+      // add to local storage
+      localStorage.setItem('history', JSON.stringify(history));
+    } else if (from === 'saved') {
+      let temp = { ...saved };
+      temp[name].splice(index, 1);
+      setSaved(temp);
+      // add to local storage
+      localStorage.setItem('saved', JSON.stringify(saved));
+    }
+  };
+
+  const checkObjIsEmpty = (container) => {
+    let isEmpty = true;
+    if (container === 'history') {
+      for (let key in history) {
+        if (history[key].length > 0) {
+          isEmpty = false;
+          break;
+        }
+      }
+    } else if (container === 'saved') {
+      for (let key in saved) {
+        if (saved[key].length > 0) {
+          isEmpty = false;
+          break;
+        }
+      }
+    }
+
+    return isEmpty;
   };
 
   const round = (value) => {
@@ -475,7 +567,6 @@ export default function XProvider({ children }) {
     setSettings,
     saved,
     setSaved,
-    addToSaved,
     calculate,
     decimalPoints,
     setDecimalPoints,
@@ -486,6 +577,10 @@ export default function XProvider({ children }) {
     setLastMethod,
     showMsg,
     examples,
+    history,
+    setHistory,
+    removeFromObj,
+    checkObjIsEmpty,
   };
 
   return <xContext.Provider value={value}>{children}</xContext.Provider>;

@@ -27,15 +27,12 @@ const GaussElimination = () => {
   const methodName = lu ? 'LU Decomposition' : 'Gauss Elimination';
 
   const validationData = ([eq1, eq2, eq3]) => {
-    if (eq1[0] === 0 && eq1[1] === 0 && eq1[2] === 0)
-      return { status: false, error: 'Please enter the first Equation' };
-    if (eq2[0] === 0 && eq2[1] === 0 && eq2[2] === 0)
-      return { status: false, error: 'Please enter the second Equation' };
-    if (eq3[0] === 0 && eq3[1] === 0 && eq3[2] === 0)
-      return { status: false, error: 'Please enter the third Equation' };
-    if (eq1[3] === 0) return { status: false, error: 'Please enter the solution of the first Equation' };
-    if (eq2[3] === 0) return { status: false, error: 'Please enter the solution of the second Equation' };
-    if (eq3[3] === 0) return { status: false, error: 'Please enter the solution of the third Equation' };
+    if (eq1[0] == 0 && eq1[1] == 0 && eq1[2] == 0) return { status: false, error: 'Please enter the first Equation' };
+    if (eq2[0] == 0 && eq2[1] == 0 && eq2[2] == 0) return { status: false, error: 'Please enter the second Equation' };
+    if (eq3[0] == 0 && eq3[1] == 0 && eq3[2] == 0) return { status: false, error: 'Please enter the third Equation' };
+    if (eq1[3] == 0) return { status: false, error: 'Please enter the solution of the first Equation' };
+    if (eq2[3] == 0) return { status: false, error: 'Please enter the solution of the second Equation' };
+    if (eq3[3] == 0) return { status: false, error: 'Please enter the solution of the third Equation' };
 
     return { status: true };
   };
@@ -50,7 +47,7 @@ const GaussElimination = () => {
             [e.target.x1_2.value, e.target.x2_2.value, e.target.x3_2.value, e.target.sol_2.value],
             [e.target.x1_3.value, e.target.x2_3.value, e.target.x3_3.value, e.target.sol_3.value],
           ],
-          withPP: e.target.withPP.checked,
+          withPP: e.target.withPP ? e.target.withPP.checked : false,
         }
       : !example
       ? {
@@ -74,13 +71,14 @@ const GaussElimination = () => {
               formRef.current.sol_3.value,
             ],
           ],
-          withPP: formRef.current.withPP.checked,
+          withPP: formRef.current.withPP ? formRef.current.withPP.checked : false,
         }
       : { matrix: example, withPP: false };
 
     example && setCurrentExample(values);
 
     if (operation !== 'save' && operation !== 'calculateFromQuery' && validationData(values.matrix).status) {
+      console.log(operation !== 'save', operation !== 'calculateFromQuery', validationData(values.matrix).status);
       router.query = {
         ...router.query,
         operation: 'calculateQuery',
@@ -182,7 +180,7 @@ const GaussElimination = () => {
             </div>
           </FadeChildren>
         )}
-        <ExamplesAndSaved method={methodName} examples={examples.gaussElimination} setter={handleCalculate} />
+        <ExamplesAndSaved method={methodName} examples={examples.matrices} setter={handleCalculate} />
       </div>
     </>
   );
