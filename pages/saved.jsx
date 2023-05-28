@@ -10,10 +10,6 @@ import MiniLabel from '../components/MiniLabel';
 const Saved = () => {
   const { saved, checkObjIsEmpty } = useX();
 
-  React.useEffect(() => {
-    console.log(saved);
-  }, [saved]);
-
   return (
     <div>
       <>
@@ -23,14 +19,14 @@ const Saved = () => {
         <div className="page">
           <FadeChildren once={true}>
             <div className="center-title">
-              Saved
+              Saved Problems
               <MiniLabel label="New" />
             </div>
             <div className={Styles.flexColumnFullWidth}>
               {checkObjIsEmpty('saved') ? (
                 <div className="error-page">
                   <ErrorIcon />
-                  No Saved yet!
+                  No saved problems yet!
                 </div>
               ) : (
                 <SelectMenu items={saved} name="saved" type="multiMenus" />

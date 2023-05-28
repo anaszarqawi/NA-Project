@@ -46,7 +46,7 @@ const Home = () => {
         },
         {
           name: 'LU Decomposition',
-          path: '/methods/gauss-elimination?lu=true',
+          path: '/methods/lu-decomposition',
         },
         {
           name: 'Gauss Jordan',
@@ -58,15 +58,6 @@ const Home = () => {
         },
       ],
     },
-    // {
-    //   name: 'Chapter 3',
-    //   methods: [
-    //     {
-    //       name: 'Golden Section',
-    //       path: '/methods/golden-section',
-    //     },
-    //   ],
-    // },
   ];
 
   React.useEffect(() => {

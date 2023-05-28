@@ -25,15 +25,12 @@ const GaussJordan = () => {
   const methodName = 'Gauss Jordan';
 
   const validationData = ([eq1, eq2, eq3]) => {
-    if (eq1[0] === 0 && eq1[1] === 0 && eq1[2] === 0)
-      return { status: false, error: 'Please enter the first Equation' };
-    if (eq2[0] === 0 && eq2[1] === 0 && eq2[2] === 0)
-      return { status: false, error: 'Please enter the second Equation' };
-    if (eq3[0] === 0 && eq3[1] === 0 && eq3[2] === 0)
-      return { status: false, error: 'Please enter the third Equation' };
-    if (eq1[3] === 0) return { status: false, error: 'Please enter the solution of the first Equation' };
-    if (eq2[3] === 0) return { status: false, error: 'Please enter the solution of the second Equation' };
-    if (eq3[3] === 0) return { status: false, error: 'Please enter the solution of the third Equation' };
+    if (eq1[0] == 0 && eq1[1] == 0 && eq1[2] == 0) return { status: false, error: 'Please enter the first Equation' };
+    if (eq2[0] == 0 && eq2[1] == 0 && eq2[2] == 0) return { status: false, error: 'Please enter the second Equation' };
+    if (eq3[0] == 0 && eq3[1] == 0 && eq3[2] == 0) return { status: false, error: 'Please enter the third Equation' };
+    if (eq1[3] == 0) return { status: false, error: 'Please enter the solution of the first Equation' };
+    if (eq2[3] == 0) return { status: false, error: 'Please enter the solution of the second Equation' };
+    if (eq3[3] == 0) return { status: false, error: 'Please enter the solution of the third Equation' };
 
     return { status: true };
   };

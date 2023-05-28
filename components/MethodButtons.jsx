@@ -19,41 +19,41 @@ const MethodButtons = (props) => {
   const { setSaved, saved, showMsg } = useX();
   const router = useRouter();
 
-  const generateQueryList = () => {
-    const queryList = [];
-    for (const key in router.query) {
-      if (key !== 'operation') {
-        if (key === 'condition') {
-          const condition = JSON.parse(router.query[key]);
-          console.log(router.query[key]);
-          queryList.push(`▶${condition.type} = ${condition.value}`);
-        } else queryList.push(`▶${key} = ${router.query[key]}`);
-      }
-    }
-    return queryList;
-  };
+  // const generateQueryList = () => {
+  //   const queryList = [];
+  //   for (const key in router.query) {
+  //     if (key !== 'operation') {
+  //       if (key === 'condition') {
+  //         const condition = JSON.parse(router.query[key]);
+  //         console.log(router.query[key]);
+  //         queryList.push(`▶${condition.type} = ${condition.value}`);
+  //       } else queryList.push(`▶${key} = ${router.query[key]}`);
+  //     }
+  //   }
+  //   return queryList;
+  // };
 
   const copyLink = async () => {
     const URL = window.location.href;
-    // if ('clipboard' in navigator) {
-    //   await navigator.clipboard.writeText(URL);
-    //   showMsg('success', 'Solution Link Copied 😉');
-    // } else {
-    //   document.execCommand('copy', true, URL);
-    //   showMsg('success', 'Solution Link Copied 😉');
-    // }
-    const title = 'Numerical Analysis Mini Project';
-    const text = 'Solution Link Copied 😉';
-
-    const msg = generateQueryList() + '\n\n Made with 🤍 by anaszarqawi';
-
-    try {
-      await navigator.share({ title, msg, url: URL });
-      showMsg('success', 'Shared successfully');
-    } catch (error) {
-      showMsg('error', 'Error sharing: ' + error);
-      showMsg('success', msg);
+    if ('clipboard' in navigator) {
+      await navigator.clipboard.writeText(URL);
+      showMsg('success', 'Solution Link Copied 😉');
+    } else {
+      document.execCommand('copy', true, URL);
+      showMsg('success', 'Solution Link Copied 😉');
     }
+    // const title = 'Numerical Analysis Mini Project';
+    // const text = 'Solution Link Copied 😉';
+
+    // const msg = generateQueryList() + '\n\n Made with 🤍 by anaszarqawi';
+
+    // try {
+    //   await navigator.share({ title, msg, url: URL });
+    //   showMsg('success', 'Shared successfully');
+    // } catch (error) {
+    //   showMsg('error', 'Error sharing: ' + error);
+    //   showMsg('success', msg);
+    // }
   };
 
   return (

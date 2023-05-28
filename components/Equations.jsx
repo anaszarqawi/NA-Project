@@ -1,11 +1,26 @@
 import React from 'react';
+import { create, all, fix, i, re, matrix } from 'mathjs';
+const config = {};
+const math = create(all, config);
 
 const Equations = (props) => {
+  const frac = (value) => {
+    const num = math.number(value);
+    const f = math.fraction(num);
+    if (f.d === 1) return `${f.n}`;
+    else return `${f.n}/${f.d}`;
+  };
+
   const handleSign = (value, isFirst) => {
+    const handelValue = (num) => {
+      if (`${num}`.includes('.')) return frac(num);
+      return Math.abs(num);
+    };
+
     if (value === 1) return isFirst ? '' : ' + ';
     if (value === -1) return isFirst ? ' -' : ' - ';
-    if (value > 0) return isFirst ? value : ' + ' + value;
-    if (value < 0) return isFirst ? value : ' - ' + Math.abs(value);
+    if (value > 0) return isFirst ? handelValue(value) : ' + ' + handelValue(value);
+    if (value < 0) return isFirst ? handelValue(value) : ' - ' + handelValue(value);
   };
 
   //   <div className="inline-step">

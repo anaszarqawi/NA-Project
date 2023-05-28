@@ -6,23 +6,23 @@ import Input from '../../components/Input';
 import MethodButtons from '../../components/MethodButtons';
 import Styles from '../../styles/containers.module.scss';
 import ExamplesAndSaved from '../../components/ExamplesAndSaved';
+import FadeChildren from '../../components/FadeChildren';
 
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import Cramer_steps from '../../components/cramer_steps';
-import FadeChildren from '../../components/FadeChildren';
+import LU_steps from '../../components/lu_steps';
 import MatrixInputs from '../../components/MatrixInputs';
 
-const Cramer = () => {
+const LuDecomposition = () => {
   const formRef = React.useRef(null);
   const router = useRouter();
 
-  const { calculate, currentExample, setCurrentExample, examples } = useX();
+  const { calculate, examples, currentExample, setCurrentExample } = useX();
 
   const [showSolution, setShowSolution] = React.useState(false);
   const [solution, setSolution] = React.useState([]);
 
-  const methodName = 'Cramer';
+  const methodName = 'LU Decomposition';
 
   const validationData = ([eq1, eq2, eq3]) => {
     if (eq1[0] == 0 && eq1[1] == 0 && eq1[2] == 0) return { status: false, error: 'Please enter the first Equation' };
@@ -45,6 +45,7 @@ const Cramer = () => {
             [e.target.x1_2.value, e.target.x2_2.value, e.target.x3_2.value, e.target.sol_2.value],
             [e.target.x1_3.value, e.target.x2_3.value, e.target.x3_3.value, e.target.sol_3.value],
           ],
+          withPP: e.target.withPP ? e.target.withPP.checked : false,
         }
       : !example
       ? {
@@ -68,27 +69,33 @@ const Cramer = () => {
               formRef.current.sol_3.value,
             ],
           ],
+          withPP: formRef.current.withPP ? formRef.current.withPP.checked : false,
         }
-      : { matrix: example };
+      : { matrix: example, withPP: false };
 
     example && setCurrentExample(values);
 
     if (operation !== 'save' && operation !== 'calculateFromQuery' && validationData(values.matrix).status) {
+      const [x1_1, x2_1, x3_1, sol_1] = values.matrix[0];
+      const [x1_2, x2_2, x3_2, sol_2] = values.matrix[1];
+      const [x1_3, x2_3, x3_3, sol_3] = values.matrix[2];
+
       router.query = {
         ...router.query,
         operation: 'calculateQuery',
-        x1_1: values.matrix[0][0],
-        x2_1: values.matrix[0][1],
-        x3_1: values.matrix[0][2],
-        sol_1: values.matrix[0][3],
-        x1_2: values.matrix[1][0],
-        x2_2: values.matrix[1][1],
-        x3_2: values.matrix[1][2],
-        sol_2: values.matrix[1][3],
-        x1_3: values.matrix[2][0],
-        x2_3: values.matrix[2][1],
-        x3_3: values.matrix[2][2],
-        sol_3: values.matrix[2][3],
+        x1_1,
+        x2_1,
+        x3_1,
+        sol_1,
+        x1_2,
+        x2_2,
+        x3_2,
+        sol_2,
+        x1_3,
+        x2_3,
+        x3_3,
+        sol_3,
+        withPP: values.withPP,
       };
       router.push(router);
     }
@@ -105,17 +112,21 @@ const Cramer = () => {
 
   React.useEffect(() => {
     if (router.query.operation === 'calculateQuery' && formRef.current.sol_1.value === '') {
-      const values = [
-        [+router.query.x1_1, +router.query.x2_1, +router.query.x3_1, +router.query.sol_1],
-        [+router.query.x1_2, +router.query.x2_2, +router.query.x3_2, +router.query.sol_2],
-        [+router.query.x1_3, +router.query.x2_3, +router.query.x3_3, +router.query.sol_3],
-      ];
+      const values = {
+        matrix: [
+          [+router.query.x1_1, +router.query.x2_1, +router.query.x3_1, +router.query.sol_1],
+          [+router.query.x1_2, +router.query.x2_2, +router.query.x3_2, +router.query.sol_2],
+          [+router.query.x1_3, +router.query.x2_3, +router.query.x3_3, +router.query.sol_3],
+        ],
+        withPP: !router.query.withPP ? false : router.query.withPP === 'true' ? true : false,
+      };
 
       setCurrentExample(values);
+      console.log(values);
 
       calculate({
         name: methodName,
-        values: { matrix: values },
+        values,
         validationData,
         setShowSolution,
         operation: 'calculateFromQuery',
@@ -131,6 +142,7 @@ const Cramer = () => {
     router.query = {};
     router.push(router);
     e.target.reset();
+    console.clear();
   };
 
   return (
@@ -139,7 +151,9 @@ const Cramer = () => {
         <title>{methodName}</title>
       </Head>
       <div className="page">
-        <div className="center-title">{methodName} Method</div>
+        <FadeChildren>
+          <div className="center-title">{methodName} Method</div>
+        </FadeChildren>
         <form
           ref={formRef}
           className={Styles.flexColumnFullWidth}
@@ -147,7 +161,8 @@ const Cramer = () => {
           onReset={handleReset}>
           <FadeChildren>
             <div className={Styles.inputs_Container}>
-              <MatrixInputs withPP={false} />
+              <div className="inputs-title">Variables</div>
+              <MatrixInputs withPP={true} />
             </div>
             <MethodButtons method={methodName} calculate={handleCalculate} />
           </FadeChildren>
@@ -159,7 +174,7 @@ const Cramer = () => {
               Solution
             </div>
             <div className={Styles.flexColumnFullWidthStart}>
-              <Cramer_steps solution={solution} />
+              <LU_steps solution={solution} />
             </div>
           </FadeChildren>
         )}
@@ -169,4 +184,4 @@ const Cramer = () => {
   );
 };
 
-export default Cramer;
+export default LuDecomposition;

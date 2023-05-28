@@ -25,7 +25,7 @@ const ExamplesAndSaved = (props) => {
       )}
       <FadeChildren once={true}>
         <hr className="line-divider"></hr>
-        <div className="center-title">Examples</div>
+        <div className="center-title">Test Me!</div>
         <div className="examples-container">
           <SelectMenu examples={props.examples} type="examples" setter={props.setter} />
         </div>

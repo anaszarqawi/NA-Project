@@ -43,6 +43,38 @@ const Input = (props) => {
         })}
       </div>
     );
+  } else if (props.type === 'radio') {
+    const [checked, setChecked] = React.useState(true);
+    return (
+      <div className={Styles.inputs_container}>
+        {props.options.map((option, i) => {
+          const inputId = React.useId();
+          return (
+            <div
+              className={Styles.standard_input_container}
+              data-aos={props['data-aos'] ? props['data-aos'] : null}
+              data-aos-duration={props['data-aos-duration'] ? props['data-aos-duration'] : null}
+              data-aos-delay={props['data-aos-delay'] ? props['data-aos-delay'] : null}
+              data-aos-once={props['data-aos-once'] ? props['data-aos-once'] : null}>
+              <label className={Styles.input_radio} htmlFor={inputId}>
+                <input
+                  id={inputId}
+                  type="radio"
+                  name={props.name}
+                  value={option.value}
+                  checked={option.checked ? option.checked : null}
+                  defaultChecked={option.checked && option.checked}
+                  onChange={(e) => {
+                    setChecked(e.target.value);
+                  }}
+                />
+                {option.label}
+              </label>
+            </div>
+          );
+        })}
+      </div>
+    );
   } else if (props.type === 'checkbox') {
     const [checked, setChecked] = React.useState(null);
     return (

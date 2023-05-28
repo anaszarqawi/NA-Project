@@ -67,7 +67,6 @@ const FalsePosition = () => {
 
   const handleCalculate = ({ e, operation, example }) => {
     e && e.preventDefault();
-    !e && console.log(formRef.current);
 
     const values = e
       ? {
@@ -93,7 +92,6 @@ const FalsePosition = () => {
 
     example && setCurrentExample(values);
 
-    console.log(operation);
     if (operation !== 'save' && operation !== 'calculateFromQuery' && validationData(values).status) {
       router.query = { operation: 'calculateQuery', ...values, condition: JSON.stringify(values.condition) };
       router.push(router);
@@ -110,7 +108,6 @@ const FalsePosition = () => {
   };
 
   React.useEffect(() => {
-    console.log(router.query);
     if (router.query.operation === 'calculateQuery' && formRef.current.fx.value === '') {
       const values = {
         fx: router.query.fx && router.query.fx,

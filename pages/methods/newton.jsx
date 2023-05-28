@@ -56,7 +56,6 @@ const SimpleFixedPoint = () => {
 
   const handleCalculate = ({ e, operation, example }) => {
     e && e.preventDefault();
-    !e && console.log(formRef.current);
 
     const values = e
       ? {
@@ -80,7 +79,6 @@ const SimpleFixedPoint = () => {
 
     example && setCurrentExample(values);
 
-    console.log(operation);
     if (operation !== 'save' && operation !== 'calculateFromQuery' && validationData(values).status) {
       router.query = { operation: 'calculateQuery', ...values, condition: JSON.stringify(values.condition) };
       router.push(router);

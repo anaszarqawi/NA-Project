@@ -11,9 +11,12 @@
     }
 
     .matrix,
+    .matrix-inputs,
+    .matrix-solution-inputs,
     .matrix-solution {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: space-between;
         gap: var(--space-1);
         background-color: var(--color-2);
         padding: var(--space-1);
@@ -30,8 +33,40 @@
                 text-align: center;
             }
         }
+
+        .matrix-col {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-1);
+
+            .matrix-cell {
+                padding: 0 var(--space-25);
+                min-width: 40px;
+                text-align: center;
+                transition: var(--transition-1);
+                border-radius: var(--border-radius-6);
+                cursor: pointer;
+
+                &:hover {
+                    background-color: var(--color-3-10);
+                }
+
+                @media only screen and (max-width: 600px) {
+                    padding: 0;
+                }
+            }
+        }
     }
 
+    .matrix-inputs {
+        flex-direction: column;
+    }
+
+    .matrix-solution-inputs {
+        flex-direction: column;
+    }
+
+    .matrix-solution-inputs,
     .matrix-solution {
         border-right: 1px solid var(--color-3-20);
         border-left-style: dashed;
