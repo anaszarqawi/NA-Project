@@ -23,8 +23,7 @@ const GaussElimination = () => {
   const [showSolution, setShowSolution] = React.useState(false);
   const [solution, setSolution] = React.useState([]);
 
-  const { lu } = router.query;
-  const methodName = lu ? 'LU Decomposition' : 'Gauss Elimination';
+  const methodName = 'Gauss Elimination';
 
   const validationData = ([eq1, eq2, eq3]) => {
     if (eq1[0] == 0 && eq1[1] == 0 && eq1[2] == 0) return { status: false, error: 'Please enter the first Equation' };
@@ -78,22 +77,25 @@ const GaussElimination = () => {
     example && setCurrentExample(values);
 
     if (operation !== 'save' && operation !== 'calculateFromQuery' && validationData(values.matrix).status) {
-      console.log(operation !== 'save', operation !== 'calculateFromQuery', validationData(values.matrix).status);
+      const [x1_1, x2_1, x3_1, sol_1] = values.matrix[0];
+      const [x1_2, x2_2, x3_2, sol_2] = values.matrix[1];
+      const [x1_3, x2_3, x3_3, sol_3] = values.matrix[2];
+
       router.query = {
         ...router.query,
         operation: 'calculateQuery',
-        x1_1: values.matrix[0][0],
-        x2_1: values.matrix[0][1],
-        x3_1: values.matrix[0][2],
-        sol_1: values.matrix[0][3],
-        x1_2: values.matrix[1][0],
-        x2_2: values.matrix[1][1],
-        x3_2: values.matrix[1][2],
-        sol_2: values.matrix[1][3],
-        x1_3: values.matrix[2][0],
-        x2_3: values.matrix[2][1],
-        x3_3: values.matrix[2][2],
-        sol_3: values.matrix[2][3],
+        x1_1,
+        x2_1,
+        x3_1,
+        sol_1,
+        x1_2,
+        x2_2,
+        x3_2,
+        sol_2,
+        x1_3,
+        x2_3,
+        x3_3,
+        sol_3,
         withPP: values.withPP,
       };
       router.push(router);
@@ -138,9 +140,7 @@ const GaussElimination = () => {
     setCurrentExample(null);
     setShowSolution(false);
     setSolution(null);
-    router.query = {
-      lu,
-    };
+    router.query = {};
     router.push(router);
     e.target.reset();
     console.clear();
@@ -163,7 +163,7 @@ const GaussElimination = () => {
           <FadeChildren>
             <div className={Styles.inputs_Container}>
               <div className="inputs-title">Variables</div>
-              <MatrixInputs withPP={!lu} />
+              <MatrixInputs withPP={true} />
             </div>
             <MethodButtons method={methodName} calculate={handleCalculate} />
           </FadeChildren>
@@ -175,8 +175,7 @@ const GaussElimination = () => {
               Solution
             </div>
             <div className={Styles.flexColumnFullWidthStart}>
-              {!lu && <GaussElimination_steps solution={solution} />}
-              {lu && <LU_steps solution={solution} />}
+              <GaussElimination_steps solution={solution} />
             </div>
           </FadeChildren>
         )}

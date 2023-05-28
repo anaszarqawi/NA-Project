@@ -48,7 +48,7 @@ const Footer = () => {
         </div>
         <div className="version">
           v2.0
-          <MiniLabel label="New" />
+          <MiniLabel label="Beta" />
         </div>
 
         <div className="social">

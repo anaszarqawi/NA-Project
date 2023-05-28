@@ -10,7 +10,7 @@ const MatrixInputs = (props) => {
   return (
     <>
       <div className="matrix-container">
-        <div className="matrix withSolution">
+        <div className="matrix-inputs withSolution">
           <div className="matrix-row">
             <Input
               type="text"
@@ -81,7 +81,7 @@ const MatrixInputs = (props) => {
             />
           </div>
         </div>
-        <div className="matrix-solution">
+        <div className="matrix-solution-inputs">
           <div className="matrix-row">
             <Input
               type="text"

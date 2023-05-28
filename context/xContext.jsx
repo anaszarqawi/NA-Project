@@ -33,6 +33,7 @@ export default function XProvider({ children }) {
   const [decimalPoints, setDecimalPoints] = React.useState(3);
   const [withRounding, setWithRounding] = React.useState(false);
   const router = useRouter();
+  const [analytics, setAnalytics] = React.useState(null);
 
   const examples = {
     bisection: [
@@ -308,8 +309,26 @@ export default function XProvider({ children }) {
     const tempHistory = JSON.parse(localStorage.getItem('history'));
     if (tempSaved) setSaved(tempSaved);
     if (tempHistory) setHistory(tempHistory);
+  }, []);
 
-    // const analytics = getAnalytics(app);
+  React.useEffect(() => {
+    setAnalytics(getAnalytics(app));
+  }, []);
+
+  React.useEffect(() => {
+    const settings = JSON.parse(localStorage.getItem('settings'));
+    if (settings) {
+      setSettings(settings);
+    } else {
+      const settingsData = {
+        decimalPrecision: {
+          decimalPlaces: 3,
+          withRounding: false,
+        },
+      };
+      setSettings(settingsData);
+      localStorage.setItem('settings', JSON.stringify(settingsData));
+    }
   }, []);
 
   React.useEffect(() => {
@@ -330,7 +349,7 @@ export default function XProvider({ children }) {
   }, []);
 
   React.useEffect(() => {
-    console.log(currentExample);
+    // console.log(currentExample);
   }, [currentExample]);
 
   // const addToSaved = (method, data) => {
@@ -440,23 +459,24 @@ export default function XProvider({ children }) {
 
     switch (operation) {
       case 'save':
-        // logEvent(analytics, 'save');
+        logEvent(analytics, 'save');
         addToObj('saved', name.replace(/ /g, '_'), values);
+        return;
         break;
 
       case 'setExample':
-        // logEvent(analytics, 'example');
+        logEvent(analytics, 'example');
         result = matchMethod(name, values);
-        console.log(result);
+        // console.log(result);
         break;
 
       case 'calculate':
-        // logEvent(analytics, 'calculate');
+        logEvent(analytics, 'calculate');
         result = matchMethod(name, values);
         break;
 
       case 'calculateFromQuery':
-        // logEvent(analytics, 'calculateFromQuery');
+        logEvent(analytics, 'calculateFromQuery');
         result = matchMethod(name, values);
         break;
 
@@ -485,22 +505,27 @@ export default function XProvider({ children }) {
     );
   };
 
+  React.useEffect(() => {
+    // console.log({ saved });
+  }, [saved]);
+
   const addToObj = (to, name, values) => {
-    console.log({ to, name, values });
+    // console.log({ to, name, values });
     if (to === 'history') {
       let temp = { ...history };
       if (name in temp) temp[name].push(values);
       else temp[name] = [values];
       setHistory(temp);
-
+      // add to local storage
       localStorage.setItem('history', JSON.stringify(history));
     } else if (to === 'saved') {
       let temp = { ...saved };
+      // console.log({ temp });
       if (name in temp) temp[name].push(values);
       else temp[name] = [values];
-      setSaved(temp);
+      setSaved({ ...temp });
       showMsg('success', 'Saved successfully!');
-
+      // add to local storage
       localStorage.setItem('saved', JSON.stringify(saved));
     }
   };
@@ -542,6 +567,22 @@ export default function XProvider({ children }) {
     return isEmpty;
   };
 
+  const removeObj = (from, name) => {
+    if (from === 'history') {
+      const temp = { ...history };
+      delete temp[name];
+      setHistory(temp);
+      // add to local storage
+      localStorage.setItem('history', JSON.stringify(history));
+    } else if (from === 'saved') {
+      let temp = { ...saved };
+      delete temp[name];
+      setSaved(temp);
+      // add to local storage
+      localStorage.setItem('saved', JSON.stringify(saved));
+    }
+  };
+
   const round = (value) => {
     if (value.toString().includes('.')) {
       if (withRounding) {
@@ -556,6 +597,17 @@ export default function XProvider({ children }) {
     } else {
       return value;
     }
+  };
+
+  const checkIfEmpty = (arr) => {
+    let isEmpty = true;
+
+    arr.forEach((element) => {
+      if (element) isEmpty = false;
+      return;
+    });
+
+    return isEmpty;
   };
 
   const value = {
@@ -581,6 +633,8 @@ export default function XProvider({ children }) {
     setHistory,
     removeFromObj,
     checkObjIsEmpty,
+    removeObj,
+    checkIfEmpty,
   };
 
   return <xContext.Provider value={value}>{children}</xContext.Provider>;

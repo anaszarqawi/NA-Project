@@ -51,7 +51,6 @@ const Bisection = () => {
 
   const handleCalculate = ({ e, operation, example }) => {
     e && e.preventDefault();
-    !e && console.log(formRef.current);
 
     const values = e
       ? {
@@ -77,7 +76,6 @@ const Bisection = () => {
 
     example && setCurrentExample(values);
 
-    console.log(operation);
     if (operation !== 'save' && operation !== 'calculateFromQuery' && validationData(values).status) {
       router.query = { operation: 'calculateQuery', ...values, condition: JSON.stringify(values.condition) };
       router.push(router);
@@ -94,7 +92,6 @@ const Bisection = () => {
   };
 
   React.useEffect(() => {
-    console.log(router.query);
     if (router.query.operation === 'calculateQuery' && formRef.current.fx.value === '') {
       const values = {
         fx: router?.query?.fx,
@@ -102,8 +99,6 @@ const Bisection = () => {
         x0: +router?.query?.x0,
         condition: router?.query?.condition && JSON.parse(router.query.condition),
       };
-
-      console.log({ values });
 
       setCurrentExample(values);
 

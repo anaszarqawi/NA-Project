@@ -4,6 +4,7 @@ import Equations from './Equations';
 import XsValues from './XsValues';
 import FadeChildren from './FadeChildren';
 import Styles from '../styles/containers.module.scss';
+import { useX } from '../context/xContext';
 
 const PrintStep = ({ stepX, name, mij_rule }) => {
   return (
@@ -16,33 +17,35 @@ const PrintStep = ({ stepX, name, mij_rule }) => {
       <div className={Styles.step}>
         <div className={Styles.title}>{name}</div>
         {stepX.map((step, i) => {
-          return (
-            <div className={Styles.sub_step} key={i}>
-              {step.swap &&
-                step.swap.map((swap) => {
-                  return (
-                    <div className={Styles.inside_step}>
-                      <div className={Styles.comment}>{swap.comment}</div>
-                      <Matrix matrix={swap.finalMatrix} withSolution={false} label={step.matrixLabel} />
-                    </div>
-                  );
-                })}
-              {i === 0 && mij_rule && <div className={Styles.rule}>{mij_rule}</div>}
-              <div className={Styles.step_rule}>{step.mij}</div>
-              <div className={Styles.comment}>{step.comment}</div>
-              <div className={Styles.rule}>{step.rule}</div>
-              <div className={Styles.sub_step}>
-                {step.steps.map((step, i) => {
-                  return (
-                    <div className={Styles.sub_in_rule} key={i}>
-                      {step}
-                    </div>
-                  );
-                })}
+          if (step) {
+            return (
+              <div className={Styles.sub_step} key={i}>
+                {step.swap &&
+                  step.swap.map((swap) => {
+                    return (
+                      <div className={Styles.inside_step}>
+                        <div className={Styles.comment}>{swap.comment}</div>
+                        <Matrix matrix={swap.finalMatrix} withSolution={false} label={step.matrixLabel} />
+                      </div>
+                    );
+                  })}
+                {i === 0 && mij_rule && <div className={Styles.rule}>{mij_rule}</div>}
+                <div className={Styles.step_rule}>{step.mij}</div>
+                <div className={Styles.comment}>{step.comment}</div>
+                <div className={Styles.rule}>{step.rule}</div>
+                <div className={Styles.sub_step}>
+                  {step.steps.map((step, i) => {
+                    return (
+                      <div className={Styles.sub_in_rule} key={i}>
+                        {step}
+                      </div>
+                    );
+                  })}
+                </div>
+                <Matrix matrix={step.finalMatrix} withSolution={false} label={step?.matrixLabel} />
               </div>
-              <Matrix matrix={step.finalMatrix} withSolution={false} label={step?.matrixLabel} />
-            </div>
-          );
+            );
+          }
         })}
       </div>
     </div>
@@ -87,14 +90,19 @@ const PrintMatrixStep = ({ step }) => {
 };
 
 const LU_steps = ({ solution }) => {
-  console.log(solution);
+  const { checkIfEmpty } = useX();
+
   return (
     <>
       <FadeChildren>
         <div className={Styles.steps_container}>
           <FadeChildren>
-            <PrintStep stepX={solution.step1} mij_rule={solution.mij_rule} name="1st Step" />
-            <PrintStep stepX={solution.step2} name="2nd Step" />
+            <Matrix matrix={solution.A} withSolution={false} label="A = " />
+            <Matrix matrix={solution.b} withSolution={false} label="b = " />
+            {!checkIfEmpty(solution.step1) && (
+              <PrintStep stepX={solution.step1} mij_rule={solution.mij_rule} name="1st Step" />
+            )}
+            {!checkIfEmpty(solution.step2) && <PrintStep stepX={solution.step2} name="2nd Step" />}
             <div className={Styles.step_container}>
               <PrintMatrixStep step={solution.U} />
             </div>

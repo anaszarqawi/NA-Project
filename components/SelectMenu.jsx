@@ -12,29 +12,30 @@ import BookmarkRemoveIcon from '../assets/svg/bookmarkRemoveIcon';
 
 const PrintEquations = (equations) => {
   const isOne = (value) => {
-    if (value === 1) return ' + ';
-    if (value === -1) return ' - ';
+    if (value == 1) return ' + ';
+    if (value == -1) return ' - ';
     if (value > 0) return ' + ' + value;
     if (value < 0) return ' - ' + Math.abs(value);
   };
 
   const PrintEquation = ({ equation }) => {
     const [x1, x2, x3, sol] = equation;
+
     return (
       <>
-        {x1 !== 0 && (
+        {x1 != 0 && (
           <>
-            {x1 > 0 ? x1 : x1}X<sub>1</sub>
+            {x1 > 0 ? x1 : x1}x<sub>1</sub>
           </>
         )}
-        {x2 !== 0 && (
+        {x2 != 0 && (
           <>
-            {isOne(x2)}X<sub>2</sub>
+            {isOne(x2)}x<sub>2</sub>
           </>
         )}
-        {x3 !== 0 && (
+        {x3 != 0 && (
           <>
-            {isOne(x3)}X<sub>3</sub>
+            {isOne(x3)}x<sub>3</sub>
           </>
         )}
         {` = ${sol}`}
@@ -101,7 +102,7 @@ const PrintSimpleExample = (example) => {
 };
 
 const SelectMenu = (props) => {
-  const { removeFromObj } = useX();
+  const { removeFromObj, removeObj } = useX();
   const router = useRouter();
 
   const generateUrl = (methodName, data) => {
@@ -114,7 +115,6 @@ const SelectMenu = (props) => {
 
       const values = {
         operation: 'calculateQuery',
-        lu: data?.lu,
         x1_1,
         x2_1,
         x3_1,
@@ -129,10 +129,6 @@ const SelectMenu = (props) => {
         sol_3,
         withPP: data.withPP,
       };
-      if (methodName === 'LU Decomposition') {
-        values.lu = true;
-        methodName = 'Gauss Elimination';
-      }
 
       query = values;
     } else {
@@ -174,6 +170,7 @@ const SelectMenu = (props) => {
   }
 
   if (props.type === 'examples' || props.type === 'saved') {
+    // console.log({ examples: props.examples });
     return (
       <div className="select-menu">
         <div className="select-menu-list">
@@ -193,11 +190,13 @@ const SelectMenu = (props) => {
                     e.target.tagName !== 'path' &&
                     e.target.tagName !== 'svg'
                   ) {
-                    console.log(example);
-                    props.setter({ operation: 'setExample', example });
+                    // console.log(example);
+                    props.setter({ operation: 'setExample', example: example.matrix ? example.matrix : example });
                   }
                 }}>
-                {example.length > 0 ? PrintEquations(example) : PrintSimpleExample(example)}
+                {example.length > 0 || example.matrix
+                  ? PrintEquations(example.matrix ? example.matrix : example)
+                  : PrintSimpleExample(example)}
                 {props.type === 'saved' && (
                   <div className="select-menu-item-buttons">
                     <div
@@ -225,7 +224,18 @@ const SelectMenu = (props) => {
           return (
             method.length > 0 && (
               <div className="select-menu" key={i}>
-                <div className="select-menu-title">{methodName} Method</div>
+                <div className="select-menu-header">
+                  <div className="select-menu-title">{methodName}</div>
+                  <div className="select-menu-buttons">
+                    <div
+                      className="select-menu-button"
+                      onClick={() => {
+                        removeObj(props.name, methodKey);
+                      }}>
+                      {props.name === 'saved' ? <BookmarkRemoveIcon /> : <DeleteIcon />}
+                    </div>
+                  </div>
+                </div>
                 <div className="select-menu-list">
                   {method.map((example, index) => {
                     return (
@@ -254,7 +264,7 @@ const SelectMenu = (props) => {
                             <div
                               className="select-menu-item-button"
                               onClick={() => removeFromObj(props.name, methodKey, index)}>
-                              <DeleteIcon />
+                              {props.name === 'saved' ? <BookmarkRemoveIcon /> : <DeleteIcon />}
                             </div>
                           </div>
                         )}

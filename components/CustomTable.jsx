@@ -8,7 +8,7 @@ const CustomTable = (props) => {
   const { round } = useX();
 
   React.useEffect(() => {
-    console.log({ dataInTable: props.data });
+    // console.log({ dataInTable: props.data });
   }, [props.data]);
 
   const customizeValue = (header, value, row) => {

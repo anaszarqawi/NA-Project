@@ -76,7 +76,6 @@ const Bisection = () => {
 
     example && setCurrentExample(values);
 
-    console.log(operation);
     if (operation !== 'save' && operation !== 'calculateFromQuery' && validationData(values).status) {
       router.query = { operation: 'calculateQuery', ...values, condition: JSON.stringify(values.condition) };
       router.push(router);

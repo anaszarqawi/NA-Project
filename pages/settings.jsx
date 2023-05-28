@@ -11,27 +11,11 @@ import BtnStyles from '../styles/button.module.scss';
 import FadeChildren from '../components/FadeChildren';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import SaveIcon from '../assets/svg/saveIcon';
 
 const Settings = (props) => {
-  const [settings, setSettings] = React.useState({});
-  const { showMsg, lastMethod } = useX();
+  const { showMsg, lastMethod, settings, setSettings } = useX();
   const router = useRouter();
-
-  React.useEffect(() => {
-    const settings = JSON.parse(localStorage.getItem('settings'));
-    if (settings) {
-      setSettings(settings);
-    } else {
-      const settingsData = {
-        decimalPrecision: {
-          decimalPlaces: 4,
-          withRounding: false,
-        },
-      };
-      setSettings(settingsData);
-      localStorage.setItem('settings', JSON.stringify(settingsData));
-    }
-  }, []);
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -79,7 +63,7 @@ const Settings = (props) => {
               </FadeChildren>
             </div>
             <div className={lastMethod !== null && BtnStyles.buttons_container}>
-              <Button label="Save" type="submit" isPrimary={true} />
+              <Button label="Save" icon={<SaveIcon />} type="submit" isPrimary={true} />
             </div>
           </form>
         </FadeChildren>
